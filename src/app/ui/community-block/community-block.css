@@ -1,0 +1,40 @@
+.community-block-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 160px 100px 120px;
+
+    @media screen and (max-width: 1280px) {
+        padding: 160px 40px 120px;
+    }
+}
+
+.community-block-title {
+    flex: 1;
+    font-weight: 500;
+    font-size: 96px;
+    line-height: 123px;
+    text-transform: uppercase;
+    color: #111111;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 78px;
+        line-height: 125%;
+    }
+}
+
+.community-block-description {
+    flex: 1;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 125%;
+    color: #111111;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 20px;
+    }
+}

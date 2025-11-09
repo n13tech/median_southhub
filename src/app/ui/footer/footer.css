@@ -1,0 +1,66 @@
+.footer-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 56px 100px 40px;
+    background-color: #111;
+    gap: 80px;
+
+    @media screen and (max-width: 1280px) {
+        padding: 56px 40px 40px;
+    }
+}
+
+.footer-info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-title {
+    text-align: right;
+    font-weight: 500;
+    font-size: 96px;
+    line-height: 123px;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 60px;
+        line-height: 125%;
+    }
+}
+
+.footer-description {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 125%;
+    color: #FFFFFF80;
+    white-space: pre-wrap;
+    max-width: 480px;
+}
+
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-info-email {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+    color: #fff;
+    width: 250px;
+}
+
+.footer-info-oferta {
+    text-align: right;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+    color: #fff;
+    width: 250px;
+    cursor: pointer;
+}

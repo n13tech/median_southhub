@@ -1,0 +1,70 @@
+.events-block-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+    width: 100%;
+    padding: 0 100px 120px;
+
+    @media screen and (max-width: 1280px) {
+        gap: 80px;
+        padding: 0 40px 120px;
+    }
+}
+
+.events-block-card-wrapper {
+    display: flex;
+}
+
+.events-block-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 680px;
+    padding-right: 20px;
+    margin-right: 165px;
+    border-right: 1px solid #111;
+}
+
+.events-block-card-info-title {
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 61px;
+    text-transform: uppercase;
+    color: #111111;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 40px;
+        line-height: 125%;
+    }
+}
+
+.events-block-card-info-description {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 125%;
+    color: #111111;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 20px;
+    }
+}
+
+.events-block-card-info-button {
+    width: fit-content;
+    background-color: #18436D;
+    height: 44px;
+    padding: 0 40px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+
+    &:hover {
+        background-color: #E55929 !important;
+    }
+
+    @media screen and (max-width: 1280px) {
+        height: 36px;
+    }
+}

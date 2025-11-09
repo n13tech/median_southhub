@@ -1,0 +1,42 @@
+.simple-block-wrapper {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    width: 100%;
+    padding: 120px 100px;
+
+    @media screen and (max-width: 1280px) {
+        padding: 120px 40px;
+    }
+}
+
+.simple-block-title {
+    flex: 1;
+    font-weight: 500;
+    font-size: 96px;
+    line-height: 123px;
+    text-transform: uppercase;
+    color: #111111;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 78px;
+        line-height: 125%;
+    }
+}
+
+.simple-block-description {
+    display: flex;
+    align-items: end;
+    padding-bottom: 24px;
+    flex: 1;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 125%;
+    color: #111111;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 20px;
+    }
+}
