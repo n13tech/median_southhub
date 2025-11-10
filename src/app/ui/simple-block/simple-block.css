@@ -1,12 +1,12 @@
 .simple-block-wrapper {
     display: flex;
-    gap: 20px;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 32px;
     width: 100%;
-    padding: 120px 100px;
+    padding: 80px 100px 96px;
 
     @media screen and (max-width: 1280px) {
-        padding: 120px 40px;
+        padding: 80px 40px 96px;
     }
 }
 

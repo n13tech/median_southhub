@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Arrow from '../../../../public/arrow.svg';
+import TelegaIcon from '../../../../public/telegramm-icon-white.svg';
 import LogoWhite from '../../../../public/logo-white.svg';
 
 import './infinity-banner.css';
@@ -11,8 +11,8 @@ const Item = () => {
     return (
         <div className='infinity-banner-item'>
             <Image
-                src={Arrow}
-                alt="arrow"
+                src={TelegaIcon}
+                alt="telegramm-icon"
                 height={52}
                 width={52}
                 priority
@@ -24,7 +24,7 @@ const Item = () => {
                 priority
             />
             <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>
-                Подпишитесь, чтобы оставаться на связи
+                Все инсайты и новости ближе, чем вы думаете
             </p>
         </div>
     )

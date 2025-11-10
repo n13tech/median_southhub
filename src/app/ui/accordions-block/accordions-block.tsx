@@ -7,6 +7,7 @@ import Image from 'next/image';
 import AccordionPlus from '../../../../public/accordion-plus.svg';
 
 import './accordions-block.css';
+import { Fade } from 'react-awesome-reveal';
 
 const items: CollapseProps['items'] = [
   {
@@ -14,25 +15,25 @@ const items: CollapseProps['items'] = [
     label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Топы для топов</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {'Все участники клуба — управленцы C-level, которые говорят\nна языке бизнеса и понимают, как вести за собой'}
+            {'Все участники Сообщества — C-level в IT и те, кто хочет ими стать.\nЗдесь говорят на языке бизнеса и понимают, как вести за собой.'}
         </p>
     ),
   },
   {
     key: '2',
-    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Свобода говорить</p>,
+    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Свобода мыслить и создавать</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {'Попадите в круг равных, где доверие и открытость\nвдохновляют создавать новое вместе'}
+            {'Попадите в круг равных, где доверие и открытость вдохновляют\nсоздавать новое вместе.'}
         </p>
     ),
   },
   {
     key: '3',
-    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Вход по уровню</p>,
+    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Сила внутри</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {'Мы внимательно отбираем участников, чтобы, в сообществе было с кем говорить по делу и по душам'}
+            {'Мы внимательно отбираем участников, с кем можно говорить и\nпо делу, и по душам.'}
         </p>
     ),
   },
@@ -41,7 +42,7 @@ const items: CollapseProps['items'] = [
     label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Локальная сила, глобальные инсайты</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {'Сочетаем российскую практику, вдохновляемся\nмеждународными идеями, чтобы расти глобально'}
+            {'Участники Сообщества — IT-лидеры, которые делают бизнес в\nРоссии и мыслят масштабно.'}
         </p>
     ),
   },
@@ -50,21 +51,23 @@ const items: CollapseProps['items'] = [
 export const AccordionsBlock = () => {
     return (
         <div className='accordions-block-wrapper' id='accordions-block'>
-            <Collapse
-                ghost={true}
-                expandIconPosition='end'
-                items={items}
-                className='accordions-block-component'
-                expandIcon={() => (
-                    <Image
-                        src={AccordionPlus}
-                        alt="accordion-plus"
-                        width={47}
-                        height={47}
-                        priority
-                    />
-                )}
-            />
+            <Fade delay={250} triggerOnce>
+                <Collapse
+                    ghost={true}
+                    expandIconPosition='end'
+                    items={items}
+                    className='accordions-block-component'
+                    expandIcon={() => (
+                        <Image
+                            src={AccordionPlus}
+                            alt="accordion-plus"
+                            width={47}
+                            height={47}
+                            priority
+                        />
+                    )}
+                />
+            </Fade>
         </div>
     );
 }

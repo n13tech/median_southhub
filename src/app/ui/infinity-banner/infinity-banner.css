@@ -11,7 +11,7 @@
 
 .infinity-banner-items {
     display: flex;
-    gap: 41px;
+    gap: 42px;
     justify-content: space-around;
     min-width: 100%;
     flex-shrink: 0;
@@ -20,7 +20,7 @@
 .infinity-banner-item {
     display: flex;
     align-items: center;
-    gap: 41px;
+    gap: 42px;
     transition: all 0.1s ease-in-out;
 }
 

@@ -1,8 +1,9 @@
 .main-banner-wrapper {
-    padding: 192px 100px 360px;
+    position: relative;
+    padding: 158px 100px 80px;
 
     @media screen and (max-width: 1280px) {
-        padding: 192px 40px 240px;
+        padding: 158px 40px 80px;
     }
 }
 
@@ -13,6 +14,7 @@
     text-transform: uppercase;
     color: #111111;
     white-space: pre-wrap;
+    margin-bottom: 56px;
 
     @media screen and (max-width: 1280px) {
         font-size: 78px;
@@ -21,8 +23,11 @@
 }
 
 .main-banner-description {
+    position: absolute;
+    top: 570px;
+    left: 610px;
+    width: 410px;
     display: flex;
-    margin: 10px 0 10px 510px;
     font-weight: 500;
     font-size: 24px;
     line-height: 125%;
@@ -30,7 +35,8 @@
     white-space: pre-wrap;
 
     @media screen and (max-width: 1280px) {
-        margin: 10px 0 10px 415px;
+        top: 485px;
+        left: 460px;
     }
 }
 
@@ -44,8 +50,11 @@
     line-height: 24px;
     text-transform: uppercase;
     color: #fff;
-    background-color: #0037FFE5;
-    backdrop-filter: blur(16px);
+    background-color: #18436D;
+
+    &:hover {
+        background-color: #E55929 !important;
+    }
 
     @media screen and (max-width: 1280px) {
         height: 52px;

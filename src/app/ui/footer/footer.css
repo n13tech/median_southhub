@@ -15,20 +15,50 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 32px;
 }
 
-.footer-title {
-    text-align: right;
+.footer-description-button-wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-description-button-email {
+    width: 396px;
+    height: 63px;
+    color: rgba(184, 184, 184, 1);
     font-weight: 500;
-    font-size: 96px;
-    line-height: 123px;
-    text-transform: uppercase;
-    color: #fff;
-    white-space: pre-wrap;
+    font-size: 24px;
+    line-height: 24px;
+    background: transparent !important;
+
+    &:hover {
+        color: #E55929 !important;
+        border-color: #E55929 !important;
+    }
 
     @media screen and (max-width: 1280px) {
-        font-size: 60px;
-        line-height: 125%;
+        width: 320px;
+    }
+}
+
+.footer-description-button-subscription {
+    width: 396px;
+    height: 63px;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 24px;
+    color: #111;
+    background: #fff !important;
+
+    &:hover {
+        color: #111 !important;
+        background: #E55929 !important;
+    }
+
+    @media screen and (max-width: 1280px) {
+        width: 320px;
     }
 }
 
@@ -44,23 +74,37 @@
 .footer-info {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
 }
 
-.footer-info-email {
+.footer-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-contacts-label {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-contacts-label-dashed {
+    width: fit-content;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.footer-contacts-link {
     font-weight: 500;
     font-size: 16px;
     line-height: 100%;
     color: #fff;
-    width: 250px;
+    cursor: pointer;
 }
 
-.footer-info-oferta {
-    text-align: right;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 100%;
-    color: #fff;
-    width: 250px;
+.footer-icons {
+    display: flex;
+    gap: 28px;
     cursor: pointer;
 }

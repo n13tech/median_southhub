@@ -8,11 +8,6 @@ import './header.css';
 export const Header = () => {
     return (
         <div className='header' id='header'>
-            <div className='header_item_wrapper'>
-                <HeaderItem title='а можно попроще' intoScroll='simple-block' />
-                <HeaderItem title='личный кабинет' intoScroll='become-member' />
-            </div>
-
             <div>
                 <Image
                     src={Logo}
@@ -23,10 +18,13 @@ export const Header = () => {
                 />
             </div>
 
-            <div className='header_item_wrapper header_item_wrapper_second'>
-                <HeaderItem title='стать участником' intoScroll='become-member' />
-                <HeaderItem title='контакты' intoScroll='footer' />
+            <div>
+                <HeaderItem title='о сообществе' intoScroll='community-block' />
             </div>
+
+            <div />
+
+            <div />
         </div>
     );
 }

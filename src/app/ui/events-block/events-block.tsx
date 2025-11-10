@@ -28,11 +28,15 @@ const Card = ({ img, alt, title, description, buttonTitle, onClick }: Props) => 
     return (
         <div className='events-block-card-wrapper'>
             <div className='events-block-card-info'>
-                <h4 className={`${FONT_MONT_BOOK.className} events-block-card-info-title`}>{title}</h4>
-                <p className={`${FONT_MONT_BOOK.className} events-block-card-info-description`}>{description}</p>
-                <Button className={`${FONT_MONT_BOOK.className} events-block-card-info-button`} onClick={onClick} type='primary'>
-                    {buttonTitle}
-                </Button>
+                <Fade direction='up' triggerOnce>
+                    <h4 className={`${FONT_MONT_BOOK.className} events-block-card-info-title`}>{title}</h4>
+                </Fade>
+                <Fade delay={250} triggerOnce>
+                    <p className={`${FONT_MONT_BOOK.className} events-block-card-info-description`}>{description}</p>
+                    <Button className={`${FONT_MONT_BOOK.className} events-block-card-info-button`} onClick={onClick} type='primary'>
+                        {buttonTitle}
+                    </Button>
+                </Fade>
             </div>
 
             <Fade direction='right' delay={250} triggerOnce>
