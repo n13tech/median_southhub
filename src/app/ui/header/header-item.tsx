@@ -11,7 +11,13 @@ type Props = {
 
 export const HeaderItem = ({ title, intoScroll }: Props) => {
     const handleScrollIntoView = () => {
-        document.getElementById(intoScroll)?.scrollIntoView({behavior: 'smooth'});
+        const element = document.getElementById(intoScroll);
+        const yOffset = -98;
+
+        if (element) {
+            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
     }
 
     return (

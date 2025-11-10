@@ -93,6 +93,7 @@
 .footer-contacts-label-dashed {
     width: fit-content;
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
 }
 
 .footer-contacts-link {
@@ -106,5 +107,8 @@
 .footer-icons {
     display: flex;
     gap: 28px;
-    cursor: pointer;
+
+    > * {
+        cursor: pointer;
+    }
 }

@@ -26,9 +26,12 @@ export default function Home() {
           <MainBanner />
           <SimpleBlock />
           <AccordionsBlock />
+
           <InfinityBanner />
+
           <CommunityBlock />
           <EventsBlock />
+
           <InfinityBanner />
       </main>
 
