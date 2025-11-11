@@ -5,6 +5,10 @@
     @media screen and (max-width: 1280px) {
         padding: 158px 40px 80px;
     }
+
+    @media screen and (max-width: 1023px) {
+        padding: 125px 16px 0;
+    }
 }
 
 .main-banner-title {
@@ -19,6 +23,12 @@
     @media screen and (max-width: 1280px) {
         font-size: 78px;
         line-height: 125%;
+    }
+
+    @media screen and (max-width: 1023px) {
+        width: 300px;
+        font-size: 48px;
+        margin-bottom: 10px;
     }
 }
 
@@ -37,6 +47,14 @@
     @media screen and (max-width: 1280px) {
         top: 485px;
         left: 460px;
+    }
+
+    @media screen and (max-width: 1023px) {
+        position: static;
+        width: 100%;
+        font-size: 16px;
+        white-space: normal;
+        margin-bottom: 42px;
     }
 }
 
@@ -57,8 +75,13 @@
     }
 
     @media screen and (max-width: 1280px) {
-        height: 52px;
+        height: 55px;
         font-size: 20px;
         line-height: 20px;
+    }
+
+    @media screen and (max-width: 1023px) {
+        width: 100%;
+        font-size: 18px;
     }
 }

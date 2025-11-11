@@ -6,7 +6,6 @@ import Image from 'next/image';
 
 import AboutUsImg from '../../../../public/about-us-img.png';
 import MedianLogo from '../../../../public/median-logo.png';
-import { Button } from 'antd';
 import { AboutUsBlockButton } from './about-us-block-button';
 
 export const AboutUsBlock = () => {

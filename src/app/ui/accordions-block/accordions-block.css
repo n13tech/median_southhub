@@ -5,15 +5,23 @@
     @media screen and (max-width: 1280px) {
         padding: 60px 40px 180px;
     }
+
+    @media screen and (max-width: 1023px) {
+        padding: 60px 16px 120px;
+    }
 }
 
 .accordions-block-label {
     font-weight: 500;
     font-size: 48px;
-    line-height: 48px;
+    line-height: 125%;
     text-transform: uppercase;
     color: #111111;
     white-space: pre-wrap;
+
+    @media screen and (max-width: 1023px) {
+        font-size: 20px;
+    }
 }
 
 .accordions-block-children {
@@ -25,6 +33,11 @@
 
     @media screen and (max-width: 1280px) {
         font-size: 20px;
+    }
+
+    @media screen and (max-width: 1023px) {
+        font-size: 14px;
+        white-space: normal;
     }
 }
 
@@ -46,6 +59,11 @@
 
     .ant-collapse-content-box {
         padding: 0 0 24px !important;
+
+        @media screen and (max-width: 1023px) {
+            padding: 0 0 12px !important;
+            margin-top: -12px;
+        }
     }
 
     .ant-collapse-item {
@@ -54,8 +72,15 @@
             justify-content: center;
             align-items: center;
             width: 48px !important;
+            min-width: 48px !important;
             height: 48px !important;
             transition: all 0.2s ease-out;
+
+            @media screen and (max-width: 1023px) {
+                width: 24px !important;
+                min-width: 24px !important;
+                height: 24px !important;
+            }
         }
     }
 

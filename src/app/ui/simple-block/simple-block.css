@@ -8,6 +8,11 @@
     @media screen and (max-width: 1280px) {
         padding: 80px 40px 96px;
     }
+
+    @media screen and (max-width: 1023px) {
+        padding: 60px 16px 0;
+        gap: 20px;
+    }
 }
 
 .simple-block-title {
@@ -22,6 +27,10 @@
     @media screen and (max-width: 1280px) {
         font-size: 78px;
         line-height: 125%;
+    }
+
+    @media screen and (max-width: 1023px) {
+        font-size: 40px;
     }
 }
 
@@ -38,5 +47,10 @@
 
     @media screen and (max-width: 1280px) {
         font-size: 20px;
+    }
+
+    @media screen and (max-width: 1023px) {
+        font-size: 16px;
+        white-space: normal;
     }
 }

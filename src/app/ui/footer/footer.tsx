@@ -41,15 +41,16 @@ export const Footer = () => {
                     alt="southuub"
                     height={28}
                     priority
+                    className='footer-logo'
                 />
 
-                <div className='footer-contacts'>
+                <div className='footer-contacts footer-contacts-first'>
                     <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>Контакты:</p>
                     <a href='mailto:mail@southhub.ru' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Email: mail@southhub.ru</a>
                     <a href='https://telegram.me/share/url?url=sthhb' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Telegram: @sthhb</a>
                 </div>
 
-                <div className='footer-contacts'>
+                <div className='footer-contacts footer-contacts-second'>
                     <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>ООО «Высокие люди»</p>
                     <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>ИНН 2320134913</p>
                     <p className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Публичная оферта</p>
