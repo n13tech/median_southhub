@@ -19,7 +19,7 @@ export const Header = () => {
             </div>
 
             <div>
-                <HeaderItem title='о сообществе' intoScroll='community-block' />
+                <HeaderItem title='о сообществе' intoScroll='community-in-numbers' />
             </div>
 
             <div />

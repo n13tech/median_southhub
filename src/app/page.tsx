@@ -2,13 +2,13 @@ import Image from "next/image";
 import BG from '../../public/bg.png';
 
 import { AccordionsBlock } from "./ui/accordions-block";
-import { CommunityBlock } from "./ui/community-block";
-import { EventsBlock } from "./ui/events-block";
+import { GrowthPointsBlock } from "./ui/growth-points-block";
 import { Footer } from "./ui/footer";
 import { Header } from "./ui/header"
 import { InfinityBanner } from "./ui/infinity-banner";
 import { MainBanner } from "./ui/main-banner";
 import { SimpleBlock } from "./ui/simple-block";
+import { CommunityInNumbers } from "./ui/community-in-numbers";
 
 export default function Home() {
   return (
@@ -29,8 +29,8 @@ export default function Home() {
 
           <InfinityBanner />
 
-          <CommunityBlock />
-          <EventsBlock />
+          <CommunityInNumbers />
+          <GrowthPointsBlock />
 
           <InfinityBanner />
       </main>
