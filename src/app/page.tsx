@@ -9,6 +9,7 @@ import { InfinityBanner } from "./ui/infinity-banner";
 import { MainBanner } from "./ui/main-banner";
 import { SimpleBlock } from "./ui/simple-block";
 import { CommunityInNumbers } from "./ui/community-in-numbers";
+import { AboutUsBlock } from "./ui/about-us-block";
 
 export default function Home() {
   return (
@@ -33,6 +34,8 @@ export default function Home() {
           <GrowthPointsBlock />
 
           <InfinityBanner />
+
+          <AboutUsBlock />
       </main>
 
       <Footer />

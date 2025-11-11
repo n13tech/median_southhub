@@ -1,0 +1,88 @@
+.about-us-block-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+    width: 100%;
+    padding: 120px 100px 96px;
+
+    @media screen and (max-width: 1280px) {
+        padding: 80px 40px 96px;
+        gap: 56px;
+    }
+}
+
+.about-us-block-main-img {
+    width: 100%;
+}
+
+.about-us-block-info-wrapper {
+    display: flex;
+    gap: 86px;
+
+    @media screen and (max-width: 1280px) {
+        gap: 52px;
+    }
+}
+
+.about-us-block-logo-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 415px;
+    gap: 32px;
+    align-items: center;
+}
+
+.about-us-block-down-logo {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 125%;
+    color: #2A2A2A;
+    white-space: pre-wrap;
+}
+
+.about-us-block-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.about-us-block-info-text {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 125%;
+    color: #2A2A2A;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 20px;
+    }
+}
+
+.about-us-block-info-text-median {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 125%;
+    color: #18436D;
+    white-space: pre-wrap;
+    cursor: pointer;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 20px;
+    }
+}
+
+.about-us-block-info-button {
+    width: 237px;
+    height: 52px;
+    color: #000;
+    border-color: #18436D;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    background: transparent !important;
+
+    &:hover {
+        color: #E55929 !important;
+        border-color: #E55929 !important;
+    }
+}

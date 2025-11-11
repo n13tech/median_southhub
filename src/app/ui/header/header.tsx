@@ -22,7 +22,9 @@ export const Header = () => {
                 <HeaderItem title='о сообществе' intoScroll='community-in-numbers' />
             </div>
 
-            <div />
+            <div>
+                <HeaderItem title='о нас' intoScroll='about-us-block' />
+            </div>
 
             <div />
         </div>
