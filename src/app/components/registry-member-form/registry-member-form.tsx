@@ -1,3 +1,5 @@
+'use client';
+
 import { DrawerWithForm } from "../drawer-with-form";
 import { ModalWithForm } from "../modal-with-form";
 
