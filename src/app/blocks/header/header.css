@@ -6,7 +6,7 @@
     width: 100%;
     padding: 36px 100px;
     gap: 15%;
-    z-index: 9999;
+    z-index: 99;
     background-image: linear-gradient(to right, rgba(35, 35, 35, 0), #f2f2f280);
     -webkit-backdrop-filter: blur(20px); /* For Webkit browsers */
     backdrop-filter: blur(20px);

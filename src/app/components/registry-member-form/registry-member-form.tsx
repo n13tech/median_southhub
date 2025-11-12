@@ -1,0 +1,17 @@
+import { DrawerWithForm } from "../drawer-with-form";
+import { ModalWithForm } from "../modal-with-form";
+
+type Props = {
+    open: boolean;
+    onClose: () => void;
+}
+
+export const RegestryMemeberForm = ({ open, onClose }: Props) => {
+    const isMobile = window.innerWidth < 1024;
+
+    if (isMobile) {
+        return <DrawerWithForm open={open} onClose={onClose} />;
+    }
+
+    return <ModalWithForm open={open} onClose={onClose} />
+}
