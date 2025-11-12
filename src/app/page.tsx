@@ -1,15 +1,15 @@
 import Image from "next/image";
 import BG from '../../public/bg.png';
 
-import { AccordionsBlock } from "./ui/accordions-block";
-import { GrowthPointsBlock } from "./ui/growth-points-block";
-import { Footer } from "./ui/footer";
-import { Header } from "./ui/header"
-import { InfinityBanner } from "./ui/infinity-banner";
-import { MainBanner } from "./ui/main-banner";
-import { SimpleBlock } from "./ui/simple-block";
-import { CommunityInNumbers } from "./ui/community-in-numbers";
-import { AboutUsBlock } from "./ui/about-us-block";
+import { AccordionsBlock } from "./blocks/accordions-block";
+import { GrowthPointsBlock } from "./blocks/growth-points-block";
+import { Footer } from "./blocks/footer";
+import { Header } from "./blocks/header"
+import { InfinityBanner } from "./blocks/infinity-banner";
+import { MainBanner } from "./blocks/main-banner";
+import { SimpleBlock } from "./blocks/simple-block";
+import { CommunityInNumbers } from "./blocks/community-in-numbers";
+import { AboutUsBlock } from "./blocks/about-us-block";
 
 export default function Home() {
   return (

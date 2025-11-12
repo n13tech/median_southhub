@@ -14,7 +14,7 @@ export const AboutUsBlockButton = () => {
             onClick={handleClick}
             className={`${FONT_MONT_BOOK.className} about-us-block-info-button`}
         >
-            Связаться с нами
+            Связаться с нами
         </Button>
     );
 }
