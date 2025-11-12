@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   web:
     build:
@@ -8,6 +6,4 @@ services:
     container_name: nextjs_prod
     ports:
       - "3000:3000"
-    env_file:
-      - .env.production
     restart: always
