@@ -10,6 +10,7 @@ import TelegramChanell from '../../../../public/telegram-chanell.png'
 import OnlineBroadcast from '../../../../public/online-broadcast.png'
 import CommunityChat from '../../../../public/community-chat.png'
 
+
 import './growth-points-block.css';
 import { Button } from 'antd';
 import Image, { StaticImageData } from 'next/image';

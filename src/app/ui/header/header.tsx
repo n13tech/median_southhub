@@ -4,11 +4,12 @@ import Logo from '../../../../public/logo.svg';
 import { HeaderItem } from './header-item';
 
 import './header.css';
+import { HeaderBurger } from './header-burger';
 
 export const Header = () => {
     return (
-        <div className='header' id='header'>
-            <div>
+        <div className='header header_desktop' id='header'>
+            <div className='header-logo'>
                 <Image
                     src={Logo}
                     alt="SOUTHUUUB"
@@ -16,6 +17,8 @@ export const Header = () => {
                     height={21}
                     priority
                 />
+
+                <HeaderBurger />
             </div>
 
             <div>

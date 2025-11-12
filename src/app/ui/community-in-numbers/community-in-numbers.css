@@ -40,49 +40,64 @@
     gap: 30px;
 
     @media screen and (max-width: 1023px) {
-        flex-direction: column;
+        flex-wrap: wrap;
         gap: 60px;
     }
 }
 
 .community-in-numbers-card {
+    display: flex;
+    flex-wrap: wrap;
     width: calc(25% - 23px);
     max-width: 302px;
     background-color: rgba(245, 245, 245, 1);
 
+    img {
+        height: 265px;
+        object-fit: cover;
+    }
+
     @media screen and (max-width: 1023px) {
-        width: 100%;
-        max-width: auto;
         height: 476px;
+        min-width: 302px;
+        max-width: 333px;
+        width: 100%;
+
+        img {
+            width: 100%;
+        }
     }
 
     &:nth-child(1) {
-        border-radius: 8px 100px 8px 8px;
+        border-radius: 8px;
+
+        img {
+            border-radius: 8px 8px 100px 8px;
+        }
     }
 
     &:nth-child(2) {
         border-radius: 100px 8px 8px 8px;
-        position: relative;
-        z-index: 2;
 
-        &:after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 30px;
-            width: 100%;
-            z-index: -1;
-            background-color: #EAEAEA;
+        img {
+            border-radius: 100px 8px 100px 8px;
         }
     }
 
     &:nth-child(3) {
         border-radius: 8px 100px 8px 8px;
+
+        img {
+            border-radius: 8px 100px 8px 100px;
+        }
     }
 
     &:nth-child(4) {
-        border-radius: 8px 100px 8px 8px;
+        border-radius: 8px;
+
+        img {
+            border-radius: 8px 8px 8px 100px;
+        }
     }
 }
 

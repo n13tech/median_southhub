@@ -4,10 +4,10 @@ import { FONT_MONT_BOOK } from '../../fonts';
 import './community-in-numbers.css';
 import Image, { StaticImageData } from 'next/image';
 
-import CommunityOne from '../../../../public/community-one.png';
-import CommunityTwo from '../../../../public/community-two.png';
-import CommunityThree from '../../../../public/community-three.png';
-import CommunityFour from '../../../../public/community-four.png';
+import CommunityOne from '../../../../public/comminity-one.png';
+import CommunityTwo from '../../../../public/community-two.jpg';
+import CommunityThree from '../../../../public/community-three.jpg';
+import CommunityFour from '../../../../public/community-four.jpg';
 
 type Props = {
     src: StaticImageData;
