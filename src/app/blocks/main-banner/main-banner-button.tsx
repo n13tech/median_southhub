@@ -8,7 +8,7 @@ import { RegestryMemeberForm } from "@/app/components/registry-member-form";
 export const MainBannerButton = () => {
     const [open, setOpen] = useState(false);
 
-    const handleClick = () => setOpen(true);
+    const handleClick = () => window.open('https://lk.southhub.ru/accounts/login/', '_blank');
 
     return (
         <>

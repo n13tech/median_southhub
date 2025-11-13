@@ -2,11 +2,17 @@ import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
 
+// import Video from '../../../../public/we';
+
 import './main-banner.css';
 
 export const MainBanner = () => {
     return (
         <div className='main-banner-wrapper' id='main-banner'>
+            {/* <video muted loop className='main-banner-video'>
+                <source src={Video} type="video/webm"/>
+            </video> */}
+
             <Fade direction='up' triggerOnce>
                 <h1 className={`${FONT_MONT_BOOK.className} main-banner-title`}>
                     {'Масштаб\nлюдей, идей\nи тёплых\nсвязей'}
