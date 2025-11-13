@@ -153,6 +153,7 @@
     font-weight: 500;
     font-size: 16px;
     line-height: 100%;
+    text-transform: uppercase;
 
     &:hover {
         background-color: #E55929 !important;

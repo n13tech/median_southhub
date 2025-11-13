@@ -37,6 +37,7 @@
     line-height: 125%;
     color: #2A2A2A80;
     white-space: pre-wrap;
+    text-transform: uppercase;
 }
 
 .modal-with-form-submit {

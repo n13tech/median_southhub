@@ -13,7 +13,7 @@ export const HeaderLogin = () => {
         <div className='header-login-block'>
             <a
                 className={`${FONT_MONT_BOOK.className} header_item header_item_logo`}
-                href='https://lk.southhub.ru/'
+                href='https://lk.southhub.ru/accounts/register/'
                 target='_blank'
             >
                 <p>войти</p>
