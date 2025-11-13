@@ -47,7 +47,7 @@ export const Footer = () => {
                     <div className='footer-contacts footer-contacts-first'>
                         <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>Контакты:</p>
                         <a href='mailto:mail@southhub.ru' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Email: mail@southhub.ru</a>
-                        <a href='https://telegram.me/share/url?url=sthhb' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Telegram: @sthhb</a>
+                        <a href='https://t.me/southhub_com' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Telegram</a>
                     </div>
 
                     <div className='footer-contacts footer-contacts-second'>
@@ -78,7 +78,7 @@ export const Footer = () => {
                                 priority
                             />
                         </a>
-                        <a href='https://telegram.me/share/url?url=sthhb' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
+                        <a href='https://t.me/sthhb' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
                             <Image
                                 src={TelegrammIcon}
                                 alt="telegramm"
