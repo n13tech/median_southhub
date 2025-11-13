@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import TelegaIcon from '../../../../public/telegramm-icon-white.svg';
 import LogoWhite from '../../../../public/logo-white.svg';
@@ -26,15 +24,29 @@ const Item = () => {
             <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>
                 Все инсайты и новости ближе, чем вы думаете
             </p>
+            <Image
+                src={TelegaIcon}
+                alt="telegramm-icon"
+                height={52}
+                width={52}
+                priority
+            />
+            <Image
+                src={LogoWhite}
+                alt="southuub"
+                height={52}
+                priority
+            />
+            <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>
+                Подпишитесь, чтобы оставаться на связи
+            </p>
         </div>
     )
 }
 
 export const InfinityBanner = () => {
-    const handleClick = () => alert('WELCOME TELEGA');
-
     return (
-        <div className='infinity-banner-wrapper' id='infinity-banner' onClick={handleClick}>
+        <a className='infinity-banner-wrapper' id='infinity-banner' href='https://t.me/sthhb' target='_blank'>
             <div className="infinity-banner-items infinity-banner-marquee">
                 <Item />
                 <Item />
@@ -47,6 +59,6 @@ export const InfinityBanner = () => {
                 <Item />
                 <Item />
             </div>
-        </div>
+        </a>
     )
 };

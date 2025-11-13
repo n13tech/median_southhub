@@ -1,6 +1,3 @@
-import Image from "next/image";
-import BG from '../../public/bg.png';
-
 import { AccordionsBlock } from "./blocks/accordions-block";
 import { GrowthPointsBlock } from "./blocks/growth-points-block";
 import { Footer } from "./blocks/footer";
@@ -14,31 +11,24 @@ import { AboutUsBlock } from "./blocks/about-us-block";
 export default function Home() {
   return (
     <div>
-      <Header />
+        <Header />
 
-        <Image
-            src={BG}
-            alt='bg'
-            priority
-            className="bg-img"
-        />
+        <main >
+            <MainBanner />
+            <SimpleBlock />
+            <AccordionsBlock />
 
-      <main >
-          <MainBanner />
-          <SimpleBlock />
-          <AccordionsBlock />
+            <InfinityBanner />
 
-          <InfinityBanner />
+            <GrowthPointsBlock />
+            <CommunityInNumbers />
 
-          <CommunityInNumbers />
-          <GrowthPointsBlock />
+            <InfinityBanner />
 
-          <InfinityBanner />
+            <AboutUsBlock />
+        </main>
 
-          <AboutUsBlock />
-      </main>
-
-      <Footer />
+        <Footer />
     </div>
   );
 }
