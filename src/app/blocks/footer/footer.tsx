@@ -48,6 +48,7 @@ export const Footer = () => {
                         <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>Контакты:</p>
                         <a href='mailto:mail@southhub.ru' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Email: mail@southhub.ru</a>
                         <a href='https://t.me/southhub_com' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Telegram</a>
+                        <a href='tel:+7 862 29 59 977' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>+7 862 29 59 977</a>
                     </div>
 
                     <div className='footer-contacts footer-contacts-second'>
