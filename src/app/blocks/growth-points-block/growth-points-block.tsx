@@ -49,7 +49,7 @@ const Card = ({ img, video, alt, title, description, buttonTitle, onClick }: Pro
                     )}
                     {video && (
                         <video width="313" height="209" autoPlay loop muted>
-                            <source src={video} type="video/mp4" />
+                            <source src={video} type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" />
                             Your browser does not support the video tag.
                         </video>
                     )}
