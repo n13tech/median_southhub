@@ -83,6 +83,8 @@
     video,
     img {
         border-radius: 8px;
+        max-width: 313px;
+        max-height: 209px;
     }
 
     @media screen and (max-width: 1023px) {
@@ -91,6 +93,8 @@
 
         img,
         video {
+            max-width: none;
+            max-height: none;
             width: 100%;
         }
     }

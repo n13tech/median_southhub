@@ -12,7 +12,7 @@ import { Button } from 'antd';
 import Image, { StaticImageData } from 'next/image';
 
 type Props = {
-    img?: StaticImageData;
+    img?: StaticImageData | string;
     video?: string;
     alt: string;
     title: string;
@@ -79,7 +79,7 @@ export const GrowthPointsBlock = () => {
 
             <div className='events-block-wrapper'>
                 <Card
-                    video='/SB.mp4'
+                    img='/SB-4.gif'
                     alt='snow-base-camp'
                     title='Snow BASE Camp'
                     description={`19–21 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и бизнеса`}
@@ -88,7 +88,7 @@ export const GrowthPointsBlock = () => {
                 />
 
                 <Card
-                    video='/SH.mp4'
+                    img='/SH2-2.gif'
                     alt='south-hub-camp'
                     title='South HUB Camp'
                     description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в ІТ`}
