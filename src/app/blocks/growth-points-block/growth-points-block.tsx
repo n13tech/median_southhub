@@ -84,7 +84,7 @@ export const GrowthPointsBlock = () => {
                     title='Snow BASE Camp'
                     description={`19–21 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и бизнеса`}
                     buttonTitle='Участвовать'
-                    onClick={() => window.open('https://southhub.ru/snowbase', '_blank')}
+                    onClick={() => window.open('https://southhub.ru/snowbase/', '_blank')}
                 />
 
                 <Card
@@ -93,7 +93,7 @@ export const GrowthPointsBlock = () => {
                     title='South HUB Camp'
                     description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в ІТ`}
                     buttonTitle='Зарегистрироваться'
-                    onClick={() => window.open('https://southhub.ru/southub', '_blank')}
+                    onClick={() => window.open('https://southhub.ru/southub/', '_blank')}
                 />
 
                 <Card
