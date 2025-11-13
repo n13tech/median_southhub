@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 
 import Logo from '../../../../public/logo.svg';
@@ -8,6 +9,14 @@ import { HeaderBurger } from './header-burger';
 import { HeaderLogin } from './header-login';
 
 export const Header = () => {
+    const handleScrollIntoView = () => {
+        const element = document.getElementById('header');
+
+        if (element) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
     return (
         <div className='header header_desktop' id='header'>
             <div className='header_desktop_wrapper'>
@@ -18,6 +27,8 @@ export const Header = () => {
                         width={180}
                         height={21}
                         priority
+                        onClick={handleScrollIntoView}
+                        style={{ cursor: 'pointer' }}
                     />
 
                     <HeaderBurger />
