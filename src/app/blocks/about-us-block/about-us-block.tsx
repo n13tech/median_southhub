@@ -42,15 +42,15 @@ export const AboutUsBlock = () => {
                         </p>
 
                         <div>
-                            <p className={`${FONT_MONT_BOOK.className} about-us-block-info-text-median`}>
+                            <a href='https://median.agency/' target='_blank' className={`${FONT_MONT_BOOK.className} about-us-block-info-text-median`}>
                                 median.agency
-                            </p>
+                            </a>
                             <p className={`${FONT_MONT_BOOK.className} about-us-block-info-text`}>
                                 Команда, которая мечтает, думает и делает
                             </p>
                         </div>
 
-                        <AboutUsBlockButton />
+                        {/* <AboutUsBlockButton /> */}
                     </div>
                 </Fade>
             </div>
