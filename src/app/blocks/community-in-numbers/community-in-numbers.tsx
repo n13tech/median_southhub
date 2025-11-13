@@ -25,8 +25,10 @@ const Card = ({ src, alt, description, title }: Props) => {
                 height={265}
             />
 
-            <p className={`${FONT_MONT_BOOK.className} community-in-numbers-card-title`}>{title}</p>
-            <p className={`${FONT_MONT_BOOK.className} community-in-numbers-card-description`}>{description}</p>
+            <div>
+                <p className={`${FONT_MONT_BOOK.className} community-in-numbers-card-title`}>{title}</p>
+                <p className={`${FONT_MONT_BOOK.className} community-in-numbers-card-description`}>{description}</p>
+            </div>
         </div>
     )
 }
@@ -46,7 +48,7 @@ export const CommunityInNumbers = () => {
                         src={CommunityOne}
                         alt='professional'
                         title='1 477'
-                        description='профессионалов в IT: 55% CTO, 20% CPO, 15% CDO и 15% CEO'
+                        description={`профессионалов в IT: 55% CTO, 20% CPO,\n15% CDO и 15% CEO`}
                     />
                     <Card
                         src={CommunityTwo}

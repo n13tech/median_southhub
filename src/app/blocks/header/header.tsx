@@ -24,7 +24,7 @@ export const Header = () => {
                 </div>
 
                 <div>
-                    <HeaderItem title='о сообществе' intoScroll='community-in-numbers' />
+                    <HeaderItem title='о сообществе' intoScroll='growth-points-block' />
                 </div>
 
                 <div className='header_desktop_login'>

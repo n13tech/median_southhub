@@ -53,7 +53,7 @@ export const HeaderBurger = () => {
             >
                 <div>
                     <div onClick={() => setActive(false)}>
-                        <HeaderItem title='о сообществе' intoScroll='community-in-numbers' />
+                        <HeaderItem title='о сообществе' intoScroll='growth-points-block' />
                     </div>
                 </div>
                 <div>
