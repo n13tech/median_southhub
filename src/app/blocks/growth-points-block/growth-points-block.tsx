@@ -49,7 +49,7 @@ const Card = ({ img, video, alt, title, description, buttonTitle, onClick }: Pro
                     )}
                     {video && (
                         <video width="313" height="209" autoPlay loop muted>
-                            <source src={video} type="video/webm" />
+                            <source src={video} type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
                     )}
@@ -79,7 +79,7 @@ export const GrowthPointsBlock = () => {
 
             <div className='events-block-wrapper'>
                 <Card
-                    video='/SB.webm'
+                    video='/SB.mp4'
                     alt='snow-base-camp'
                     title='Snow BASE Camp'
                     description={`19–21 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и бизнеса`}
@@ -88,7 +88,7 @@ export const GrowthPointsBlock = () => {
                 />
 
                 <Card
-                    video='/SH.webm'
+                    video='/SH.mp4'
                     alt='south-hub-camp'
                     title='South HUB Camp'
                     description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в ІТ`}

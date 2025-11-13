@@ -80,6 +80,11 @@
 .events-block-card-wrapper {
     display: flex;
 
+    video,
+    img {
+        border-radius: 8px;
+    }
+
     @media screen and (max-width: 1023px) {
         width: 100%;
         flex-direction: column;
