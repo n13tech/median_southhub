@@ -51,6 +51,11 @@ body {
     left: 100px;
     width: calc(100vw + 100px);
   }
+
+  @media screen and (max-width: 400px) {
+    left: 100px;
+    width: calc(100vw + 180px);
+  }
 }
 
 .home-video {
