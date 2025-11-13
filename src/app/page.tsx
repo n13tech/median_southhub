@@ -25,8 +25,8 @@ export default function Home() {
         <Header />
 
         <div className="video-wrapper">
-          <video muted className='home-video' id='home-video' loop={false}>
-              <source src={'/AnimLettera2.mp4'} type="video/mp4" />
+          <video muted className='home-video' id='home-video' loop={false} playsInline>
+              <source src={'/AnimLettera.mp4'} type="video/mp4"  />
           </video>
         </div>
 
