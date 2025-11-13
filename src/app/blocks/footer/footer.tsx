@@ -1,7 +1,7 @@
 'use client';
 
 import { FONT_MONT_BOOK } from '../../fonts';
-import LogoWhite from '../../../../public/footer-logo.svg';
+import LogoWhite from '../../../../public/logo-white.svg';
 import TelegrammIcon from '../../../../public/telegramm-icon-white.svg';
 import InstIcon from '../../../../public/inst-icon.png';
 import YoutubeIcon from '../../../../public/youtube-icon.png';

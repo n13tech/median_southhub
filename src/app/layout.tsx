@@ -5,6 +5,13 @@ import { ReactNode } from "react";
 export const metadata: Metadata = {
   title: "Southuuub",
   description: "Median southuuub project",
+  openGraph: {
+    type: "website",
+    title: "Southuuub",
+    description: "Median southuuub project",
+    siteName: "Southuuub",
+    images: [{ url: "/site.png" }]
+  }
 };
 
 export default function RootLayout({

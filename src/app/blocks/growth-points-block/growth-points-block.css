@@ -13,7 +13,7 @@
     }
 
     @media screen and (max-width: 1023px) {
-        padding: 160px 16px 0;
+        padding: 160px 16px 80px;
         justify-content: flex-start;
         align-items: start;
     }
@@ -80,11 +80,17 @@
 .events-block-card-wrapper {
     display: flex;
 
+    video,
+    img {
+        border-radius: 8px;
+    }
+
     @media screen and (max-width: 1023px) {
         width: 100%;
         flex-direction: column;
 
-        img {
+        img,
+        video {
             width: 100%;
         }
     }
