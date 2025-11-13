@@ -9,6 +9,7 @@ import Burger from '../../../../public/burger.svg';
 import Cross from '../../../../public/accordion-plus.svg';
 import Logo from '../../../../public/logo.svg';
 import { HeaderItem } from './header-item';
+import { HeaderLogin } from './header-login';
 
 export const HeaderBurger = () => {
     const [isActive, setActive] = useState(false);
@@ -50,11 +51,13 @@ export const HeaderBurger = () => {
                     />
                 )}
             >
-                <div onClick={() => setActive(false)}>
-                    <HeaderItem title='о сообществе' intoScroll='community-in-numbers' />
+                <div>
+                    <div onClick={() => setActive(false)}>
+                        <HeaderItem title='о сообществе' intoScroll='community-in-numbers' />
+                    </div>
                 </div>
-                <div onClick={() => setActive(false)}>
-                    <HeaderItem title='о нас' intoScroll='about-us-block' />
+                <div>
+                    <HeaderLogin />
                 </div>
             </Drawer>
         </>

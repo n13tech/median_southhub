@@ -14,7 +14,7 @@ import { AboutUsBlock } from "./blocks/about-us-block";
 export default function Home() {
   return (
     <div>
-      <Header />
+        <Header />
 
         <Image
             src={BG}
@@ -23,22 +23,22 @@ export default function Home() {
             className="bg-img"
         />
 
-      <main >
-          <MainBanner />
-          <SimpleBlock />
-          <AccordionsBlock />
+        <main >
+            <MainBanner />
+            <SimpleBlock />
+            <AccordionsBlock />
 
-          <InfinityBanner />
+            <InfinityBanner />
 
-          <CommunityInNumbers />
-          <GrowthPointsBlock />
+            <CommunityInNumbers />
+            <GrowthPointsBlock />
 
-          <InfinityBanner />
+            <InfinityBanner />
 
-          <AboutUsBlock />
-      </main>
+            <AboutUsBlock />
+        </main>
 
-      <Footer />
+        <Footer />
     </div>
   );
 }
