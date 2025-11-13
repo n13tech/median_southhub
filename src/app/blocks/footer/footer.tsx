@@ -7,18 +7,17 @@ import InstIcon from '../../../../public/inst-icon.png';
 import YoutubeIcon from '../../../../public/youtube-icon.png';
 
 import './footer.css';
-import { Button } from 'antd';
 import Image from 'next/image';
 
 export const Footer = () => {
     return (
         <div className='footer' id='footer'>
             <div className='footer-wrapper'>
-                <div className='footer-info-wrapper'>
+                {/* <div className='footer-info-wrapper'>
                     <p className={`${FONT_MONT_BOOK.className} footer-description`}>
                         {'Подписывайтесь на нашу рассылку, чтобы первыми узнавать о новых событиях, инсайтах от лидеров индустрии и возможностях для развития.'}
                     </p>
-                    {/* <div className='footer-description-button-wrapper'>
+                    <div className='footer-description-button-wrapper'>
                         <Button
                             variant='outlined'
                             color='default'
@@ -33,8 +32,8 @@ export const Footer = () => {
                         >
                             подписаться
                         </Button>
-                    </div> */}
-                </div>
+                    </div>
+                </div> */}
 
                 <div className='footer-info'>
                     <Image

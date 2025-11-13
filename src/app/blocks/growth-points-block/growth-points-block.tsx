@@ -2,20 +2,18 @@
 
 import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
-import SnowBaseCamp from '../../../../public/snow-base-camp.png'
-import SouthHubCamp from '../../../../public/south-hub-camp.png'
 import ClubMeet from '../../../../public/встречи.jpg'
 import YoutubeChanell from '../../../../public/ютуб.jpg'
 import TelegramChanell from '../../../../public/тг.jpg'
 import OnlineBroadcast from '../../../../public/эфир.jpg'
-
 
 import './growth-points-block.css';
 import { Button } from 'antd';
 import Image, { StaticImageData } from 'next/image';
 
 type Props = {
-    img: StaticImageData;
+    img?: StaticImageData;
+    video?: string;
     alt: string;
     title: string;
     description: string;
@@ -23,7 +21,7 @@ type Props = {
     onClick: () => void;
 }
 
-const Card = ({ img, alt, title, description, buttonTitle, onClick }: Props) => {
+const Card = ({ img, video, alt, title, description, buttonTitle, onClick }: Props) => {
     return (
         <div className='events-block-card-wrapper'>
             <div className='events-block-card-info'>
@@ -40,13 +38,21 @@ const Card = ({ img, alt, title, description, buttonTitle, onClick }: Props) => 
 
             <Fade direction='right' delay={250} triggerOnce>
                 <div>
-                    <Image
-                        src={img}
-                        alt={alt}
-                        width={313}
-                        height={209}
-                        priority
-                    />
+                    {img && (
+                        <Image
+                            src={img}
+                            alt={alt}
+                            width={313}
+                            height={209}
+                            priority
+                        />
+                    )}
+                    {video && (
+                        <video width="313" height="209" autoPlay loop muted>
+                            <source src={video} type="video/webm" />
+                            Your browser does not support the video tag.
+                        </video>
+                    )}
                 </div>
             </Fade>
         </div>
@@ -73,7 +79,7 @@ export const GrowthPointsBlock = () => {
 
             <div className='events-block-wrapper'>
                 <Card
-                    img={SnowBaseCamp}
+                    video='/SB.webm'
                     alt='snow-base-camp'
                     title='Snow BASE Camp'
                     description={`19–21 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и бизнеса`}
@@ -82,7 +88,7 @@ export const GrowthPointsBlock = () => {
                 />
 
                 <Card
-                    img={SouthHubCamp}
+                    video='/SH.webm'
                     alt='south-hub-camp'
                     title='South HUB Camp'
                     description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в ІТ`}
@@ -96,7 +102,7 @@ export const GrowthPointsBlock = () => {
                     title='Клубные встречи'
                     description={`Камерные события, где вы сами задаёте формат: пробежки, воркшопы, дискуссии. Здесь начинаются новые идеи и партнёрства`}
                     buttonTitle='Участвовать'
-                    onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
+                    onClick={() => window.open('https://lk.southhub.ru/', '_blank')}
                 />
 
                 <Card
