@@ -4,11 +4,10 @@ import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
 import SnowBaseCamp from '../../../../public/snow-base-camp.png'
 import SouthHubCamp from '../../../../public/south-hub-camp.png'
-import ClubMeet from '../../../../public/club-meet.png'
-import YoutubeChanell from '../../../../public/youtube-chanell.png'
-import TelegramChanell from '../../../../public/telegram-chanell.png'
-import OnlineBroadcast from '../../../../public/online-broadcast.png'
-import CommunityChat from '../../../../public/community-chat.png'
+import ClubMeet from '../../../../public/встречи.jpg'
+import YoutubeChanell from '../../../../public/ютуб.jpg'
+import TelegramChanell from '../../../../public/тг.jpg'
+import OnlineBroadcast from '../../../../public/эфир.jpg'
 
 
 import './growth-points-block.css';
@@ -79,7 +78,7 @@ export const GrowthPointsBlock = () => {
                     title='Snow BASE Camp'
                     description={`19–21 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и бизнеса`}
                     buttonTitle='Участвовать'
-                    onClick={() => alert('НЕ БУДЕШЬ ТЫ УЧАСТВОВАТЬ!')}
+                    onClick={() => window.open('https://southhub.ru/snowbase', '_blank')}
                 />
 
                 <Card
@@ -88,7 +87,7 @@ export const GrowthPointsBlock = () => {
                     title='South HUB Camp'
                     description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в ІТ`}
                     buttonTitle='Зарегистрироваться'
-                    onClick={() => alert('ЗАРЕГЕСТРИРОВАЛСЯ, КРАСАВА!')}
+                    onClick={() => window.open('https://southhub.ru/southub', '_blank')}
                 />
 
                 <Card
@@ -97,7 +96,7 @@ export const GrowthPointsBlock = () => {
                     title='Клубные встречи'
                     description={`Камерные события, где вы сами задаёте формат: пробежки, воркшопы, дискуссии. Здесь начинаются новые идеи и партнёрства`}
                     buttonTitle='Участвовать'
-                    onClick={() => alert('ПИТЬ НАДО КАК КОНЯМ!')}
+                    onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
                 />
 
                 <Card
@@ -106,7 +105,7 @@ export const GrowthPointsBlock = () => {
                     title='YouTube-канал'
                     description={`Все записи встреч и вдохновляющие речи лидеров индустрии`}
                     buttonTitle='Подписаться'
-                    onClick={() => alert('ТЫКАЕМ В КОЛОКОЛЬЧИК!')}
+                    onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
                 />
 
                 <Card
@@ -115,7 +114,7 @@ export const GrowthPointsBlock = () => {
                     title='Telegram-канал'
                     description={`Медиа, чтобы держать руку на пульсе Сообщества, быть в курсе новых событий и находить поводы для живого диалога`}
                     buttonTitle='Подписаться'
-                    onClick={() => alert('ЗАПУСКАЕМ САМОЛЕТИКИ!')}
+                    onClick={() => window.open('https://t.me/sthhb', '_blank')}
                 />
 
                 <Card
@@ -124,17 +123,17 @@ export const GrowthPointsBlock = () => {
                     title='Онлайн-эфиры'
                     description={`Каждый раз новый формат: мок-интервью, дискуссии на злободневные темы и живые обсуждения с лидерами рынка`}
                     buttonTitle='смотреть'
-                    onClick={() => alert('СМОТРИ НЕ ПРОСМОТРИ!')}
+                    onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
                 />
 
-                <Card
+                {/* <Card
                     img={CommunityChat}
                     alt='community-chat'
                     title='Чат сообщества'
                     description={`Здесь встречаются с людьми, идеями и новыми вызовами`}
                     buttonTitle='Вступить'
                     onClick={() => alert('ВСТУПИ НЕ ТУПИ!')}
-                />
+                /> */}
             </div>
         </>
     );
