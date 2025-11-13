@@ -89,12 +89,12 @@
 
     @media screen and (max-width: 1023px) {
         width: 100%;
-        max-width: none;
-        max-height: none;
         flex-direction: column;
 
         img,
         video {
+            max-width: none;
+            max-height: none;
             width: 100%;
         }
     }
