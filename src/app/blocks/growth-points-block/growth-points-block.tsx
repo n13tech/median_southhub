@@ -120,7 +120,7 @@ export const GrowthPointsBlock = () => {
                     title='Telegram-канал'
                     description={`Медиа, чтобы держать руку на пульсе Сообщества, быть в курсе новых событий и находить поводы для живого диалога`}
                     buttonTitle='Подписаться'
-                    onClick={() => window.open('https://t.me/sthhb', '_blank')}
+                    onClick={() => window.open('https://t.me/+A-vMV8yq_6M3ZjFi', '_blank')}
                 />
 
                 <Card
@@ -129,7 +129,7 @@ export const GrowthPointsBlock = () => {
                     title='Онлайн-эфиры'
                     description={`Каждый раз новый формат: мок-интервью, дискуссии на злободневные темы и живые обсуждения с лидерами рынка`}
                     buttonTitle='смотреть'
-                    onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
+                    onClick={() => window.open('https://www.youtube.com/playlist?list=PL1GqRF3TOpZAHPTOiNLLXByfEwVjHvvLO', '_blank')}
                 />
 
                 {/* <Card

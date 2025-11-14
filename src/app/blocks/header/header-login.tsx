@@ -24,7 +24,7 @@ export const HeaderLogin = () => {
                     height={50}
                 />
             </a>
-            <a href='https://t.me/sthhb' target='_blank' className={`${FONT_MONT_BOOK.className} header_item header_item_logo`}>
+            <a href='https://t.me/+A-vMV8yq_6M3ZjFi' target='_blank' className={`${FONT_MONT_BOOK.className} header_item header_item_logo`}>
                 <Image
                     src={Logo}
                     alt='telega'

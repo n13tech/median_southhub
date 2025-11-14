@@ -46,7 +46,7 @@ const Item = () => {
 
 export const InfinityBanner = () => {
     return (
-        <a className='infinity-banner-wrapper' id='infinity-banner' href='https://t.me/sthhb' target='_blank'>
+        <a className='infinity-banner-wrapper' id='infinity-banner' href='https://t.me/+A-vMV8yq_6M3ZjFi' target='_blank'>
             <div className="infinity-banner-items infinity-banner-marquee">
                 <Item />
                 <Item />
