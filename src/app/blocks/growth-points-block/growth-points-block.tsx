@@ -82,7 +82,7 @@ export const GrowthPointsBlock = () => {
                     img='/SB-4.gif'
                     alt='snow-base-camp'
                     title='Snow BASE Camp'
-                    description={`19–21 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и бизнеса`}
+                    description={`19–22 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и бизнеса`}
                     buttonTitle='Участвовать'
                     onClick={() => window.open('https://southhub.ru/snowbase/', '_blank')}
                 />
