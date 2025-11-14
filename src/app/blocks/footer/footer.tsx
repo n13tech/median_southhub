@@ -79,7 +79,7 @@ export const Footer = () => {
                                 priority
                             />
                         </a>
-                        <a href='https://t.me/sthhb' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
+                        <a href='https://t.me/+A-vMV8yq_6M3ZjFi' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
                             <Image
                                 src={TelegrammIcon}
                                 alt="telegramm"

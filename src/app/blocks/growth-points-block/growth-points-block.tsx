@@ -120,7 +120,7 @@ export const GrowthPointsBlock = () => {
                     title='Telegram-канал'
                     description={`Медиа, чтобы держать руку на пульсе Сообщества, быть в курсе новых событий и находить поводы для живого диалога`}
                     buttonTitle='Подписаться'
-                    onClick={() => window.open('https://t.me/sthhb', '_blank')}
+                    onClick={() => window.open('https://t.me/+A-vMV8yq_6M3ZjFi', '_blank')}
                 />
 
                 <Card
