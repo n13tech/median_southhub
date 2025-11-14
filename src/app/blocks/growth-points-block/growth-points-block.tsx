@@ -129,7 +129,7 @@ export const GrowthPointsBlock = () => {
                     title='Онлайн-эфиры'
                     description={`Каждый раз новый формат: мок-интервью, дискуссии на злободневные темы и живые обсуждения с лидерами рынка`}
                     buttonTitle='смотреть'
-                    onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
+                    onClick={() => window.open('https://www.youtube.com/playlist?list=PL1GqRF3TOpZAHPTOiNLLXByfEwVjHvvLO', '_blank')}
                 />
 
                 {/* <Card
