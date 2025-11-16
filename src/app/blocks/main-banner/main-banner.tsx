@@ -5,6 +5,7 @@ import { MainBannerButton } from './main-banner-button';
 // import Video from '../../../../public/we';
 
 import './main-banner.css';
+import { NBSP } from '@/app/constants';
 
 export const MainBanner = () => {
     return (
@@ -17,7 +18,7 @@ export const MainBanner = () => {
 
             <Fade delay={250} triggerOnce>
                 <p className={`${FONT_MONT_BOOK.className} main-banner-description`}>
-                    {'Сообщество C-level в IT,\nгде рождаются партнёрства,\nдружба и смыслы, которых\nне найти онлайн'}
+                    {`Сообщество C-level в${NBSP}IT,\nгде рождаются партнёрства,\nдружба и${NBSP}смыслы, которых\nне найти онлайн`}
                 </p>
             </Fade>
 

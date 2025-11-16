@@ -16,7 +16,7 @@ const items: CollapseProps['items'] = [
     label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Топы для топов</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {`Все участники сообщества — C-level в IT и${NBSP}те, кто хочет ими стать.\nЗдесь говорят на языке бизнеса и${NBSP}понимают, как вести за собой`}
+            {`Все участники сообщества — C-level в${NBSP}IT и${NBSP}те, кто хочет ими стать.\nЗдесь говорят на языке бизнеса и${NBSP}понимают, как вести за собой`}
         </p>
     ),
   },
