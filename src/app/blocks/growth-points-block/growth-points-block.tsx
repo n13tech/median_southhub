@@ -92,7 +92,7 @@ export const GrowthPointsBlock = () => {
                     alt='south-hub-camp'
                     title='South HUB Camp'
                     description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в ІТ`}
-                    buttonTitle='Зарегистрироваться'
+                    buttonTitle='УЧАСТВОВАТЬ'
                     onClick={() => window.open('https://southhub.ru/southub/', '_blank')}
                 />
 
@@ -110,7 +110,7 @@ export const GrowthPointsBlock = () => {
                     alt='youtube-chanell'
                     title='YouTube-канал'
                     description={`Все записи встреч и вдохновляющие речи лидеров индустрии`}
-                    buttonTitle='Подписаться'
+                    buttonTitle='СМОТРЕТЬ'
                     onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
                 />
 
@@ -118,7 +118,7 @@ export const GrowthPointsBlock = () => {
                     img={TelegramChanell}
                     alt='telegramm-chanell'
                     title='Telegram-канал'
-                    description={`Медиа, чтобы держать руку на пульсе Сообщества, быть в курсе новых событий и находить поводы для живого диалога`}
+                    description={`Медиа, чтобы держать руку на пульсе cообщества, быть в курсе новых событий и находить поводы для живого диалога`}
                     buttonTitle='Подписаться'
                     onClick={() => window.open('https://t.me/+A-vMV8yq_6M3ZjFi', '_blank')}
                 />

@@ -50,7 +50,7 @@ export const AboutUsBlock = () => {
                             </p>
                         </div>
 
-                        {/* <AboutUsBlockButton /> */}
+                        <AboutUsBlockButton />
                     </div>
                 </Fade>
             </div>
