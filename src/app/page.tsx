@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { Button, Modal } from "antd";
 import { NBSP } from "./constants";
 import { FONT_MONT_BOOK } from "./fonts";
+import { AccessibleBlock } from "./blocks/accessible-block";
 
 export default function Home() {
   const [isOpenCookieModal, setOpenCookieModal] = useState(!localStorage.getItem('isVisibleCookieAlert'));
@@ -47,6 +48,7 @@ export default function Home() {
 
             <InfinityBanner />
 
+            <AccessibleBlock />
             <AboutUsBlock />
         </main>
 

@@ -2,7 +2,12 @@
     position: relative;
     max-width: 1920px;
     margin: 0 auto;
+    /* height: 100vh;
+    min-height: 739px; */
     padding: 158px 100px 80px;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center; */
 
     @media screen and (max-width: 1280px) {
         padding: 158px 40px 80px;
@@ -38,6 +43,8 @@
     position: absolute;
     top: 570px;
     left: 610px;
+    /* margin: -115px 415px;
+    height: 0; */
     width: 410px;
     display: flex;
     font-weight: 500;

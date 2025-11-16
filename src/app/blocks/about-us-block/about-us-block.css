@@ -1,14 +1,17 @@
 .about-us-block-wrapper {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 72px;
     width: 100%;
-    padding: 120px 100px 96px;
+    min-height: 830px;
+    height: 100vh;
+    padding: 120px 100px;
     max-width: 1920px;
     margin: 0 auto;
 
     @media screen and (max-width: 1280px) {
-        padding: 80px 40px 96px;
+        padding: 120px 40px;
         gap: 56px;
     }
 

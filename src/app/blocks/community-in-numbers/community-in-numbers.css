@@ -6,15 +6,25 @@
     justify-content: center;
     gap: 72px;
     width: 100%;
-    padding: 54px 100px 180px;
+    min-height: 975px;
+    height: 100vh;
+    padding: 120px 100px;
+
+    @media screen and (max-height: 975px) {
+        height: auto;
+    }
+
+    @media screen and (max-width: 1500px) {
+        height: auto;
+    }
 
     @media screen and (max-width: 1280px) {
-        padding: 54px 40px 140px;
+        padding: 120px 40px;
         gap: 56px;
     }
 
     @media screen and (max-width: 1024px) {
-        padding: 120px 16px 60px;
+        padding: 120px 16px;
         gap: 60px;
     }
 }
