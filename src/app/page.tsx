@@ -15,6 +15,8 @@ import { FONT_MONT_BOOK } from "./fonts";
 import { AccessibleBlock } from "./blocks/accessible-block";
 import { HowBecomeCommunityBlock } from "./blocks/how-become-community-block";
 import { NetwarmingBlock } from "./blocks/netwarming-block";
+import { PhilosophyBlock } from "./blocks/philosophy-block/philosophy-block";
+import { HotToSouthubBlock } from "./blocks/hot-to-southub-block/hot-to-southub-block";
 
 export default function Home() {
   const [isOpenCookieModal, setOpenCookieModal] = useState(!localStorage.getItem('isVisibleCookieAlert'));
@@ -50,6 +52,8 @@ export default function Home() {
 
             <InfinityBanner />
 
+            <HotToSouthubBlock />
+            <PhilosophyBlock />
             <NetwarmingBlock />
             <HowBecomeCommunityBlock />
             <AccessibleBlock />
