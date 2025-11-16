@@ -14,6 +14,7 @@ import { NBSP } from "./constants";
 import { FONT_MONT_BOOK } from "./fonts";
 import { AccessibleBlock } from "./blocks/accessible-block";
 import { HowBecomeCommunityBlock } from "./blocks/how-become-community-block";
+import { NetwarmingBlock } from "./blocks/netwarming-block";
 
 export default function Home() {
   const [isOpenCookieModal, setOpenCookieModal] = useState(!localStorage.getItem('isVisibleCookieAlert'));
@@ -49,6 +50,7 @@ export default function Home() {
 
             <InfinityBanner />
 
+            <NetwarmingBlock />
             <HowBecomeCommunityBlock />
             <AccessibleBlock />
             <AboutUsBlock />
