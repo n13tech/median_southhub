@@ -5,9 +5,9 @@ import './community-in-numbers.css';
 import Image, { StaticImageData } from 'next/image';
 
 import CommunityOne from '../../../../public/comminity-one.png';
-import CommunityTwo from '../../../../public/community-two.jpg';
-import CommunityThree from '../../../../public/community-three.jpg';
-import CommunityFour from '../../../../public/community-four.jpg';
+import CommunityTwo from '../../../../public/number2.jpg';
+import CommunityThree from '../../../../public/number3.jpg';
+import CommunityFour from '../../../../public/number4.jpg';
 import { NBSP } from '@/app/constants';
 
 type Props = {
