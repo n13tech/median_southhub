@@ -17,9 +17,17 @@ import { HowBecomeCommunityBlock } from "./blocks/how-become-community-block";
 import { NetwarmingBlock } from "./blocks/netwarming-block";
 import { PhilosophyBlock } from "./blocks/philosophy-block/philosophy-block";
 import { HotToSouthubBlock } from "./blocks/hot-to-southub-block/hot-to-southub-block";
+import { CarouselBlock } from "./blocks/carousel-block";
 
 export default function Home() {
-  const [isOpenCookieModal, setOpenCookieModal] = useState(!localStorage.getItem('isVisibleCookieAlert'));
+  const [isOpenCookieModal, setOpenCookieModal] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !window.localStorage.getItem('isVisibleCookieAlert')) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setOpenCookieModal(true);
+    }
+  }, []);
 
   useEffect(() => {
       setTimeout(() => {
@@ -53,6 +61,7 @@ export default function Home() {
             <InfinityBanner />
 
             <HotToSouthubBlock />
+            <CarouselBlock />
             <PhilosophyBlock />
             <NetwarmingBlock />
             <HowBecomeCommunityBlock />
@@ -78,7 +87,7 @@ export default function Home() {
                 className={`${FONT_MONT_BOOK.className} cookie-banner-button`}
                 onClick={() => {
                     setOpenCookieModal(false)
-                    localStorage.setItem('isVisibleCookieAlert', 'true')}
+                    window.localStorage.setItem('isVisibleCookieAlert', 'true')}
                 }
             >
                 да
