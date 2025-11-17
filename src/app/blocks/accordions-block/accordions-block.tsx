@@ -8,6 +8,7 @@ import AccordionPlus from '../../../../public/accordion-plus.svg';
 
 import './accordions-block.css';
 import { Fade } from 'react-awesome-reveal';
+import { NBSP } from '@/app/constants';
 
 const items: CollapseProps['items'] = [
   {
@@ -15,16 +16,16 @@ const items: CollapseProps['items'] = [
     label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Топы для топов</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {'Все участники Сообщества — C-level в IT и те, кто хочет ими стать.\nЗдесь говорят на языке бизнеса и понимают, как вести за собой.'}
+            {`Все участники сообщества — C-level в${NBSP}IT и${NBSP}те, кто хочет ими стать.\nЗдесь говорят на языке бизнеса и${NBSP}понимают, как вести за собой`}
         </p>
     ),
   },
   {
     key: '2',
-    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Свобода мыслить и создавать</p>,
+    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>{`Свобода мыслить и${NBSP}создавать`}</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {'Попадите в круг равных, где доверие и открытость вдохновляют\nсоздавать новое вместе.'}
+            {`Попадите в${NBSP}круг равных, где доверие и${NBSP}открытость вдохновляют\nсоздавать новое вместе`}
         </p>
     ),
   },
@@ -33,16 +34,16 @@ const items: CollapseProps['items'] = [
     label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Сила внутри</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {'Мы внимательно отбираем участников, с кем можно говорить и\nпо делу, и по душам.'}
+            {`Мы внимательно отбираем участников, с${NBSP}кем можно говорить и${NBSP}по делу, и${NBSP}по душам`}
         </p>
     ),
   },
   {
     key: '4',
-    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Локальная сила, глобальные инсайты</p>,
+    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Глобальные инсайты</p>,
     children: (
         <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {'Участники Сообщества — IT-лидеры, которые делают бизнес в\nРоссии и мыслят масштабно.'}
+            {`Участники сообщества — IT-лидеры, которые делают бизнес в${NBSP}России и${NBSP}мыслят масштабно`}
         </p>
     ),
   },

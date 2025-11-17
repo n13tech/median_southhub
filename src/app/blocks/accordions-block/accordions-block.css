@@ -8,7 +8,7 @@
         padding: 60px 40px 180px;
     }
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         padding: 60px 16px 120px;
     }
 }
@@ -21,7 +21,7 @@
     color: #111111;
     white-space: pre-wrap;
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         font-size: 20px;
     }
 }
@@ -37,7 +37,7 @@
         font-size: 20px;
     }
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         font-size: 14px;
         white-space: normal;
     }
@@ -62,7 +62,7 @@
     .ant-collapse-content-box {
         padding: 0 0 24px !important;
 
-        @media screen and (max-width: 1023px) {
+        @media screen and (max-width: 1024px) {
             padding: 0 0 12px !important;
             margin-top: -12px;
         }
@@ -78,7 +78,7 @@
             height: 48px !important;
             transition: all 0.2s ease-out;
 
-            @media screen and (max-width: 1023px) {
+            @media screen and (max-width: 1024px) {
                 width: 24px !important;
                 min-width: 24px !important;
                 height: 24px !important;

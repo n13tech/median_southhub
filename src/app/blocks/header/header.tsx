@@ -38,6 +38,10 @@ export const Header = () => {
                     <HeaderItem title='о сообществе' intoScroll='growth-points-block' />
                 </div>
 
+                <div>
+                    <HeaderItem title='для кого' intoScroll='hot-to-southub-block' />
+                </div>
+
                 <div className='header_desktop_login'>
                     <HeaderLogin />
                 </div>
