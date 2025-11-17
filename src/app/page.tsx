@@ -39,7 +39,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', top: '0', left: '0' }}>
         <Header />
 
         <div className="video-wrapper">
@@ -71,28 +71,23 @@ export default function Home() {
 
         <Footer />
 
-        <Modal
-            open={isOpenCookieModal}
-            closable={false}
-            className='cookie-banner'
-            rootClassName='cookie-banner-root'
-            wrapClassName='cookie-banner-wrapp'
-            footer={null}
-        >
-            <p className={`${FONT_MONT_BOOK.className} cookie-banner-text`}>
-                {`Немного данных, чтобы вам было уютно и${NBSP}всё работало гладко. Мы собираем Cookies, потому что они помогают сайту помнить вас и${NBSP}оставаться таким же внимательным, как люди в${NBSP}сообществе South HUB. Просто скажите «да»`}
-            </p>
+        {isOpenCookieModal && (
+            <div className="cookie-banner">
+                <p className={`${FONT_MONT_BOOK.className} cookie-banner-text`}>
+                    {`Мы собираем cookies, потому что они помогают сайту помнить вас и${NBSP}оставаться таким${NBSP}же внимательным, как${NBSP}люди в${NBSP}сообществе South${NBSP}HUВ. Просто скажите «да»`}
+                </p>
 
-            <Button
-                className={`${FONT_MONT_BOOK.className} cookie-banner-button`}
-                onClick={() => {
-                    setOpenCookieModal(false)
-                    window.localStorage.setItem('isVisibleCookieAlert', 'true')}
-                }
-            >
-                да
-            </Button>
-        </Modal>
+                <Button
+                    className={`${FONT_MONT_BOOK.className} cookie-banner-button`}
+                    onClick={() => {
+                        setOpenCookieModal(false)
+                        window.localStorage.setItem('isVisibleCookieAlert', 'true')}
+                    }
+                >
+                    да
+                </Button>
+            </div>
+        )}
     </div>
   );
 }

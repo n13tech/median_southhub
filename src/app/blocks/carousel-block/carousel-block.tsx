@@ -7,7 +7,6 @@ import Img2 from '../../../../public/carousel2.jpg';
 import Img3 from '../../../../public/carousel3.jpg';
 import Img4 from '../../../../public/carousel4.jpg';
 import Img5 from '../../../../public/carousel5.jpg';
-import Img6 from '../../../../public/carousel6.jpg';
 
 import './carousel-block.css';
 import Image from 'next/image';
@@ -19,18 +18,11 @@ const responsive = {
 };
 
 export const CarouselBlock = () => {
-    const isTablet = typeof window !== "undefined" && window.innerWidth < 1280;
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
-    console.log(isMobile ? 16 : isTablet ? 40 : 100);
-
     return (
         <div className='carousel-block-wrapper' id='carousel-block'>
             <Fade delay={250} triggerOnce>
                 <AliceCarousel
                     mouseTracking
-                    // paddingRight={isMobile ? 16 : isTablet ? 40 : 100}
-                    // paddingLeft={isMobile ? 16 : isTablet ? 40 : 100}
                     paddingRight={16}
                     paddingLeft={16}
                     responsive={responsive}
@@ -64,12 +56,6 @@ export const CarouselBlock = () => {
                         <div data-value="5" key={5}>
                             <Image
                                 src={Img5}
-                                alt=''
-                            />
-                        </div>,
-                        <div data-value="6" key={6}>
-                            <Image
-                                src={Img6}
                                 alt=''
                             />
                         </div>
