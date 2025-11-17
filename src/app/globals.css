@@ -85,54 +85,39 @@ body {
     }
 }
 
-.cookie-banner-root {
-    .ant-modal-mask {
-      @media screen and (min-width: 1025px) {
-        background-color: transparent !important;
-        z-index: -1;
-      }
-    }
-
-    .cookie-banner-wrapp {
-        @media screen and (min-width: 1025px) {
-          width: 100vw;
-          height: 156px;
-          top: calc(100vh - 156px);
-
-          > div {
-            position: relative;
-            top: 0;
-          }
-        }
-    }
-}
-
 .cookie-banner {
-    width: 900px !important;
-    top: auto;
-    bottom: calc(-100vh + 156px);
+    position: fixed;
+    top: calc(100vh - 134px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 800px;
+    gap: 40px;
+    padding: 24px 32px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 
     @media screen and (max-width: 1024px) {
-      width: 346px !important;
-      height: 290xp;
-      bottom: auto;
-      top: 50%;
-      transform: translate(0, -50%);
+      top: calc(100vh - 100px);
+      width: calc(100vw - 20px);
+      max-width: 800px;
+      gap: 20px;
+      padding: 16px;
     }
 
-    .ant-modal-content {
-        padding: 34px !important;
+    @media screen and (max-width: 470px) {
+      top: calc(100vh - 112px);
     }
 
-    .ant-modal-body {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    @media screen and (max-width: 420px) {
+      top: calc(100vh - 127px);
+    }
 
-        @media screen and (max-width: 1024px) {
-          flex-direction: column;
-          gap: 40px;
-        }
+    @media screen and (max-width: 365px) {
+      top: calc(100vh - 142px);
     }
 
     .cookie-banner-text {
@@ -142,13 +127,14 @@ body {
         line-height: 125%;
 
       @media screen and (max-width: 1024px) {
-        width: auto !important;
+        font-size: 12px;
+        width: auto;
       }
     }
 
     .cookie-banner-button {
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
         border-radius: 100%;
         border: none;
         background-color: #18436D;
@@ -163,8 +149,8 @@ body {
         }
 
         @media screen and (max-width: 1024px) {
-          width: 56px;
-          height: 56px;
+          width: 48px;
+          height: 48px;
           font-size: 16px;
           line-height: 16px;
         }
