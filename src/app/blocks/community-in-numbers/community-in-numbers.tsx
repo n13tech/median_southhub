@@ -5,9 +5,10 @@ import './community-in-numbers.css';
 import Image, { StaticImageData } from 'next/image';
 
 import CommunityOne from '../../../../public/comminity-one.png';
-import CommunityTwo from '../../../../public/community-two.jpg';
-import CommunityThree from '../../../../public/community-three.jpg';
-import CommunityFour from '../../../../public/community-four.jpg';
+import CommunityTwo from '../../../../public/number2.jpg';
+import CommunityThree from '../../../../public/number3.jpg';
+import CommunityFour from '../../../../public/number4.jpg';
+import { NBSP } from '@/app/constants';
 
 type Props = {
     src: StaticImageData;
@@ -38,7 +39,7 @@ export const CommunityInNumbers = () => {
         <div className='community-in-numbers-wrapper' id='community-in-numbers'>
             <Fade direction='up' triggerOnce>
                 <h2 className={`${FONT_MONT_BOOK.className} community-in-numbers-title`}>
-                    {'Сообщество в цифрах'}
+                    {`Сообщество в${NBSP}цифрах`}
                 </h2>
             </Fade>
 
@@ -48,7 +49,7 @@ export const CommunityInNumbers = () => {
                         src={CommunityOne}
                         alt='professional'
                         title='1 477'
-                        description={`профессионалов в IT: 55% CTO, 20% CPO,\n15% CDO и 15% CEO`}
+                        description={`профессионалов в${NBSP}IT:\n32% CTO&CIO,\n18% CPO, 8% CDO\nи 15% CEO`}
                     />
                     <Card
                         src={CommunityTwo}
@@ -57,16 +58,16 @@ export const CommunityInNumbers = () => {
                         description='спикера и лидера индустрии выступили на мероприятиях за 4 года'
                     />
                     <Card
-                        src={CommunityThree}
-                        alt='members'
-                        title='77%'
-                        description='участников из Москвы, 23% — из других городов России и стран СНГ'
-                    />
-                    <Card
                         src={CommunityFour}
                         alt='nps'
                         title='73%'
-                        description='NPS Сообщества'
+                        description='NPS cообщества'
+                    />
+                    <Card
+                        src={CommunityThree}
+                        alt='members'
+                        title='52%'
+                        description='retention rate сообщества'
                     />
                 </div>
             </Fade>

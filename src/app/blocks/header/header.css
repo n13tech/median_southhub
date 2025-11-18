@@ -17,7 +17,7 @@
         padding: 0 40px;
     }
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         padding: 16px;
         gap: 0;
 
@@ -55,7 +55,7 @@
     .header-desctop-hiden {
         display: none;
 
-        @media screen and (max-width: 1023px) {
+        @media screen and (max-width: 1024px) {
             display: block;
         }
     }
@@ -80,7 +80,7 @@
     cursor: pointer;
     color: #111;
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         display: none;
     }
 }

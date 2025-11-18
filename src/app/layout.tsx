@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ReactNode } from "react";
+import { YandexMetrika } from "./ya-metric";
 
 export const metadata: Metadata = {
   title: "Southuuub",
@@ -22,6 +23,8 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={`antialiased`}>
+        <YandexMetrika />
+
         {children}
       </body>
     </html>

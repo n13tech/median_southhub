@@ -38,6 +38,10 @@ export const Header = () => {
                     <HeaderItem title='о сообществе' intoScroll='growth-points-block' />
                 </div>
 
+                <div>
+                    <HeaderItem title='для кого' intoScroll='for-who-scrollable-block' />
+                </div>
+
                 <div className='header_desktop_login'>
                     <HeaderLogin />
                 </div>

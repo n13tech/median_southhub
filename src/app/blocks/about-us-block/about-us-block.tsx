@@ -4,9 +4,10 @@ import { FONT_MONT_BOOK } from '../../fonts';
 import './about-us-block.css';
 import Image from 'next/image';
 
-import AboutUsImg from '../../../../public/about-us-img.png';
+import AboutUsImg from '../../../../public/about-us-img.jpg';
 import MedianLogo from '../../../../public/median-logo.png';
 import { AboutUsBlockButton } from './about-us-block-button';
+import { NBSP } from '@/app/constants';
 
 export const AboutUsBlock = () => {
     return (
@@ -38,7 +39,7 @@ export const AboutUsBlock = () => {
                 <Fade delay={250} triggerOnce>
                     <div className='about-us-block-text-wrapper'>
                         <p className={`${FONT_MONT_BOOK.className} about-us-block-info-text`}>
-                            Мы создаём идеи и проводим события для IT-специалистов и бизнес-лидеров. Наши проекты побеждают в конкурсах, а участники помнят их годами.
+                            {`Мы создаём идеи и${NBSP}проводим события для IT-специалистов и${NBSP}бизнес-лидеров. Наши проекты побеждают в${NBSP}конкурсах, а${NBSP}участники помнят их годами`}
                         </p>
 
                         <div>
@@ -50,7 +51,7 @@ export const AboutUsBlock = () => {
                             </p>
                         </div>
 
-                        {/* <AboutUsBlockButton /> */}
+                        <AboutUsBlockButton />
                     </div>
                 </Fade>
             </div>

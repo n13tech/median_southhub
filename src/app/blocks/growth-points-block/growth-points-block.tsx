@@ -10,6 +10,7 @@ import OnlineBroadcast from '../../../../public/эфир.jpg'
 import './growth-points-block.css';
 import { Button } from 'antd';
 import Image, { StaticImageData } from 'next/image';
+import { NBSP } from '@/app/constants';
 
 type Props = {
     img?: StaticImageData | string;
@@ -25,11 +26,15 @@ const Card = ({ img, video, alt, title, description, buttonTitle, onClick }: Pro
     return (
         <div className='events-block-card-wrapper'>
             <div className='events-block-card-info'>
-                <Fade direction='up' triggerOnce>
-                    <h4 className={`${FONT_MONT_BOOK.className} events-block-card-info-title`}>{title}</h4>
-                </Fade>
+                <div className='events-block-card-info-text-wrapper'>
+                    <Fade direction='up' triggerOnce>
+                        <h4 className={`${FONT_MONT_BOOK.className} events-block-card-info-title`}>{title}</h4>
+                    </Fade>
+                    <Fade delay={250} triggerOnce>
+                        <p className={`${FONT_MONT_BOOK.className} events-block-card-info-description`}>{description}</p>
+                    </Fade>
+                </div>
                 <Fade delay={250} triggerOnce>
-                    <p className={`${FONT_MONT_BOOK.className} events-block-card-info-description`}>{description}</p>
                     <Button className={`${FONT_MONT_BOOK.className} events-block-card-info-button`} onClick={onClick} type='primary'>
                         {buttonTitle}
                     </Button>
@@ -82,7 +87,7 @@ export const GrowthPointsBlock = () => {
                     img='/SB-4.gif'
                     alt='snow-base-camp'
                     title='Snow BASE Camp'
-                    description={`19–21 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и бизнеса`}
+                    description={`19–22 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`}
                     buttonTitle='Участвовать'
                     onClick={() => window.open('https://southhub.ru/snowbase/', '_blank')}
                 />
@@ -91,8 +96,8 @@ export const GrowthPointsBlock = () => {
                     img='/SH2-2.gif'
                     alt='south-hub-camp'
                     title='South HUB Camp'
-                    description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в ІТ`}
-                    buttonTitle='Зарегистрироваться'
+                    description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в${NBSP}ІТ`}
+                    buttonTitle='УЧАСТВОВАТЬ'
                     onClick={() => window.open('https://southhub.ru/southub/', '_blank')}
                 />
 
@@ -100,7 +105,7 @@ export const GrowthPointsBlock = () => {
                     img={ClubMeet}
                     alt='club-meet'
                     title='Клубные встречи'
-                    description={`Камерные события, где вы сами задаёте формат: пробежки, воркшопы, дискуссии. Здесь начинаются новые идеи и партнёрства`}
+                    description={`Камерные события, где вы сами задаёте формат: пробежки, воркшопы, дискуссии. Здесь начинаются новые идеи и${NBSP}партнёрства`}
                     buttonTitle='Участвовать'
                     onClick={() => window.open('https://lk.southhub.ru/', '_blank')}
                 />
@@ -109,8 +114,8 @@ export const GrowthPointsBlock = () => {
                     img={YoutubeChanell}
                     alt='youtube-chanell'
                     title='YouTube-канал'
-                    description={`Все записи встреч и вдохновляющие речи лидеров индустрии`}
-                    buttonTitle='Подписаться'
+                    description={`Все записи встреч и${NBSP}вдохновляющие речи лидеров индустрии`}
+                    buttonTitle='СМОТРЕТЬ'
                     onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
                 />
 
@@ -118,25 +123,25 @@ export const GrowthPointsBlock = () => {
                     img={TelegramChanell}
                     alt='telegramm-chanell'
                     title='Telegram-канал'
-                    description={`Медиа, чтобы держать руку на пульсе Сообщества, быть в курсе новых событий и находить поводы для живого диалога`}
+                    description={`Медиа, чтобы держать руку на пульсе cообщества, быть в${NBSP}курсе новых событий и${NBSP}находить поводы для живого диалога`}
                     buttonTitle='Подписаться'
-                    onClick={() => window.open('https://t.me/sthhb', '_blank')}
+                    onClick={() => window.open('https://t.me/+A-vMV8yq_6M3ZjFi', '_blank')}
                 />
 
                 <Card
                     img={OnlineBroadcast}
                     alt='online-broadcast'
                     title='Онлайн-эфиры'
-                    description={`Каждый раз новый формат: мок-интервью, дискуссии на злободневные темы и живые обсуждения с лидерами рынка`}
+                    description={`Каждый раз новый формат: мок-интервью, дискуссии на злободневные темы и${NBSP}живые обсуждения с${NBSP}лидерами рынка`}
                     buttonTitle='смотреть'
-                    onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
+                    onClick={() => window.open('https://www.youtube.com/playlist?list=PL1GqRF3TOpZAHPTOiNLLXByfEwVjHvvLO', '_blank')}
                 />
 
                 {/* <Card
                     img={CommunityChat}
                     alt='community-chat'
                     title='Чат сообщества'
-                    description={`Здесь встречаются с людьми, идеями и новыми вызовами`}
+                    description={`Здесь встречаются с${NBSP}людьми, идеями и новыми вызовами`}
                     buttonTitle='Вступить'
                     onClick={() => alert('ВСТУПИ НЕ ТУПИ!')}
                 /> */}

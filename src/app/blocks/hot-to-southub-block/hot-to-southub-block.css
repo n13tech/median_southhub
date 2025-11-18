@@ -1,0 +1,65 @@
+.hot-to-southub-block-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    padding: 120px 100px;
+    max-width: 1920px;
+    margin: 0 auto;
+
+    @media screen and (max-width: 1280px) {
+        padding: 120px 40px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        padding: 120px 16px;
+    }
+}
+
+.hot-to-southub-block-title {
+    flex: 1;
+    font-weight: 500;
+    font-size: 140px;
+    line-height: 145px;
+    text-transform: uppercase;
+    color: #111111;
+    white-space: pre-wrap;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 96px;
+        line-height: 125%;
+    }
+
+    @media screen and (max-width: 1024px) {
+        font-size: 40px;
+    }
+}
+
+.hot-to-southub-block-description-wrapper {
+    display: flex;
+    justify-content: end;
+}
+
+.hot-to-southub-block-description {
+    flex: 1;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 125%;
+    color: #111111;
+    white-space: pre-wrap;
+    max-width: 650px;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 20px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        font-size: 16px;
+        white-space: normal;
+        width: 80%;
+    }
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+    }
+}

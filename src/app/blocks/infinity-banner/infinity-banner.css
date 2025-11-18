@@ -7,8 +7,9 @@
     gap: 41px;
     background-color: #111;
     cursor: pointer;
+    margin-bottom: 60px;
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         gap: 32px;
 
         img {
@@ -25,7 +26,7 @@
     min-width: 100%;
     flex-shrink: 0;
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         gap: 32px;
     }
 }
@@ -36,7 +37,7 @@
     gap: 42px;
     transition: all 0.1s ease-in-out;
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         gap: 32px;
     }
 }
@@ -53,7 +54,7 @@
     text-transform: uppercase;
     color: #fff;
 
-    @media screen and (max-width: 1023px) {
+    @media screen and (max-width: 1024px) {
         font-size: 14px;
     }
 }

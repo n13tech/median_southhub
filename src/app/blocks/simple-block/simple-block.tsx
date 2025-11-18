@@ -2,6 +2,7 @@ import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
 
 import './simple-block.css';
+import { NBSP } from '@/app/constants';
 
 export const SimpleBlock = () => {
     return (
@@ -14,7 +15,7 @@ export const SimpleBlock = () => {
 
             <Fade delay={250} triggerOnce>
                 <p className={`${FONT_MONT_BOOK.className} simple-block-description`}>
-                    {'Встречаемся в неформальной обстановке,\nзнакомимся вживую и общаемся по-человечески.\nВне рамок корпоративного мира. Заводим связи,\nкоторые превращаются в решения.'}
+                    {`Встречаемся в${NBSP}неформальной обстановке,\nзнакомимся вживую и${NBSP}общаемся по-человечески.\nВне рамок корпоративного мира. Заводим связи,\nкоторые превращаются в${NBSP}решения`}
                 </p>
             </Fade>
         </div>
