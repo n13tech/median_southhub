@@ -39,7 +39,7 @@ export const Header = () => {
                 </div>
 
                 <div>
-                    <HeaderItem title='для кого' intoScroll='hot-to-southub-block' />
+                    <HeaderItem title='для кого' intoScroll='for-who-scrollable-block' />
                 </div>
 
                 <div className='header_desktop_login'>
