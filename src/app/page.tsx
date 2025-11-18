@@ -9,7 +9,7 @@ import { SimpleBlock } from "./blocks/simple-block";
 import { CommunityInNumbers } from "./blocks/community-in-numbers";
 import { AboutUsBlock } from "./blocks/about-us-block";
 import { useEffect, useState } from "react";
-import { Button, Modal } from "antd";
+import { Button } from "antd";
 import { NBSP } from "./constants";
 import { FONT_MONT_BOOK } from "./fonts";
 import { AccessibleBlock } from "./blocks/accessible-block";
@@ -18,6 +18,7 @@ import { NetwarmingBlock } from "./blocks/netwarming-block";
 import { PhilosophyBlock } from "./blocks/philosophy-block/philosophy-block";
 import { HotToSouthubBlock } from "./blocks/hot-to-southub-block/hot-to-southub-block";
 import { CarouselBlock } from "./blocks/carousel-block";
+import { ForWhoScrollableBlock } from "./blocks/for-who-scrollable-block";
 
 export default function Home() {
   const [isOpenCookieModal, setOpenCookieModal] = useState(false);
@@ -60,6 +61,7 @@ export default function Home() {
 
             <InfinityBanner />
 
+            <ForWhoScrollableBlock />
             <HotToSouthubBlock />
             <CarouselBlock />
             <PhilosophyBlock />
