@@ -1,6 +1,6 @@
 'use client';
 import { AccordionsBlock } from "./blocks/accordions-block";
-import { GrowthPointsBlock } from "./blocks/growth-points-block";
+import { GrowthPointsScrollableBlock } from "./blocks/growth-points-scrollable-block";
 import { Footer } from "./blocks/footer";
 import { Header } from "./blocks/header"
 import { InfinityBanner } from "./blocks/infinity-banner";
@@ -22,6 +22,10 @@ import { ForWhoScrollableBlock } from "./blocks/for-who-scrollable-block";
 
 export default function Home() {
   const [isOpenCookieModal, setOpenCookieModal] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0,0);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined" && !window.localStorage.getItem('isVisibleCookieAlert')) {
@@ -56,7 +60,7 @@ export default function Home() {
 
             <InfinityBanner />
 
-            <GrowthPointsBlock />
+            <GrowthPointsScrollableBlock />
             <CommunityInNumbers />
 
             <InfinityBanner />
