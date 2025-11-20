@@ -45,30 +45,34 @@ export const CommunityInNumbers = () => {
 
             <Fade delay={250} triggerOnce>
                 <div className='community-in-numbers-cards-wrapper'>
-                    <Card
-                        src={CommunityOne}
-                        alt='professional'
-                        title='1 477'
-                        description={`профессионалов в${NBSP}IT:\n32% CTO&CIO,\n18% CPO, 8% CDO\nи 15% CEO`}
-                    />
-                    <Card
-                        src={CommunityTwo}
-                        alt='speakers'
-                        title='153'
-                        description='спикера и лидера индустрии выступили на мероприятиях за 4 года'
-                    />
-                    <Card
-                        src={CommunityFour}
-                        alt='nps'
-                        title='73%'
-                        description='NPS cообщества'
-                    />
-                    <Card
-                        src={CommunityThree}
-                        alt='members'
-                        title='52%'
-                        description='retention rate сообщества'
-                    />
+                    <div>
+                        <Card
+                            src={CommunityOne}
+                            alt='professional'
+                            title='1 477'
+                            description={`профессионалов в${NBSP}IT:\n32% CTO&CIO,\n18% CPO, 8% CDO\nи 15% CEO`}
+                        />
+                        <Card
+                            src={CommunityTwo}
+                            alt='speakers'
+                            title='153'
+                            description='спикера и лидера индустрии выступили на мероприятиях за 4 года'
+                        />
+                    </div>
+                    <div>
+                        <Card
+                            src={CommunityFour}
+                            alt='nps'
+                            title='73%'
+                            description='NPS cообщества'
+                        />
+                        <Card
+                            src={CommunityThree}
+                            alt='members'
+                            title='52%'
+                            description='retention rate сообщества'
+                        />
+                    </div>
                 </div>
             </Fade>
         </div>
