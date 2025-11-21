@@ -67,11 +67,12 @@ export const NetwarmingBlock = () => {
             mouseX, mouseY, 0,
             mouseX, mouseY, radius
         );
+
         gradient.addColorStop(0, '#FF3700');
         gradient.addColorStop(0.2933, '#FF7A32');
-        gradient.addColorStop(0.6106, '#ff8e51ff');
-        gradient.addColorStop(0.7548, '#45688aff');
+        gradient.addColorStop(0.7548, '#FFD2D2');
         gradient.addColorStop(1, '#6191C1');
+
         return gradient;
     }, []);
 
@@ -86,7 +87,7 @@ export const NetwarmingBlock = () => {
         
         const text = "Netwarming";
         // Рассчитываем оптимальный размер шрифта
-        const maxTextWidth = canvas.width - 20;
+        const maxTextWidth = canvas.width - 150;
         const fontSize = calculateFontSize(ctx, text, maxTextWidth);
         
         // Устанавливаем стиль текста
@@ -101,7 +102,7 @@ export const NetwarmingBlock = () => {
         // Измеряем текст для расчета радиуса
         const metrics = ctx.measureText(text);
         const textWidth = metrics.width;
-        const radius = textWidth * 0.3;
+        const radius = textWidth * 0.2;
 
         if (mouseX !== null && mouseY !== null) {
             // Рисуем основной градиентный текст

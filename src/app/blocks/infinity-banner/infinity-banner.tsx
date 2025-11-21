@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import TelegaIcon from '../../../../public/telegramm-icon-white.svg';
 import LogoWhite from '../../../../public/logo-white.svg';
