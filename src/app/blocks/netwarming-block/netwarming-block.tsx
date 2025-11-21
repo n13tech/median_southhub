@@ -23,6 +23,7 @@ export const NetwarmingBlock = () => {
     const [targetMousePos, setTargetMousePos] = useState<MousePosition | null>(null);
     const [currentMousePos, setCurrentMousePos] = useState<MousePosition | null>(null);
     const [animationProgress, setAnimationProgress] = useState(0);
+    const [isTouching, setIsTouching] = useState(false);
 
     // Для отслеживания движения курсора
     const lastMousePosRef = useRef<MousePosition | null>(null);
@@ -109,7 +110,7 @@ export const NetwarmingBlock = () => {
         
         // Базовые радиусы
         const centerRadius = textWidth * 0.2;  // 20% в центре
-        const edgeRadius = textWidth * 0.075;    // 7.5% на краях
+        const edgeRadius = textWidth * 0.1;    // 10% на краях
         
         // Интерполяция радиуса в зависимости от расстояния от центра
         // Используем квадратичную функцию для более плавного изменения
@@ -168,7 +169,7 @@ export const NetwarmingBlock = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         const text = "Netwarming";
-        const maxTextWidth = canvas.width - 100;
+        const maxTextWidth = canvas.width - (window.innerWidth > 1024 ? 150 : 32);
         const fontSize = calculateFontSize(ctx, text, maxTextWidth);
         
         ctx.font = getFont(fontSize);
@@ -196,15 +197,14 @@ export const NetwarmingBlock = () => {
             // Применяем анимацию к радиусу
             const currentRadius = dynamicRadius * animationProgress;
             
-            // ФИКС: Градиент всегда точно по центру курсора
             // Создаем круговую область вокруг курсора
             ctx.beginPath();
             ctx.arc(currentMousePos.x, currentMousePos.y, currentRadius, 0, Math.PI * 2);
             ctx.closePath();
             ctx.clip();
 
-            // Рисуем текст с радиальным градиентом - центр градиента точно на курсоре
-            ctx.fillStyle = createHoverGradient(ctx, currentMousePos.x, currentMousePos.y, currentRadius);
+            // Рисуем текст с радиальным градиентом
+            ctx.fillStyle = createHoverGradient(ctx, currentMousePos.x, currentMousePos.y, dynamicRadius);
             ctx.fillText(text, textCenterX, textCenterY);
             
             ctx.restore();
@@ -245,7 +245,7 @@ export const NetwarmingBlock = () => {
         drawText();
     }, [targetMousePos, currentMousePos, drawText]);
 
-    // Обработчик движения мыши - ФИКС: используем точную позицию курсора
+    // Обработчик движения мыши
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -254,12 +254,10 @@ export const NetwarmingBlock = () => {
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
         
-        // ФИКС: Используем точную позицию курсора без смещения
         const newTargetPos = { x: mouseX, y: mouseY };
         setTargetMousePos(newTargetPos);
         handleMovementDetection(newTargetPos);
 
-        // Инициализируем текущую позицию если ее нет
         if (!currentMousePos) {
             setCurrentMousePos(newTargetPos);
         }
@@ -267,7 +265,6 @@ export const NetwarmingBlock = () => {
 
     // Обработчик входа мыши
     const handleMouseEnter = useCallback(() => {
-        // Плавное появление - увеличиваем прогресс анимации
         const startTime = Date.now();
         const animateIn = () => {
         const elapsed = Date.now() - startTime;
@@ -283,12 +280,10 @@ export const NetwarmingBlock = () => {
 
     // Обработчик выхода мыши
     const handleMouseLeave = useCallback(() => {
-        // Сбрасываем таймер при выходе
         if (movementTimerRef.current) {
         clearTimeout(movementTimerRef.current);
         }
         
-        // Плавное исчезновение
         const startTime = Date.now();
         const startProgress = animationProgress;
         
@@ -309,37 +304,105 @@ export const NetwarmingBlock = () => {
         animateOut();
     }, [animationProgress]);
 
+    // Touch обработчики для мобильных устройств
+    const handleTouchStart = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        e.preventDefault();
+        setIsTouching(true);
+        
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        const touchX = touch.clientX - rect.left;
+        const touchY = touch.clientY - rect.top;
+        
+        const newTargetPos = { x: touchX, y: touchY };
+        setTargetMousePos(newTargetPos);
+        setCurrentMousePos(newTargetPos);
+        
+        // Плавное появление при touch
+        const startTime = Date.now();
+        const animateIn = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / 200, 1); // Быстрее на мобильных
+            setAnimationProgress(progress);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animateIn);
+            }
+        };
+        animateIn();
+    }, []);
+
+    const handleTouchMove = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        e.preventDefault();
+        
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        const touchX = touch.clientX - rect.left;
+        const touchY = touch.clientY - rect.top;
+        
+        const newTargetPos = { x: touchX, y: touchY };
+        setTargetMousePos(newTargetPos);
+        handleMovementDetection(newTargetPos);
+    }, [handleMovementDetection]);
+
+    const handleTouchEnd = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
+        e.preventDefault();
+        setIsTouching(false);
+        
+        // Плавное исчезновение при окончании touch
+        const startTime = Date.now();
+        const startProgress = animationProgress;
+        
+        const animateOut = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.max(startProgress - (elapsed / 200), 0); // Быстрее на мобильных
+            setAnimationProgress(progress);
+            
+            if (progress > 0) {
+                requestAnimationFrame(animateOut);
+            } else {
+                setTargetMousePos(null);
+                setCurrentMousePos(null);
+                lastMousePosRef.current = null;
+                isMovingRef.current = false;
+            }
+        };
+        animateOut();
+    }, [animationProgress]);
+
     // Инициализация и обработка ресайза
     useEffect(() => {
-        if (!isMobile) {
+        updateDimensions();
+        
+        const handleResize = () => {
             updateDimensions();
-            
-            const handleResize = () => {
-                updateDimensions();
-            };
+        };
 
-            window.addEventListener('resize', handleResize);
-            return () => window.removeEventListener('resize', handleResize);
-        }
-    }, [updateDimensions, isMobile]);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [updateDimensions]);
 
     // Запуск анимации
     useEffect(() => {
-        if (!isMobile) {
-            const animationLoop = () => {
-                animate();
-                animationRef.current = requestAnimationFrame(animationLoop);
-            };
-            
+        const animationLoop = () => {
+            animate();
             animationRef.current = requestAnimationFrame(animationLoop);
-            
-            return () => {
-                if (animationRef.current) {
-                    cancelAnimationFrame(animationRef.current);
-                }
-            };
-        }
-    }, [animate, isMobile]);
+        };
+        
+        animationRef.current = requestAnimationFrame(animationLoop);
+        
+        return () => {
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
+            }
+        };
+    }, [animate]);
 
     // Очистка таймера при размонтировании
     useEffect(() => {
@@ -355,37 +418,45 @@ export const NetwarmingBlock = () => {
 
     // Отрисовка при изменении размеров
     useEffect(() => {
-        if (!isMobile) {
-            if (dimensions.width > 0 && dimensions.height > 0) {
+        if (dimensions.width > 0 && dimensions.height > 0) {
             const canvas = canvasRef.current;
-                if (canvas) {
-                    canvas.width = dimensions.width;
-                    canvas.height = dimensions.height;
-                    drawText();
-                }
+            if (canvas) {
+                canvas.width = dimensions.width;
+                canvas.height = dimensions.height;
+                drawText();
             }
         }
-    }, [dimensions.height, dimensions.width, drawText, isMobile]);
+    }, [dimensions.height, dimensions.width, drawText]);
 
     return (
         <div ref={containerRef} className={`netwarming-block-wrapper ${isMobile ? 'netwarming-block-wrapper_mobile' : ''}`} id='netwarming-block'>
-            {isMobile && (
-                <Fade direction='up' triggerOnce>
-                    <Image
-                        src={Netwarming}
-                        alt='netwarming'
+            {isMobile ? (
+                <>
+                    {/* Для мобильных - canvas с touch событиями */}
+                    <canvas
+                        ref={canvasRef}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                        onMouseMove={handleMouseMove}
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                        id="netwarming-block-text"
+                        style={{ 
+                            touchAction: 'none', // Отключаем стандартное поведение браузера для touch
+                            cursor: 'pointer'
+                        }}
                     />
-                </Fade>
-            )}
-
-            {!isMobile && (
+                </>
+            ) : (
+                // Для десктопа - обычный canvas
                 <canvas
                     ref={canvasRef}
                     onMouseMove={handleMouseMove}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     id="netwarming-block-text"
-                ></canvas>
+                />
             )}
         </div>
     );
