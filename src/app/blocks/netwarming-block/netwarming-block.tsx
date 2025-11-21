@@ -6,12 +6,22 @@ import Image from 'next/image';
 import { FONT_IBM_PLEX_SERIF } from '@/app/fonts';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+interface MousePosition {
+  x: number;
+  y: number;
+}
+
 export const NetwarmingBlock = () => {
     const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
 
+    const getFont = useCallback((fontSize: number) => `italic bolder ${fontSize}px ${FONT_IBM_PLEX_SERIF.style.fontFamily}`, []);
+
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const animationRef = useRef<number>();
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const [mousePos, setMousePos] = useState<MousePosition | null>(null);
+    const [animationProgress, setAnimationProgress] = useState(0); // 0 to 1
 
     // Функция для расчета оптимального размера шрифта
     const calculateFontSize = useCallback((ctx: CanvasRenderingContext2D, text: string, maxWidth: number): number => {
@@ -20,14 +30,14 @@ export const NetwarmingBlock = () => {
         let textWidth = 0;
         
         // Бинарный поиск оптимального размера
-        ctx.font = `italic bolder ${fontSize}px ${FONT_IBM_PLEX_SERIF.style.fontFamily}`;
+        ctx.font = getFont(fontSize);
         textWidth = ctx.measureText(text).width;
         
         if (textWidth <= maxWidth) {
             // Если текст уже помещается, увеличиваем до максимума
             while (textWidth <= maxWidth) {
                 fontSize += step;
-                ctx.font = `italic bolder ${fontSize}px ${FONT_IBM_PLEX_SERIF.style.fontFamily}`;
+                ctx.font = getFont(fontSize);
                 textWidth = ctx.measureText(text).width;
             }
             return fontSize - step;
@@ -35,12 +45,12 @@ export const NetwarmingBlock = () => {
             // Если не помещается, уменьшаем
             while (textWidth > maxWidth && fontSize > 10) {
                 fontSize -= step;
-                ctx.font = `italic bolder ${fontSize}px ${FONT_IBM_PLEX_SERIF.style.fontFamily}`;
+                ctx.font = getFont(fontSize);
                 textWidth = ctx.measureText(text).width;
             }
             return fontSize;
         }
-    }, []);
+    }, [getFont]);
 
     // Функция для обновления размеров canvas
     const updateDimensions = useCallback(() => {
@@ -77,7 +87,7 @@ export const NetwarmingBlock = () => {
     }, []);
 
     // Основная функция отрисовки текста
-    const drawText = useCallback((mouseX: number | null, mouseY: number | null) => {
+    const drawText = useCallback(() => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
         
@@ -86,50 +96,51 @@ export const NetwarmingBlock = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         const text = "Netwarming";
-        // Рассчитываем оптимальный размер шрифта
         const maxTextWidth = canvas.width - 150;
         const fontSize = calculateFontSize(ctx, text, maxTextWidth);
         
-        // Устанавливаем стиль текста
-        ctx.font = `italic bolder ${fontSize}px ${FONT_IBM_PLEX_SERIF.style.fontFamily}`;
+        ctx.font = getFont(fontSize);
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
-        // Позиция текста по центру
         const x = canvas.width / 2;
         const y = canvas.height / 2;
         
         // Измеряем текст для расчета радиуса
         const metrics = ctx.measureText(text);
         const textWidth = metrics.width;
-        const radius = textWidth * 0.2;
-
-        if (mouseX !== null && mouseY !== null) {
-            // Рисуем основной градиентный текст
-            ctx.fillStyle = createBaseGradient(ctx, canvas.width);
-            ctx.fillText(text, x, y);
-            
-            // Сохраняем состояние canvas
+        const fullRadius = textWidth * 0.2;
+        
+        // Рисуем основной градиентный текст
+        ctx.fillStyle = createBaseGradient(ctx, canvas.width);
+        ctx.fillText(text, x, y);
+        
+        // Если есть позиция мыши и анимация активна, рисуем градиент
+        if (mousePos && animationProgress > 0) {
             ctx.save();
+        
+            // Применяем анимацию к радиусу
+            const currentRadius = fullRadius * animationProgress;
             
-            // Создаем круговую область вокруг курсора с динамическим радиусом
+            // Создаем круговую область вокруг курсора
             ctx.beginPath();
-            ctx.arc(mouseX, mouseY, radius, 0, Math.PI * 2);
+            ctx.arc(mousePos.x, mousePos.y, currentRadius, 0, Math.PI * 2);
             ctx.closePath();
             ctx.clip();
             
-            // Рисуем текст с радиальным градиентом только в области клипа
-            ctx.fillStyle = createHoverGradient(ctx, mouseX, mouseY, radius);
+            // Рисуем текст с радиальным градиентом
+            ctx.fillStyle = createHoverGradient(ctx, mousePos.x, mousePos.y, fullRadius);
             ctx.fillText(text, x, y);
             
-            // Восстанавливаем состояние canvas
             ctx.restore();
-        } else {
-            // Рисуем только основной градиентный текст когда курсор не над canvas
-            ctx.fillStyle = createBaseGradient(ctx, canvas.width);
-            ctx.fillText(text, x, y);
         }
-    }, [calculateFontSize, createBaseGradient, createHoverGradient]);
+    }, [calculateFontSize, getFont, createBaseGradient, mousePos, animationProgress, createHoverGradient]);
+
+    // Анимационный цикл
+    const animate = useCallback(() => {
+        drawText();
+        animationRef.current = requestAnimationFrame(drawText);
+    }, [drawText]);
 
     // Обработчик движения мыши
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -140,13 +151,44 @@ export const NetwarmingBlock = () => {
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
         
-        drawText(mouseX, mouseY);
-    }, [drawText]);
+        setMousePos({ x: mouseX, y: mouseY });
+    }, []);
+
+    // Обработчик входа мыши
+    const handleMouseEnter = useCallback(() => {
+        // Плавное появление - увеличиваем прогресс анимации
+        const startTime = Date.now();
+        const animateIn = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / 300, 1); // 300ms анимация
+            setAnimationProgress(progress);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animateIn);
+            }
+        };
+        animateIn();
+    }, []);
 
     // Обработчик выхода мыши
     const handleMouseLeave = useCallback(() => {
-        drawText(null, null);
-    }, [drawText]);
+        // Плавное исчезновение - уменьшаем прогресс анимации
+        const startTime = Date.now();
+        const startProgress = animationProgress;
+        
+        const animateOut = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.max(startProgress - (elapsed / 300), 0); // 300ms анимация
+            setAnimationProgress(progress);
+            
+            if (progress > 0) {
+                requestAnimationFrame(animateOut);
+            } else {
+                setMousePos(null);
+            }
+        };
+        animateOut();
+    }, [animationProgress]);
 
     // Инициализация и обработка ресайза
     useEffect(() => {
@@ -154,28 +196,39 @@ export const NetwarmingBlock = () => {
             updateDimensions();
             
             const handleResize = () => {
-                updateDimensions();
-                drawText(null, null);
+            updateDimensions();
             };
 
             window.addEventListener('resize', handleResize);
-
             return () => window.removeEventListener('resize', handleResize);
         }
     }, [updateDimensions, drawText, isMobile]);
 
+    // Запуск анимации
+    useEffect(() => {
+        if (!isMobile) {
+            animationRef.current = requestAnimationFrame(animate);
+            return () => {
+                if (animationRef.current) {
+                    cancelAnimationFrame(animationRef.current);
+                }
+            };
+        }
+    }, [animate, isMobile]);
+
     // Отрисовка при изменении размеров
     useEffect(() => {
         if (!isMobile) {
+            if (dimensions.width > 0 && dimensions.height > 0) {
             const canvas = canvasRef.current;
-
-            if (canvas && dimensions.width > 0 && dimensions.height > 0) {
-                canvas.width = dimensions.width;
-                canvas.height = dimensions.height;
-                drawText(null, null);
+                if (canvas) {
+                    canvas.width = dimensions.width;
+                    canvas.height = dimensions.height;
+                    drawText();
+                }
             }
         }
-    }, [dimensions, drawText, isMobile]);
+    }, [dimensions.height, dimensions.width, drawText, isMobile]);
 
     return (
         <div ref={containerRef} className={`netwarming-block-wrapper ${isMobile ? 'netwarming-block-wrapper_mobile' : ''}`} id='netwarming-block'>
@@ -192,6 +245,7 @@ export const NetwarmingBlock = () => {
                 <canvas
                     ref={canvasRef}
                     onMouseMove={handleMouseMove}
+                    onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     id="netwarming-block-text"
                 ></canvas>
