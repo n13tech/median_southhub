@@ -86,6 +86,33 @@ export const NetwarmingBlock = () => {
         return gradient;
     }, []);
 
+      // Расчет динамического радиуса в зависимости от позиции курсора
+    const calculateDynamicRadius = useCallback((
+        mouseX: number, 
+        textCenterX: number, 
+        textWidth: number
+    ): number => {
+        // Расстояние от курсора до центра текста
+        const distanceFromCenter = Math.abs(mouseX - textCenterX);
+        
+        // Максимальное расстояние от центра до края текста
+        const maxDistance = textWidth / 2;
+        
+        // Нормализованное расстояние (0 в центре, 1 на краю)
+        const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1);
+        
+        // Базовые радиусы
+        const centerRadius = textWidth * 0.2;  // 20% в центре
+        const edgeRadius = textWidth * 0.1;    // 10% на краях
+        
+        // Интерполяция радиуса в зависимости от расстояния от центра
+        // Используем квадратичную функцию для более плавного изменения
+        const progress = 1 - Math.pow(normalizedDistance, 0.7);
+        const dynamicRadius = edgeRadius + (centerRadius - edgeRadius) * progress;
+        
+        return dynamicRadius;
+    }, []);
+
     // Основная функция отрисовки текста
     const drawText = useCallback(() => {
         const canvas = canvasRef.current;
@@ -103,38 +130,40 @@ export const NetwarmingBlock = () => {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
-        const x = canvas.width / 2;
-        const y = canvas.height / 2;
-        
+        const textCenterX = canvas.width / 2;
+        const textCenterY = canvas.height / 2;
+            
         // Измеряем текст для расчета радиуса
         const metrics = ctx.measureText(text);
         const textWidth = metrics.width;
-        const fullRadius = textWidth * 0.2;
         
         // Рисуем основной градиентный текст
         ctx.fillStyle = createBaseGradient(ctx, canvas.width);
-        ctx.fillText(text, x, y);
+        ctx.fillText(text, textCenterX, textCenterY);
         
         // Если есть позиция мыши и анимация активна, рисуем градиент
         if (mousePos && animationProgress > 0) {
             ctx.save();
+
+            // Рассчитываем динамический радиус
+            const dynamicRadius = calculateDynamicRadius(mousePos.x, textCenterX, textWidth);
         
             // Применяем анимацию к радиусу
-            const currentRadius = fullRadius * animationProgress;
+            const currentRadius = dynamicRadius * animationProgress;
             
             // Создаем круговую область вокруг курсора
             ctx.beginPath();
             ctx.arc(mousePos.x, mousePos.y, currentRadius, 0, Math.PI * 2);
             ctx.closePath();
             ctx.clip();
-            
+
             // Рисуем текст с радиальным градиентом
-            ctx.fillStyle = createHoverGradient(ctx, mousePos.x, mousePos.y, fullRadius);
-            ctx.fillText(text, x, y);
+            ctx.fillStyle = createHoverGradient(ctx, mousePos.x, mousePos.y, dynamicRadius);
+            ctx.fillText(text, textCenterX, textCenterY);
             
             ctx.restore();
         }
-    }, [calculateFontSize, getFont, createBaseGradient, mousePos, animationProgress, createHoverGradient]);
+    }, [calculateFontSize, getFont, createBaseGradient, mousePos, animationProgress, calculateDynamicRadius, createHoverGradient]);
 
     // Анимационный цикл
     const animate = useCallback(() => {
@@ -160,7 +189,7 @@ export const NetwarmingBlock = () => {
         const startTime = Date.now();
         const animateIn = () => {
             const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / 300, 1); // 300ms анимация
+            const progress = Math.min(elapsed / 200, 1); // 300ms анимация
             setAnimationProgress(progress);
             
             if (progress < 1) {
@@ -178,7 +207,7 @@ export const NetwarmingBlock = () => {
         
         const animateOut = () => {
             const elapsed = Date.now() - startTime;
-            const progress = Math.max(startProgress - (elapsed / 300), 0); // 300ms анимация
+            const progress = Math.max(startProgress - (elapsed / 200), 0); // 300ms анимация
             setAnimationProgress(progress);
             
             if (progress > 0) {
@@ -196,7 +225,7 @@ export const NetwarmingBlock = () => {
             updateDimensions();
             
             const handleResize = () => {
-            updateDimensions();
+                updateDimensions();
             };
 
             window.addEventListener('resize', handleResize);
