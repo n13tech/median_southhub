@@ -4,13 +4,8 @@
     flex-direction: column;
     width: 100%;
     height: 370px;
-    padding: 0 100px;
     max-width: 1920px;
     margin: 0 auto;
-
-    @media screen and (max-width: 1280px) {
-        padding: 0 40px;
-    }
 
     @media screen and (max-width: 1024px) {
         padding: 0 16px;

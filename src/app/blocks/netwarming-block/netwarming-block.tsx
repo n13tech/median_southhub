@@ -109,7 +109,7 @@ export const NetwarmingBlock = () => {
         
         // Базовые радиусы
         const centerRadius = textWidth * 0.2;  // 20% в центре
-        const edgeRadius = textWidth * 0.1;    // 10% на краях
+        const edgeRadius = textWidth * 0.075;    // 7.5% на краях
         
         // Интерполяция радиуса в зависимости от расстояния от центра
         // Используем квадратичную функцию для более плавного изменения
@@ -168,7 +168,7 @@ export const NetwarmingBlock = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         const text = "Netwarming";
-        const maxTextWidth = canvas.width - 150;
+        const maxTextWidth = canvas.width - 100;
         const fontSize = calculateFontSize(ctx, text, maxTextWidth);
         
         ctx.font = getFont(fontSize);
@@ -196,21 +196,22 @@ export const NetwarmingBlock = () => {
             // Применяем анимацию к радиусу
             const currentRadius = dynamicRadius * animationProgress;
             
+            // ФИКС: Градиент всегда точно по центру курсора
             // Создаем круговую область вокруг курсора
             ctx.beginPath();
             ctx.arc(currentMousePos.x, currentMousePos.y, currentRadius, 0, Math.PI * 2);
             ctx.closePath();
             ctx.clip();
 
-            // Рисуем текст с радиальным градиентом
-            ctx.fillStyle = createHoverGradient(ctx, currentMousePos.x, currentMousePos.y, dynamicRadius);
+            // Рисуем текст с радиальным градиентом - центр градиента точно на курсоре
+            ctx.fillStyle = createHoverGradient(ctx, currentMousePos.x, currentMousePos.y, currentRadius);
             ctx.fillText(text, textCenterX, textCenterY);
             
             ctx.restore();
         }
     }, [calculateFontSize, getFont, createBaseGradient, currentMousePos, animationProgress, calculateDynamicRadius, createHoverGradient]);
 
-    // Функция анимации (не useCallback)
+    // Функция анимации
     const animate = useCallback(() => {
         if (targetMousePos && currentMousePos) {
             let newX: number, newY: number;
@@ -223,7 +224,7 @@ export const NetwarmingBlock = () => {
                 newY = smoothLerp(currentMousePos.y, targetMousePos.y, smooth);
             } else {
                 // Когда курсор остановился - быстрое точное позиционирование
-                newX = lerp(currentMousePos.x, targetMousePos.x, center); // Увеличили для быстрого центрирования
+                newX = lerp(currentMousePos.x, targetMousePos.x, center);
                 newY = lerp(currentMousePos.y, targetMousePos.y, center);
             }
             
@@ -244,7 +245,7 @@ export const NetwarmingBlock = () => {
         drawText();
     }, [targetMousePos, currentMousePos, drawText]);
 
-    // Обработчик движения мыши - исправляем смещение
+    // Обработчик движения мыши - ФИКС: используем точную позицию курсора
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -253,7 +254,7 @@ export const NetwarmingBlock = () => {
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
         
-        // Используем точную позицию курсора без смещения
+        // ФИКС: Используем точную позицию курсора без смещения
         const newTargetPos = { x: mouseX, y: mouseY };
         setTargetMousePos(newTargetPos);
         handleMovementDetection(newTargetPos);
