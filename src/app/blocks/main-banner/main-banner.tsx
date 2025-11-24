@@ -14,7 +14,6 @@ export const MainBanner = () => {
     const contentRef = useRef<HTMLDivElement>(null);
     const pinRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [imagesLoaded, setImagesLoaded] = useState(false);
     const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(100).fill(null));
     const [windowHeight, setWindowHeight] = useState(0);
     const loadedFramesRef = useRef<Set<number>>(new Set());
@@ -81,7 +80,7 @@ export const MainBanner = () => {
             if (loadingQueueRef.current.length > 0) {
                 setTimeout(() => {
                     processLoadingQueueRef.current?.();
-                }, 50);
+                }, 30); // Уменьшаем задержку для более быстрой загрузки
             }
         };
 
@@ -105,32 +104,16 @@ export const MainBanner = () => {
         }
     }, []);
 
-    // Ленивая загрузка кадров на основе текущей позиции
-    const lazyLoadFramesBasedOnPosition = useCallback((currentFrame: number) => {
-        const framesToLoad: number[] = [];
+    // Фоновая загрузка всех оставшихся кадров
+    const loadAllRemainingFrames = useCallback(() => {
+        const allFrames = Array.from({ length: 100 }, (_, i) => i);
+        const remainingFrames = allFrames.filter(frame => 
+            !loadedFramesRef.current.has(frame)
+        );
         
-        // Загружаем текущую пачку: текущий кадр и соседние
-        const startFrame = Math.max(0, currentFrame - 3);
-        const endFrame = Math.min(99, currentFrame + 3);
-        
-        for (let i = startFrame; i <= endFrame; i++) {
-            if (!loadedFramesRef.current.has(i)) {
-                framesToLoad.push(i);
-            }
-        }
-        
-        // Добавляем предварительную загрузку следующей пачки
-        const lookAheadStart = Math.max(0, currentFrame + 4);
-        const lookAheadEnd = Math.min(99, currentFrame + 13);
-        
-        for (let i = lookAheadStart; i <= lookAheadEnd; i++) {
-            if (!loadedFramesRef.current.has(i)) {
-                framesToLoad.push(i);
-            }
-        }
-        
-        if (framesToLoad.length > 0) {
-            queueFramesForLoading(framesToLoad);
+        if (remainingFrames.length > 0) {
+            console.log(`Starting background load of ${remainingFrames.length} remaining frames`);
+            queueFramesForLoading(remainingFrames);
         }
     }, [queueFramesForLoading]);
 
@@ -146,18 +129,15 @@ export const MainBanner = () => {
         return -1;
     }, []);
 
-    // Предзагрузка первой пачки критических кадров
-    const preloadFirstBatch = useCallback(async () => {
-        // Первая пачка: самые важные кадры
-        const firstBatch = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25];
-        await loadFrameBatch(firstBatch);
+    // Предзагрузка первой пачки критических кадров и запуск фоновой загрузки
+    const preloadCriticalAndStartBackground = useCallback(async () => {
+        // Первая пачка: самые важные кадры для мгновенного отображения
+        const criticalFrames = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 99];
+        await loadFrameBatch(criticalFrames);
         
-        // Вторая пачка: равномерно распределенные кадры
-        const secondBatch = [30, 40, 50, 60, 70, 80, 90, 95, 98, 99];
-        queueFramesForLoading(secondBatch);
-        
-        setImagesLoaded(true);
-    }, [loadFrameBatch, queueFramesForLoading]);
+        // Немедленно запускаем фоновую загрузку всех оставшихся кадров
+        loadAllRemainingFrames();
+    }, [loadFrameBatch, loadAllRemainingFrames]);
 
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
@@ -214,9 +194,6 @@ export const MainBanner = () => {
                         totalFrames - 1
                     );
                     
-                    // Запускаем ленивую загрузку для текущей позиции
-                    lazyLoadFramesBasedOnPosition(frameIndex);
-                    
                     const currentImage = imagesRef.current[frameIndex];
                     if (currentImage && currentImage.complete) {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -249,7 +226,8 @@ export const MainBanner = () => {
             ScrollTrigger.refresh();
         };
 
-        preloadFirstBatch().then(() => {
+        // Запускаем предзагрузку и фоновую загрузку
+        preloadCriticalAndStartBackground().then(() => {
             initScrollAnimation();
         });
 
@@ -261,9 +239,8 @@ export const MainBanner = () => {
         };
     }, [
         windowHeight, 
-        lazyLoadFramesBasedOnPosition, 
         findNearestLoadedFrame,
-        preloadFirstBatch
+        preloadCriticalAndStartBackground
     ]);
 
     return (
