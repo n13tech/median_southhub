@@ -1,22 +1,68 @@
 .main-banner-wrapper {
     position: relative;
-    max-width: 1920px;
-    margin: 0 auto;
-    /* height: 100vh;
-    min-height: 739px; */
-    padding: 158px 100px 80px;
-    /* display: flex;
+    display: flex;
     flex-direction: column;
-    justify-content: center; */
+    justify-content: center;
+    max-width: 1920px;
+    min-height: 739px;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 158px 100px;
 
     @media screen and (max-width: 1280px) {
-        padding: 158px 40px 80px;
+        padding: 158px 40px;
     }
 
     @media screen and (max-width: 1024px) {
-        padding: 125px 16px 0;
+        padding: 125px 16px;
     }
 }
+
+/* Скрыть стандартные элементы управления видео */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+.video-wrapper {
+    position: absolute;
+    height: 100vh;
+    max-width: 1920px;
+    width: 100%;
+    margin: 0 auto;
+
+    @media screen and (min-width: 1920px) {
+        left: calc(50% - 980px);
+    }
+
+    @media screen and (max-width: 600px) {
+        left: 100px;
+        width: calc(100vw + 100px);
+    }
+
+    @media screen and (max-width: 400px) {
+        left: 100px;
+        width: calc(100vw + 180px);
+    }
+}
+
+.home-video {
+    right: 0;
+    top: 50%;
+    transform: translateY(-55%);
+    object-fit: cover;
+    height: 849px;
+    position: absolute;
+    z-index: -1;
+
+    @media screen and (max-width: 1280px) {
+      height: 739px;
+    }
+
+    @media screen and (max-width: 1024px) {
+      height: 572px;
+    }
+}
+
 
 .main-banner-title {
     font-weight: 500;
@@ -40,11 +86,8 @@
 }
 
 .main-banner-description {
-    position: absolute;
-    top: 570px;
-    left: 610px;
-    /* margin: -115px 415px;
-    height: 0; */
+    margin: -125px 520px;
+    height: 0;
     width: 410px;
     display: flex;
     font-weight: 500;
