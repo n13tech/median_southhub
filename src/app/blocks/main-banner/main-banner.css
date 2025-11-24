@@ -1,37 +1,41 @@
 .main-banner-wrapper {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     max-width: 1920px;
-    min-height: 739px;
+    min-height: 100vh;
     height: 100vh;
     margin: 0 auto;
-    padding: 158px 100px;
+    overflow: hidden;
+    min-height: 200vh;
 
     @media screen and (max-width: 1280px) {
-        padding: 158px 40px;
+        min-height: 180vh;
     }
 
     @media screen and (max-width: 1024px) {
-        padding: 125px 16px;
+        min-height: 160vh;
     }
 }
 
-/* Скрыть стандартные элементы управления видео */
-video::-webkit-media-controls {
-  display: none !important;
+.pin-container {
+    position: relative;
+    height: 100vh;
+    width: 100%;
 }
 
 .video-wrapper {
     position: absolute;
+    top: 0;
+    left: 0;
     height: 100vh;
-    max-width: 1920px;
     width: 100%;
+    max-width: 1920px;
     margin: 0 auto;
+    z-index: 1;
+    pointer-events: none;
 
-    @media screen and (min-width: 1920px) {
-        left: calc(50% - 980px);
+    @media screen and (min-width: 1921px) {
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     @media screen and (max-width: 600px) {
@@ -45,14 +49,36 @@ video::-webkit-media-controls {
     }
 }
 
+.main-banner-content {
+    position: relative;
+    z-index: 10;
+    width: auto;
+    margin-left: 100px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    @media screen and (max-width: 1280px) {
+        margin-left: 40px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        margin-left: 16px;
+        padding-right: 16px;
+    }
+}
+
 .home-video {
-    right: 0;
+    position: absolute;
     top: 50%;
-    transform: translateY(-55%);
+    right: 0;
+    transform: translateY(-50%);
     object-fit: cover;
     height: 849px;
-    position: absolute;
-    z-index: -1;
+    width: auto;
+    pointer-events: none;
 
     @media screen and (max-width: 1280px) {
       height: 739px;
@@ -63,6 +89,9 @@ video::-webkit-media-controls {
     }
 }
 
+video::-webkit-media-controls {
+  display: none !important;
+}
 
 .main-banner-title {
     font-weight: 500;
@@ -72,45 +101,51 @@ video::-webkit-media-controls {
     color: #111111;
     white-space: pre-wrap;
     margin-bottom: 56px;
+    margin-top: 0;
 
     @media screen and (max-width: 1280px) {
         font-size: 78px;
         line-height: 125%;
+        margin-bottom: 40px;
     }
 
     @media screen and (max-width: 1024px) {
-        width: 300px;
         font-size: 48px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+        line-height: 110%;
+    }
+
+    @media screen and (max-width: 768px) {
+        font-size: 36px;
     }
 }
 
 .main-banner-description {
+    width: 410px;
     margin: -125px 520px;
     height: 0;
-    width: 410px;
-    display: flex;
     font-weight: 500;
     font-size: 24px;
     line-height: 125%;
     color: #111111;
     white-space: pre-wrap;
+    margin-bottom: 56px;
 
     @media screen and (max-width: 1280px) {
-        top: 485px;
-        left: 460px;
+        margin: -100px 420px;
     }
 
     @media screen and (max-width: 1024px) {
-        position: static;
+        height: auto;
+        margin: 0 0 32px;
         width: 80%;
-        font-size: 16px;
+        font-size: 18px;
         white-space: normal;
-        margin-bottom: 42px;
     }
 
     @media screen and (max-width: 768px) {
-        width: 100%;
+        width: 250px;
+        font-size: 16px;
     }
 }
 
@@ -134,13 +169,16 @@ video::-webkit-media-controls {
         height: 55px;
         font-size: 20px;
         line-height: 20px;
+        padding: 0 28px;
     }
 
     @media screen and (max-width: 1024px) {
         font-size: 18px;
+        padding: 0 24px;
+        height: 50px;
     }
 
     @media screen and (max-width: 768px) {
-        width: 100%;
+        width: auto;
     }
 }
