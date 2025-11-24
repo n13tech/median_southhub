@@ -40,7 +40,7 @@ export const MainBanner = () => {
                 }
 
                 const img = new Image();
-                img.src = `/main/AnimLettera_${frameIndex.toString().padStart(5, '0')}.png`;
+                img.src = `/main/AnimLettera_${frameIndex.toString().padStart(5, '0')}.webp`;
                 
                 img.onload = () => {
                     imagesRef.current[frameIndex] = img;

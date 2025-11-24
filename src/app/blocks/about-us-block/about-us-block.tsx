@@ -4,7 +4,7 @@ import { FONT_MONT_BOOK } from '../../fonts';
 import './about-us-block.css';
 import Image from 'next/image';
 
-import AboutUsImg from '../../../../public/about-us-img.jpg';
+import AboutUsImg from '../../../../public/about-us-img.webp';
 import MedianLogo from '../../../../public/median-logo.png';
 import { AboutUsBlockButton } from './about-us-block-button';
 import { NBSP } from '@/app/constants';

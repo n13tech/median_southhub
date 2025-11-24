@@ -2,11 +2,11 @@ import { Fade } from 'react-awesome-reveal';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 
-import Img1 from '../../../../public/carousel1.jpg';
-import Img2 from '../../../../public/carousel2.jpg';
-import Img3 from '../../../../public/carousel3.jpg';
-import Img4 from '../../../../public/carousel4.jpg';
-import Img5 from '../../../../public/carousel5.jpg';
+import Img1 from '../../../../public/carousel1.webp';
+import Img2 from '../../../../public/carousel2.webp';
+import Img3 from '../../../../public/carousel3.webp';
+import Img5 from '../../../../public/carousel5.webp';
+import Img6 from '../../../../public/carousel6.webp';
 
 import './carousel-block.css';
 import Image from 'next/image';
@@ -49,13 +49,13 @@ export const CarouselBlock = () => {
                         </div>,
                         <div data-value="4" key={4}>
                             <Image
-                                src={Img4}
+                                src={Img5}
                                 alt=''
                             />
                         </div>,
                         <div data-value="5" key={5}>
                             <Image
-                                src={Img5}
+                                src={Img6}
                                 alt=''
                             />
                         </div>
