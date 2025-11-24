@@ -2,35 +2,61 @@ import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
 import { NBSP } from '@/app/constants';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './main-banner.css';
 
 export const MainBanner = () => {
-    const videoRef = useRef<HTMLVideoElement>(null);
     const sectionRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const pinRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [imagesLoaded, setImagesLoaded] = useState(false);
+    const imagesRef = useRef<HTMLImageElement[]>([]);
+
+    const isTablet = typeof window !== undefined && window.innerWidth <= 1280 && window.innerWidth > 1024;
+    const isMobile = typeof window !== undefined && window.innerWidth <= 1024;
 
     useEffect(() => {
         // Регистрируем плагин ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        const video = videoRef.current;
         const section = sectionRef.current;
         const content = contentRef.current;
         const pin = pinRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext('2d');
         
-        if (!video || !section || !content || !pin) return;
+        if (!section || !content || !pin || !canvas || !ctx) return;
 
         let scrollTrigger: ScrollTrigger | null = null;
 
+        // Загружаем последовательность из 100 изображений
+        const loadImages = async () => {
+            const totalFrames = 100;
+            const images: HTMLImageElement[] = [];
+
+            for (let i = 0; i < totalFrames; i++) {
+                const img = new Image();
+                // Используем Next.js public directory с правильными названиями файлов
+                img.src = `/main/AnimLettera_${i.toString().padStart(5, '0')}.png`;
+                
+                await new Promise((resolve) => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                });
+                
+                images.push(img);
+            }
+
+            imagesRef.current = images;
+            setImagesLoaded(true);
+        };
+
         const initScrollAnimation = () => {
-            // Устанавливаем видео в начало и приостанавливаем
-            video.currentTime = 0;
-            video.pause();
+            if (!imagesLoaded) return;
 
             // Сбрасываем все предыдущие ScrollTrigger для этой секции
             ScrollTrigger.getAll().forEach(trigger => {
@@ -39,36 +65,66 @@ export const MainBanner = () => {
                 }
             });
 
-            // Анимация для фиксации всего контента и управления видео
+            if (!isTablet && !isMobile) {
+                canvas.width = 849;
+                canvas.height = 849;
+            }
+
+            if (isTablet) {
+                canvas.width = 739;
+                canvas.height = 739;
+            }
+
+            if (isMobile) {
+                canvas.width = 572;
+                canvas.height = 572;
+            }
+
+            // Анимация для фиксации всего контента и управления кадрами
             scrollTrigger = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
-                end: 'bottom bottom',
+                end: '+=5000',
                 scrub: true,
-                pin: pin, // Фиксируем весь контейнер
+                pin,
                 pinSpacing: false,
                 onUpdate: (self) => {
-                    // Плавное управление временем видео от 0 до конца
-                    if (video.duration) {
-                        video.currentTime = video.duration * self.progress;
+                    // Вычисляем текущий кадр на основе прогресса
+                    const totalFrames = imagesRef.current.length;
+                    const frameIndex = Math.min(
+                        Math.floor(self.progress * totalFrames),
+                        totalFrames - 1
+                    );
+                    
+                    const currentImage = imagesRef.current[frameIndex];
+                    if (currentImage && currentImage.complete) {
+                        // Очищаем canvas и рисуем текущий кадр
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
                     }
                 },
                 onEnter: () => {
-                    // Убедимся, что видео в начале
-                    if (video.duration) {
-                        video.currentTime = 0;
+                    // Показываем первый кадр
+                    const firstImage = imagesRef.current[0];
+                    if (firstImage && firstImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(firstImage, 0, 0, canvas.width, canvas.height);
                     }
                 },
                 onLeave: () => {
-                    // Убедимся, что видео в конце
-                    if (video.duration) {
-                        video.currentTime = video.duration;
+                    // Показываем последний кадр
+                    const lastImage = imagesRef.current[imagesRef.current.length - 1];
+                    if (lastImage && lastImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(lastImage, 0, 0, canvas.width, canvas.height);
                     }
                 },
                 onLeaveBack: () => {
-                    // Убедимся, что видео в начале
-                    if (video.duration) {
-                        video.currentTime = 0;
+                    // Возвращаемся к первому кадру
+                    const firstImage = imagesRef.current[0];
+                    if (firstImage && firstImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(firstImage, 0, 0, canvas.width, canvas.height);
                     }
                 }
             });
@@ -77,17 +133,25 @@ export const MainBanner = () => {
             ScrollTrigger.refresh();
         };
 
-        const handleVideoReady = () => {
-            setTimeout(initScrollAnimation, 100);
+        initScrollAnimation();
+
+        // Предзагружаем первые 10 кадров для мгновенного отображения
+        const preloadFirstFrames = async () => {
+            const preloadPromises = [];
+            for (let i = 0; i < 10; i++) {
+                const img = new Image();
+                img.src = `/main/AnimLettera_${i.toString().padStart(5, '0')}.png`;
+                preloadPromises.push(new Promise((resolve) => {
+                    img.onload = resolve;
+                }));
+                imagesRef.current[i] = img;
+            }
+            await Promise.all(preloadPromises);
+            setImagesLoaded(true);
         };
 
-        if (video.readyState >= 1) {
-            // Метаданные уже загружены
-            handleVideoReady();
-        } else {
-            // Ждем загрузки метаданных
-            video.addEventListener('loadedmetadata', handleVideoReady);
-        }
+        preloadFirstFrames();
+        loadImages(); // Загружаем остальные кадры в фоне
 
         // Очистка при размонтировании
         return () => {
@@ -100,25 +164,22 @@ export const MainBanner = () => {
                 }
             });
         };
-    }, []);
+    }, [imagesLoaded, isMobile, isTablet]);
 
     return (
         <div className='main-banner-wrapper' id='main-banner' ref={sectionRef}>
-            <div className="pin-container" ref={pinRef}>
+            {/* Контейнер для фиксации всего контента */}
+            <div className="main-banner-pin-wrapper" ref={pinRef}>
+                {/* Canvas для отрисовки кадров */}
                 <div className="video-wrapper">
-                    <video
-                        ref={videoRef}
-                        muted 
-                        className='home-video' 
-                        id='home-video' 
-                        loop={false} 
-                        playsInline
-                        preload="metadata"
-                    >
-                        <source src={'/AnimLettera.mp4'} type="video/mp4" />
-                    </video>
+                    <canvas
+                        ref={canvasRef}
+                        className='home-video'
+                        id='home-video'
+                    />
                 </div>
 
+                {/* Текстовый контент */}
                 <div className="main-banner-content" ref={contentRef}>
                     <Fade triggerOnce>
                         <h1 className={`${FONT_MONT_BOOK.className} main-banner-title`}>
