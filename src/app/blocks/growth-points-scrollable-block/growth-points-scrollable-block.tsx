@@ -2,7 +2,7 @@
 
 import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
-import ClubMeet from '../../../../public/клубные встречи.webp'
+import ClubMeet from '../../../../public/встречи.webp'
 import YoutubeChanell from '../../../../public/ютуб.webp'
 import TelegramChanell from '../../../../public/тг.webp'
 import OnlineBroadcast from '../../../../public/эфир.webp'
