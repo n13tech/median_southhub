@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
@@ -15,12 +16,21 @@ export const MainBanner = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const imagesRef = useRef<HTMLImageElement[]>([]);
-
-    const isTablet = typeof window !== undefined && window.innerWidth <= 1280 && window.innerWidth > 1024;
-    const isMobile = typeof window !== undefined && window.innerWidth <= 1024;
+    const [windowHeight, setWindowHeight] = useState(0);
 
     useEffect(() => {
-        // Регистрируем плагин ScrollTrigger
+        // Устанавливаем высоту окна при монтировании
+        setWindowHeight(window.innerHeight);
+        
+        const handleResize = () => {
+            setWindowHeight(window.innerHeight);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
 
         const section = sectionRef.current;
@@ -29,18 +39,26 @@ export const MainBanner = () => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
         
-        if (!section || !content || !pin || !canvas || !ctx) return;
+        if (!section || !content || !pin || !canvas || !ctx || !windowHeight) return;
 
         let scrollTrigger: ScrollTrigger | null = null;
 
-        // Загружаем последовательность из 100 изображений
+        // Динамически рассчитываем высоту секции на основе высоты экрана
+        const calculateSectionHeight = () => {
+            const scrollDistance = 5000; // Фиксированное расстояние скролла в пикселях
+            return scrollDistance + windowHeight; // Высота экрана + расстояние скролла
+        };
+
+        // Устанавливаем высоту секции
+        const sectionHeight = calculateSectionHeight();
+        section.style.minHeight = `${sectionHeight}px`;
+
         const loadImages = async () => {
             const totalFrames = 100;
             const images: HTMLImageElement[] = [];
 
             for (let i = 0; i < totalFrames; i++) {
                 const img = new Image();
-                // Используем Next.js public directory с правильными названиями файлов
                 img.src = `/main/AnimLettera_${i.toString().padStart(5, '0')}.png`;
                 
                 await new Promise((resolve) => {
@@ -58,38 +76,35 @@ export const MainBanner = () => {
         const initScrollAnimation = () => {
             if (!imagesLoaded) return;
 
-            // Сбрасываем все предыдущие ScrollTrigger для этой секции
             ScrollTrigger.getAll().forEach(trigger => {
                 if (trigger.trigger === section) {
                     trigger.kill();
                 }
             });
 
+            // Адаптивные размеры canvas
+            const isTablet = window.innerWidth <= 1280 && window.innerWidth > 1024;
+            const isMobile = window.innerWidth <= 1024;
+
             if (!isTablet && !isMobile) {
                 canvas.width = 849;
                 canvas.height = 849;
-            }
-
-            if (isTablet) {
+            } else if (isTablet) {
                 canvas.width = 739;
                 canvas.height = 739;
-            }
-
-            if (isMobile) {
+            } else if (isMobile) {
                 canvas.width = 572;
                 canvas.height = 572;
             }
 
-            // Анимация для фиксации всего контента и управления кадрами
             scrollTrigger = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
-                end: '+=5000',
+                end: `+=${5000}`, // 5000px скролла
                 scrub: true,
-                pin,
+                pin: pin,
                 pinSpacing: false,
                 onUpdate: (self) => {
-                    // Вычисляем текущий кадр на основе прогресса
                     const totalFrames = imagesRef.current.length;
                     const frameIndex = Math.min(
                         Math.floor(self.progress * totalFrames),
@@ -98,13 +113,11 @@ export const MainBanner = () => {
                     
                     const currentImage = imagesRef.current[frameIndex];
                     if (currentImage && currentImage.complete) {
-                        // Очищаем canvas и рисуем текущий кадр
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
                     }
                 },
                 onEnter: () => {
-                    // Показываем первый кадр
                     const firstImage = imagesRef.current[0];
                     if (firstImage && firstImage.complete) {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -112,7 +125,6 @@ export const MainBanner = () => {
                     }
                 },
                 onLeave: () => {
-                    // Показываем последний кадр
                     const lastImage = imagesRef.current[imagesRef.current.length - 1];
                     if (lastImage && lastImage.complete) {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -120,7 +132,6 @@ export const MainBanner = () => {
                     }
                 },
                 onLeaveBack: () => {
-                    // Возвращаемся к первому кадру
                     const firstImage = imagesRef.current[0];
                     if (firstImage && firstImage.complete) {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -129,13 +140,11 @@ export const MainBanner = () => {
                 }
             });
 
-            // Обновляем после создания
             ScrollTrigger.refresh();
         };
 
         initScrollAnimation();
 
-        // Предзагружаем первые 10 кадров для мгновенного отображения
         const preloadFirstFrames = async () => {
             const preloadPromises = [];
             for (let i = 0; i < 10; i++) {
@@ -151,26 +160,19 @@ export const MainBanner = () => {
         };
 
         preloadFirstFrames();
-        loadImages(); // Загружаем остальные кадры в фоне
+        loadImages();
 
-        // Очистка при размонтировании
         return () => {
-            if (scrollTrigger) {
-                scrollTrigger.kill();
-            }
+            if (scrollTrigger) scrollTrigger.kill();
             ScrollTrigger.getAll().forEach(trigger => {
-                if (trigger.trigger === section) {
-                    trigger.kill();
-                }
+                if (trigger.trigger === section) trigger.kill();
             });
         };
-    }, [imagesLoaded, isMobile, isTablet]);
+    }, [imagesLoaded, windowHeight]);
 
     return (
         <div className='main-banner-wrapper' id='main-banner' ref={sectionRef}>
-            {/* Контейнер для фиксации всего контента */}
             <div className="main-banner-pin-wrapper" ref={pinRef}>
-                {/* Canvas для отрисовки кадров */}
                 <div className="video-wrapper">
                     <canvas
                         ref={canvasRef}
@@ -179,7 +181,6 @@ export const MainBanner = () => {
                     />
                 </div>
 
-                {/* Текстовый контент */}
                 <div className="main-banner-content" ref={contentRef}>
                     <Fade triggerOnce>
                         <h1 className={`${FONT_MONT_BOOK.className} main-banner-title`}>
