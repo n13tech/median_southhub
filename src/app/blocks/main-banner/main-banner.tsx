@@ -1,122 +1,184 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
 import { NBSP } from '@/app/constants';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './main-banner.css';
 
 export const MainBanner = () => {
-    const videoRef = useRef<HTMLVideoElement>(null);
     const sectionRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const pinRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [imagesLoaded, setImagesLoaded] = useState(false);
+    const imagesRef = useRef<HTMLImageElement[]>([]);
+    const [windowHeight, setWindowHeight] = useState(0);
 
     useEffect(() => {
-        // Регистрируем плагин ScrollTrigger
+        // Устанавливаем высоту окна при монтировании
+        setWindowHeight(window.innerHeight);
+        
+        const handleResize = () => {
+            setWindowHeight(window.innerHeight);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
 
-        const video = videoRef.current;
         const section = sectionRef.current;
         const content = contentRef.current;
         const pin = pinRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext('2d');
         
-        if (!video || !section || !content || !pin) return;
+        if (!section || !content || !pin || !canvas || !ctx || !windowHeight) return;
 
         let scrollTrigger: ScrollTrigger | null = null;
 
-        const initScrollAnimation = () => {
-            // Устанавливаем видео в начало и приостанавливаем
-            video.currentTime = 0;
-            video.pause();
+        // Динамически рассчитываем высоту секции на основе высоты экрана
+        const calculateSectionHeight = () => {
+            const scrollDistance = 5000; // Фиксированное расстояние скролла в пикселях
+            return scrollDistance + windowHeight; // Высота экрана + расстояние скролла
+        };
 
-            // Сбрасываем все предыдущие ScrollTrigger для этой секции
+        // Устанавливаем высоту секции
+        const sectionHeight = calculateSectionHeight();
+        section.style.minHeight = `${sectionHeight}px`;
+
+        const loadImages = async () => {
+            const totalFrames = 100;
+            const images: HTMLImageElement[] = [];
+
+            for (let i = 0; i < totalFrames; i++) {
+                const img = new Image();
+                img.src = `/main/AnimLettera_${i.toString().padStart(5, '0')}.png`;
+                
+                await new Promise((resolve) => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                });
+                
+                images.push(img);
+            }
+
+            imagesRef.current = images;
+            setImagesLoaded(true);
+        };
+
+        const initScrollAnimation = () => {
+            if (!imagesLoaded) return;
+
             ScrollTrigger.getAll().forEach(trigger => {
                 if (trigger.trigger === section) {
                     trigger.kill();
                 }
             });
 
-            // Анимация для фиксации всего контента и управления видео
+            // Адаптивные размеры canvas
+            const isTablet = window.innerWidth <= 1280 && window.innerWidth > 1024;
+            const isMobile = window.innerWidth <= 1024;
+
+            if (!isTablet && !isMobile) {
+                canvas.width = 849;
+                canvas.height = 849;
+            } else if (isTablet) {
+                canvas.width = 739;
+                canvas.height = 739;
+            } else if (isMobile) {
+                canvas.width = 572;
+                canvas.height = 572;
+            }
+
             scrollTrigger = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
-                end: 'bottom bottom',
+                end: `+=${5000}`, // 5000px скролла
                 scrub: true,
-                pin: pin, // Фиксируем весь контейнер
+                pin: pin,
                 pinSpacing: false,
                 onUpdate: (self) => {
-                    // Плавное управление временем видео от 0 до конца
-                    if (video.duration) {
-                        video.currentTime = video.duration * self.progress;
+                    const totalFrames = imagesRef.current.length;
+                    const frameIndex = Math.min(
+                        Math.floor(self.progress * totalFrames),
+                        totalFrames - 1
+                    );
+                    
+                    const currentImage = imagesRef.current[frameIndex];
+                    if (currentImage && currentImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
                     }
                 },
                 onEnter: () => {
-                    // Убедимся, что видео в начале
-                    if (video.duration) {
-                        video.currentTime = 0;
+                    const firstImage = imagesRef.current[0];
+                    if (firstImage && firstImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(firstImage, 0, 0, canvas.width, canvas.height);
                     }
                 },
                 onLeave: () => {
-                    // Убедимся, что видео в конце
-                    if (video.duration) {
-                        video.currentTime = video.duration;
+                    const lastImage = imagesRef.current[imagesRef.current.length - 1];
+                    if (lastImage && lastImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(lastImage, 0, 0, canvas.width, canvas.height);
                     }
                 },
                 onLeaveBack: () => {
-                    // Убедимся, что видео в начале
-                    if (video.duration) {
-                        video.currentTime = 0;
+                    const firstImage = imagesRef.current[0];
+                    if (firstImage && firstImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(firstImage, 0, 0, canvas.width, canvas.height);
                     }
                 }
             });
 
-            // Обновляем после создания
             ScrollTrigger.refresh();
         };
 
-        const handleVideoReady = () => {
-            setTimeout(initScrollAnimation, 100);
+        initScrollAnimation();
+
+        const preloadFirstFrames = async () => {
+            const preloadPromises = [];
+            for (let i = 0; i < 10; i++) {
+                const img = new Image();
+                img.src = `/main/AnimLettera_${i.toString().padStart(5, '0')}.png`;
+                preloadPromises.push(new Promise((resolve) => {
+                    img.onload = resolve;
+                }));
+                imagesRef.current[i] = img;
+            }
+            await Promise.all(preloadPromises);
+            setImagesLoaded(true);
         };
 
-        if (video.readyState >= 1) {
-            // Метаданные уже загружены
-            handleVideoReady();
-        } else {
-            // Ждем загрузки метаданных
-            video.addEventListener('loadedmetadata', handleVideoReady);
-        }
+        preloadFirstFrames();
+        loadImages();
 
-        // Очистка при размонтировании
         return () => {
-            if (scrollTrigger) {
-                scrollTrigger.kill();
-            }
+            if (scrollTrigger) scrollTrigger.kill();
             ScrollTrigger.getAll().forEach(trigger => {
-                if (trigger.trigger === section) {
-                    trigger.kill();
-                }
+                if (trigger.trigger === section) trigger.kill();
             });
         };
-    }, []);
+    }, [imagesLoaded, windowHeight]);
 
     return (
         <div className='main-banner-wrapper' id='main-banner' ref={sectionRef}>
-            <div className="pin-container" ref={pinRef}>
+            <div className="main-banner-pin-wrapper" ref={pinRef}>
                 <div className="video-wrapper">
-                    <video
-                        ref={videoRef}
-                        muted 
-                        className='home-video' 
-                        id='home-video' 
-                        loop={false} 
-                        playsInline
-                        preload="metadata"
-                    >
-                        <source src={'/AnimLettera.mp4'} type="video/mp4" />
-                    </video>
+                    <canvas
+                        ref={canvasRef}
+                        className='home-video'
+                        id='home-video'
+                    />
                 </div>
 
                 <div className="main-banner-content" ref={contentRef}>

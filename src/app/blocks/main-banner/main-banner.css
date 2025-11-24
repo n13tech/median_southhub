@@ -1,3 +1,4 @@
+/* main-banner.css */
 .main-banner-wrapper {
     position: relative;
     max-width: 1920px;
@@ -5,18 +6,21 @@
     height: 100vh;
     margin: 0 auto;
     overflow: hidden;
-    min-height: 200vh;
+    padding: 0 100px;
+
+    /* Высота будет устанавливаться динамически через JS */
+    /* min-height удаляем из CSS */
 
     @media screen and (max-width: 1280px) {
-        min-height: 180vh;
+        padding: 0 40px;
     }
 
     @media screen and (max-width: 1024px) {
-        min-height: 160vh;
+        padding: 0 16px;
     }
 }
 
-.pin-container {
+.main-banner-pin-wrapper {
     position: relative;
     height: 100vh;
     width: 100%;
@@ -26,7 +30,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     max-width: 1920px;
     margin: 0 auto;
@@ -49,48 +53,37 @@
     }
 }
 
-.main-banner-content {
-    position: relative;
-    z-index: 10;
-    width: auto;
-    margin-left: 100px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-
-    @media screen and (max-width: 1280px) {
-        margin-left: 40px;
-    }
-
-    @media screen and (max-width: 1024px) {
-        margin-left: 16px;
-        padding-right: 16px;
-    }
-}
-
-.home-video {
+.video-wrapper canvas {
     position: absolute;
     top: 50%;
-    right: 0;
     transform: translateY(-50%);
+    right: -100px;
     object-fit: cover;
     height: 849px;
     width: auto;
     pointer-events: none;
 
     @media screen and (max-width: 1280px) {
-      height: 739px;
+        height: 739px;
+        right: -40px;
     }
 
     @media screen and (max-width: 1024px) {
-      height: 572px;
+        height: 572px;
+        right: -16px;
     }
 }
 
-video::-webkit-media-controls {
-  display: none !important;
+.main-banner-content {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .main-banner-title {
@@ -132,15 +125,18 @@ video::-webkit-media-controls {
     margin-bottom: 56px;
 
     @media screen and (max-width: 1280px) {
-        margin: -100px 420px;
+        margin: -125px 0 40px 460px;
+        width: 350px;
+        height: auto;
     }
 
     @media screen and (max-width: 1024px) {
-        height: auto;
-        margin: 0 0 32px;
-        width: 80%;
+        position: static;
+        width: 300px;
         font-size: 18px;
         white-space: normal;
+        margin: 0 0 32px 0;
+        height: auto;
     }
 
     @media screen and (max-width: 768px) {
