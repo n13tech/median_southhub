@@ -34,24 +34,9 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-      setTimeout(() => {
-        const video = document.querySelector('#home-video');
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        video?.play();
-      }, 250);
-  }, []);
-
   return (
     <div style={{ position: 'relative', top: '0', left: '0' }}>
         <Header />
-
-        <div className="video-wrapper">
-          <video muted className='home-video' id='home-video' loop={false} playsInline>
-              <source src={'/AnimLettera.mp4'} type="video/mp4"  />
-          </video>
-        </div>
 
         <main >
             <MainBanner />
