@@ -49,7 +49,6 @@ export const MainBanner = () => {
                 };
                 
                 img.onerror = () => {
-                    console.warn(`Failed to load frame ${frameIndex}`);
                     resolve();
                 };
             });
@@ -112,7 +111,6 @@ export const MainBanner = () => {
         );
         
         if (remainingFrames.length > 0) {
-            console.log(`Starting background load of ${remainingFrames.length} remaining frames`);
             queueFramesForLoading(remainingFrames);
         }
     }, [queueFramesForLoading]);

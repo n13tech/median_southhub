@@ -2,9 +2,10 @@
 
 import { Button } from "antd";
 import { FONT_MONT_BOOK } from "../../fonts";
+import { LK_SOUTHHUB_LINK } from "@/app/constants";
 
 export const AccesibleButton = () => {
-    const handleClick = () => window.open('https://lk.southhub.ru/', '_blank');
+    const handleClick = () => window.open(LK_SOUTHHUB_LINK, '_blank');
 
     return (
         <>
