@@ -10,7 +10,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { Button } from 'antd';
 import Image, { StaticImageData } from 'next/image';
-import { NBSP } from '@/app/constants';
+import { LK_SOUTHHUB_LINK, NBSP, SNOWBASE_LINK, SOUTHHUB_LINK, SOUTHHUB_YOUTUBE, TELEGRAM_CHANELL_LINK, YOUTUBE_PLAYLIST_LINK } from '@/app/constants';
 import { useEffect } from 'react';
 import gsap from 'gsap';
 
@@ -164,7 +164,7 @@ export const GrowthPointsScrollableBlock = () => {
                         title='Snow BASE Camp'
                         description={`19–22 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`}
                         buttonTitle='Участвовать'
-                        onClick={() => window.open('https://southhub.ru/snowbase/', '_blank')}
+                        onClick={() => window.open(SNOWBASE_LINK, '_blank')}
                     />
 
                     <Card
@@ -173,7 +173,7 @@ export const GrowthPointsScrollableBlock = () => {
                         title='South HUB Camp'
                         description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в${NBSP}ІТ`}
                         buttonTitle='УЧАСТВОВАТЬ'
-                        onClick={() => window.open('https://southhub.ru/southub/', '_blank')}
+                        onClick={() => window.open(SOUTHHUB_LINK, '_blank')}
                     />
 
                     <Card
@@ -182,7 +182,7 @@ export const GrowthPointsScrollableBlock = () => {
                         title='Клубные встречи'
                         description={`Камерные события, где вы сами задаёте формат: пробежки, воркшопы, дискуссии. Здесь начинаются новые идеи и${NBSP}партнёрства`}
                         buttonTitle='Участвовать'
-                        onClick={() => window.open('https://lk.southhub.ru/', '_blank')}
+                        onClick={() => window.open(LK_SOUTHHUB_LINK, '_blank')}
                     />
 
                     <Card
@@ -191,7 +191,7 @@ export const GrowthPointsScrollableBlock = () => {
                         title='YouTube-канал'
                         description={`Все записи встреч и${NBSP}вдохновляющие речи лидеров индустрии`}
                         buttonTitle='СМОТРЕТЬ'
-                        onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
+                        onClick={() => window.open(SOUTHHUB_YOUTUBE, '_blank')}
                     />
 
                     <Card
@@ -200,7 +200,7 @@ export const GrowthPointsScrollableBlock = () => {
                         title='Telegram-канал'
                         description={`Медиа, чтобы держать руку на пульсе cообщества, быть в${NBSP}курсе новых событий и${NBSP}находить поводы для живого диалога`}
                         buttonTitle='Подписаться'
-                        onClick={() => window.open('https://t.me/+A-vMV8yq_6M3ZjFi', '_blank')}
+                        onClick={() => window.open(TELEGRAM_CHANELL_LINK, '_blank')}
                     />
 
                     <Card
@@ -209,7 +209,7 @@ export const GrowthPointsScrollableBlock = () => {
                         title='Онлайн-эфиры'
                         description={`Каждый раз новый формат: мок-интервью, дискуссии на злободневные темы и${NBSP}живые обсуждения с${NBSP}лидерами рынка`}
                         buttonTitle='смотреть'
-                        onClick={() => window.open('https://www.youtube.com/playlist?list=PL1GqRF3TOpZAHPTOiNLLXByfEwVjHvvLO', '_blank')}
+                        onClick={() => window.open(YOUTUBE_PLAYLIST_LINK, '_blank')}
                     />
 
                     {/* <Card
