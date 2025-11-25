@@ -9,12 +9,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './main-banner.css';
 
+const totalCountImg = 119;
+
 export const MainBanner = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const pinRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(100).fill(null));
+    const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(totalCountImg).fill(null));
     const [windowHeight, setWindowHeight] = useState(0);
     const loadedFramesRef = useRef<Set<number>>(new Set());
     const loadingQueueRef = useRef<number[]>([]);
@@ -40,7 +42,7 @@ export const MainBanner = () => {
                 }
 
                 const img = new Image();
-                img.src = `/main/AnimLettera_${frameIndex.toString().padStart(5, '0')}.webp`;
+                img.src = `/main/AnimLettera_MOV_Prores4444_${frameIndex.toString().padStart(5, '0')}.webp`;
                 
                 img.onload = () => {
                     imagesRef.current[frameIndex] = img;
@@ -105,7 +107,7 @@ export const MainBanner = () => {
 
     // Фоновая загрузка всех оставшихся кадров
     const loadAllRemainingFrames = useCallback(() => {
-        const allFrames = Array.from({ length: 100 }, (_, i) => i);
+        const allFrames = Array.from({ length: totalCountImg }, (_, i) => i);
         const remainingFrames = allFrames.filter(frame => 
             !loadedFramesRef.current.has(frame)
         );
@@ -117,12 +119,12 @@ export const MainBanner = () => {
 
     // Находим ближайший загруженный кадр
     const findNearestLoadedFrame = useCallback((targetFrame: number): number => {
-        for (let offset = 0; offset < 100; offset++) {
+        for (let offset = 0; offset < totalCountImg; offset++) {
             const before = targetFrame - offset;
             const after = targetFrame + offset;
             
             if (before >= 0 && loadedFramesRef.current.has(before)) return before;
-            if (after < 100 && loadedFramesRef.current.has(after)) return after;
+            if (after < totalCountImg && loadedFramesRef.current.has(after)) return after;
         }
         return -1;
     }, []);
@@ -130,7 +132,7 @@ export const MainBanner = () => {
     // Предзагрузка первой пачки критических кадров и запуск фоновой загрузки
     const preloadCriticalAndStartBackground = useCallback(async () => {
         // Первая пачка: самые важные кадры для мгновенного отображения
-        const criticalFrames = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 99];
+        const criticalFrames = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 99, 118];
         await loadFrameBatch(criticalFrames);
         
         // Немедленно запускаем фоновую загрузку всех оставшихся кадров
@@ -186,7 +188,7 @@ export const MainBanner = () => {
                 pin: pin,
                 pinSpacing: false,
                 onUpdate: (self) => {
-                    const totalFrames = 100;
+                    const totalFrames = totalCountImg;
                     const frameIndex = Math.min(
                         Math.floor(self.progress * totalFrames),
                         totalFrames - 1
@@ -213,7 +215,7 @@ export const MainBanner = () => {
                     }
                 },
                 onLeave: () => {
-                    const lastImage = imagesRef.current[99];
+                    const lastImage = imagesRef.current[totalCountImg - 1];
                     if (lastImage && lastImage.complete) {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(lastImage, 0, 0, canvas.width, canvas.height);
