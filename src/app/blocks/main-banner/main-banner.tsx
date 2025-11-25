@@ -9,7 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './main-banner.css';
 
-const totalCountImg = 119;
+const totalCountImg = 120;
 
 export const MainBanner = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
@@ -132,7 +132,7 @@ export const MainBanner = () => {
     // Предзагрузка первой пачки критических кадров и запуск фоновой загрузки
     const preloadCriticalAndStartBackground = useCallback(async () => {
         // Первая пачка: самые важные кадры для мгновенного отображения
-        const criticalFrames = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 99, 118];
+        const criticalFrames = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 99, 119];
         await loadFrameBatch(criticalFrames);
         
         // Немедленно запускаем фоновую загрузку всех оставшихся кадров
