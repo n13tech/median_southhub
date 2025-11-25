@@ -3,7 +3,7 @@ import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
 import { NBSP } from '@/app/constants';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -14,21 +14,130 @@ export const MainBanner = () => {
     const contentRef = useRef<HTMLDivElement>(null);
     const pinRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [imagesLoaded, setImagesLoaded] = useState(false);
-    const imagesRef = useRef<HTMLImageElement[]>([]);
+    const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(100).fill(null));
     const [windowHeight, setWindowHeight] = useState(0);
+    const loadedFramesRef = useRef<Set<number>>(new Set());
+    const loadingQueueRef = useRef<number[]>([]);
+    const isCurrentlyLoadingRef = useRef(false);
+
+    // Используем ref для функции, чтобы избежать проблем с порядком объявления
+    const processLoadingQueueRef = useRef<() => Promise<void>>();
 
     useEffect(() => {
-        // Устанавливаем высоту окна при монтировании
         setWindowHeight(window.innerHeight);
-        
-        const handleResize = () => {
-            setWindowHeight(window.innerHeight);
-        };
-
+        const handleResize = () => setWindowHeight(window.innerHeight);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Функция для загрузки пачки кадров
+    const loadFrameBatch = useCallback(async (frameIndices: number[]): Promise<void> => {
+        const promises = frameIndices.map(frameIndex => {
+            return new Promise<void>((resolve, reject) => {
+                if (imagesRef.current[frameIndex]?.complete || loadedFramesRef.current.has(frameIndex)) {
+                    resolve();
+                    return;
+                }
+
+                const img = new Image();
+                img.src = `/main/AnimLettera_${frameIndex.toString().padStart(5, '0')}.webp`;
+                
+                img.onload = () => {
+                    imagesRef.current[frameIndex] = img;
+                    loadedFramesRef.current.add(frameIndex);
+                    resolve();
+                };
+                
+                img.onerror = () => {
+                    console.warn(`Failed to load frame ${frameIndex}`);
+                    resolve();
+                };
+            });
+        });
+
+        await Promise.all(promises);
+    }, []);
+
+    // Инициализируем processLoadingQueueRef после объявления loadFrameBatch
+    useEffect(() => {
+        const processLoadingQueue = async () => {
+            if (isCurrentlyLoadingRef.current || loadingQueueRef.current.length === 0) {
+                return;
+            }
+
+            isCurrentlyLoadingRef.current = true;
+
+            // Берем следующую пачку из 10 кадров из очереди
+            const batch = loadingQueueRef.current.splice(0, 10);
+            
+            if (batch.length > 0) {
+                await loadFrameBatch(batch);
+            }
+
+            isCurrentlyLoadingRef.current = false;
+
+            // Проверяем есть ли еще кадры в очереди и запускаем следующую пачку
+            if (loadingQueueRef.current.length > 0) {
+                setTimeout(() => {
+                    processLoadingQueueRef.current?.();
+                }, 30); // Уменьшаем задержку для более быстрой загрузки
+            }
+        };
+
+        processLoadingQueueRef.current = processLoadingQueue;
+    }, [loadFrameBatch]);
+
+    // Добавление кадров в очередь загрузки
+    const queueFramesForLoading = useCallback((frameIndices: number[]) => {
+        const newFrames = frameIndices.filter(frame => 
+            !loadedFramesRef.current.has(frame) && 
+            !loadingQueueRef.current.includes(frame)
+        );
+        
+        if (newFrames.length === 0) return;
+        
+        loadingQueueRef.current.push(...newFrames);
+        
+        // Запускаем обработку очереди если она не активна
+        if (!isCurrentlyLoadingRef.current) {
+            processLoadingQueueRef.current?.();
+        }
+    }, []);
+
+    // Фоновая загрузка всех оставшихся кадров
+    const loadAllRemainingFrames = useCallback(() => {
+        const allFrames = Array.from({ length: 100 }, (_, i) => i);
+        const remainingFrames = allFrames.filter(frame => 
+            !loadedFramesRef.current.has(frame)
+        );
+        
+        if (remainingFrames.length > 0) {
+            console.log(`Starting background load of ${remainingFrames.length} remaining frames`);
+            queueFramesForLoading(remainingFrames);
+        }
+    }, [queueFramesForLoading]);
+
+    // Находим ближайший загруженный кадр
+    const findNearestLoadedFrame = useCallback((targetFrame: number): number => {
+        for (let offset = 0; offset < 100; offset++) {
+            const before = targetFrame - offset;
+            const after = targetFrame + offset;
+            
+            if (before >= 0 && loadedFramesRef.current.has(before)) return before;
+            if (after < 100 && loadedFramesRef.current.has(after)) return after;
+        }
+        return -1;
+    }, []);
+
+    // Предзагрузка первой пачки критических кадров и запуск фоновой загрузки
+    const preloadCriticalAndStartBackground = useCallback(async () => {
+        // Первая пачка: самые важные кадры для мгновенного отображения
+        const criticalFrames = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 99];
+        await loadFrameBatch(criticalFrames);
+        
+        // Немедленно запускаем фоновую загрузку всех оставшихся кадров
+        loadAllRemainingFrames();
+    }, [loadFrameBatch, loadAllRemainingFrames]);
 
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
@@ -43,46 +152,20 @@ export const MainBanner = () => {
 
         let scrollTrigger: ScrollTrigger | null = null;
 
-        // Динамически рассчитываем высоту секции на основе высоты экрана
         const calculateSectionHeight = () => {
-            const scrollDistance = 5000; // Фиксированное расстояние скролла в пикселях
-            return scrollDistance + windowHeight; // Высота экрана + расстояние скролла
+            return 5000 + windowHeight;
         };
 
-        // Устанавливаем высоту секции
         const sectionHeight = calculateSectionHeight();
         section.style.minHeight = `${sectionHeight}px`;
 
-        const loadImages = async () => {
-            const totalFrames = 100;
-            const images: HTMLImageElement[] = [];
-
-            for (let i = 0; i < totalFrames; i++) {
-                const img = new Image();
-                img.src = `/main/AnimLettera_${i.toString().padStart(5, '0')}.png`;
-                
-                await new Promise((resolve) => {
-                    img.onload = resolve;
-                    img.onerror = resolve;
-                });
-                
-                images.push(img);
-            }
-
-            imagesRef.current = images;
-            setImagesLoaded(true);
-        };
-
         const initScrollAnimation = () => {
-            if (!imagesLoaded) return;
-
             ScrollTrigger.getAll().forEach(trigger => {
                 if (trigger.trigger === section) {
                     trigger.kill();
                 }
             });
 
-            // Адаптивные размеры canvas
             const isTablet = window.innerWidth <= 1280 && window.innerWidth > 1024;
             const isMobile = window.innerWidth <= 1024;
 
@@ -100,12 +183,12 @@ export const MainBanner = () => {
             scrollTrigger = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
-                end: `+=${5000}`, // 5000px скролла
+                end: `+=${5000}`,
                 scrub: true,
                 pin: pin,
                 pinSpacing: false,
                 onUpdate: (self) => {
-                    const totalFrames = imagesRef.current.length;
+                    const totalFrames = 100;
                     const frameIndex = Math.min(
                         Math.floor(self.progress * totalFrames),
                         totalFrames - 1
@@ -115,6 +198,13 @@ export const MainBanner = () => {
                     if (currentImage && currentImage.complete) {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
+                    } else {
+                        // Показываем ближайший загруженный кадр
+                        const nearestLoaded = findNearestLoadedFrame(frameIndex);
+                        if (nearestLoaded !== -1 && imagesRef.current[nearestLoaded]) {
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.drawImage(imagesRef.current[nearestLoaded]!, 0, 0, canvas.width, canvas.height);
+                        }
                     }
                 },
                 onEnter: () => {
@@ -125,17 +215,10 @@ export const MainBanner = () => {
                     }
                 },
                 onLeave: () => {
-                    const lastImage = imagesRef.current[imagesRef.current.length - 1];
+                    const lastImage = imagesRef.current[99];
                     if (lastImage && lastImage.complete) {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(lastImage, 0, 0, canvas.width, canvas.height);
-                    }
-                },
-                onLeaveBack: () => {
-                    const firstImage = imagesRef.current[0];
-                    if (firstImage && firstImage.complete) {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(firstImage, 0, 0, canvas.width, canvas.height);
                     }
                 }
             });
@@ -143,24 +226,10 @@ export const MainBanner = () => {
             ScrollTrigger.refresh();
         };
 
-        initScrollAnimation();
-
-        const preloadFirstFrames = async () => {
-            const preloadPromises = [];
-            for (let i = 0; i < 10; i++) {
-                const img = new Image();
-                img.src = `/main/AnimLettera_${i.toString().padStart(5, '0')}.png`;
-                preloadPromises.push(new Promise((resolve) => {
-                    img.onload = resolve;
-                }));
-                imagesRef.current[i] = img;
-            }
-            await Promise.all(preloadPromises);
-            setImagesLoaded(true);
-        };
-
-        preloadFirstFrames();
-        loadImages();
+        // Запускаем предзагрузку и фоновую загрузку
+        preloadCriticalAndStartBackground().then(() => {
+            initScrollAnimation();
+        });
 
         return () => {
             if (scrollTrigger) scrollTrigger.kill();
@@ -168,7 +237,11 @@ export const MainBanner = () => {
                 if (trigger.trigger === section) trigger.kill();
             });
         };
-    }, [imagesLoaded, windowHeight]);
+    }, [
+        windowHeight, 
+        findNearestLoadedFrame,
+        preloadCriticalAndStartBackground
+    ]);
 
     return (
         <div className='main-banner-wrapper' id='main-banner' ref={sectionRef}>

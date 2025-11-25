@@ -2,10 +2,10 @@
 
 import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
-import ClubMeet from '../../../../public/встречи.jpg'
-import YoutubeChanell from '../../../../public/ютуб.jpg'
-import TelegramChanell from '../../../../public/тг.jpg'
-import OnlineBroadcast from '../../../../public/эфир.jpg'
+import ClubMeet from '../../../../public/встречи.webp'
+import YoutubeChanell from '../../../../public/ютуб.webp'
+import TelegramChanell from '../../../../public/тг.webp'
+import OnlineBroadcast from '../../../../public/эфир.webp'
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { Button } from 'antd';
