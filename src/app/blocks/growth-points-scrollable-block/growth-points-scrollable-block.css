@@ -5,12 +5,12 @@
     width: 100%;
     max-width: 1920px;
     height: calc(100vh * 6);
-    min-height: calc(473px * 6 + 240px);
+    min-height: calc(550px * 6 + 240px);
     padding: 120px 100px;
     margin: 0 auto;
 
     @media screen and (max-width: 1280px) {
-        min-height: calc(412px * 6 + 240px);
+        min-height: calc(450px * 6 + 240px);
         padding: 120px 40px;
     }
 
@@ -27,13 +27,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: calc(100vh - 240px);
     gap: 100px;
 
     @media screen and (max-width: 1024px) {
-        gap: 30px;
         height: calc(100vh - 160px);
-        justify-content: start;
     }
 }
 
@@ -43,7 +42,6 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 20px;
 
     @media screen and (max-width: 1024px) {
         text-align: center;
@@ -91,16 +89,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 1158px;
-    height: 220px;
-    min-height: 220px;
+    width: calc(100vw - 200px);
+    height: 350px;
+    min-height: 350px;
 
     @media screen and (max-width: 1280px) {
-        width: 945px;
+        width: calc(100vw - 80px);
+        height: 320px;
+        min-height: 320px;
     }
 
     @media screen and (max-width: 1024px) {
-        width: 320px;
+        width: calc(100vw - 32px);
+        max-width: 320px;
         height: 400px;
         min-height: 400px;
     }
@@ -109,25 +110,38 @@
 .events-block-card-wrapper {
     position: absolute;
     display: flex;
-    height: 220px;
+    width: 100%;
+    max-width: 1312px;
+    height: 350px;
+
+    > div {
+        width: 50%;
+    }
 
     video,
     img {
         border-radius: 8px;
-        max-width: 313px;
-        max-height: 209px;
-        min-height: 209px;
+        width: 100%;
+        max-height: 350px;
+        min-height: 350px;
         object-fit: cover;
     }
 
     @media screen and (max-width: 1280px) {
+        height: 320px;
+
         video,
         img {
-            max-width: 290px;
+            max-height: 320px;
+            min-height: 320px;
         }
     }
 
     @media screen and (max-width: 1024px) {
+        > div {
+            width: 100%;
+        }
+
         flex-direction: column;
         height: 400px;
 
@@ -171,23 +185,12 @@
 .events-block-card-info {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 12px;
-    width: 680px;
+    justify-content: center;
+    gap: 24px;
     padding-right: 20px;
-    margin-right: 165px;
-    border-right: 1px solid #111;
-
-    @media screen and (max-width: 1280px) {
-        width: 575px;
-        margin-right: 80px;
-    }
 
     @media screen and (max-width: 1024px) {
         order: 2;
-        border-top: 1px solid #111;
-        border-right: none;
-        margin-top: 24px;
         padding-top: 20px;
         width: 100%;
         height: 100%;

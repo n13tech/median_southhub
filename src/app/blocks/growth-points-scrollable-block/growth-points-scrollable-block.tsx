@@ -90,8 +90,8 @@ export const GrowthPointsScrollableBlock = () => {
                 // markers: true,
                 anticipatePin: 1,
                 snap: {
-                    snapTo: 1 / (items.length - 1), // Привязка к прогрессу каждого слайда
-                    duration: { min: 0.2, max: 0.8 },
+                    snapTo: 1 / (items.length - 1),
+                    duration: { min: 0.4, max: 0.8 },
                     ease: "power1.inOut",
                 }
             }
@@ -116,20 +116,27 @@ export const GrowthPointsScrollableBlock = () => {
                 return;
             }
 
-            // Исчезание текущего элемента
+            // Исчезание текущего элемента - opacity меняется быстрее
             tl.to(item, {
-                opacity: 0,
+                opacity: 0, // Opacity меняется быстро
+                duration: 0.2, // Быстрое исчезновение
+                ease: "power2.in"
+            }, "+=" + delay)
+            // Движение и масштаб - медленнее
+            .to(item, {
                 y: -30,
                 scale: 0.8,
-                duration: 0.8
-            }, "+=" + delay)
+                duration: 0.6, // Медленнее для движения
+                ease: "power1.out"
+            }, "<") // Начинаем одновременно с opacity
             // Появление следующего элемента
             .to(nextSlide, {
                 opacity: 1,
                 y: 0,
                 scale: 1,
-                duration: 0.8
-            }, "<");
+                duration: 0.8,
+                ease: "power2.out"
+            }, "<"); // Начинаем одновременно с исчезновением предыдущего
         });
 
         // Добавляем финальную паузу
@@ -211,15 +218,6 @@ export const GrowthPointsScrollableBlock = () => {
                         buttonTitle='смотреть'
                         onClick={() => window.open(YOUTUBE_PLAYLIST_LINK, '_blank')}
                     />
-
-                    {/* <Card
-                        img={CommunityChat}
-                        alt='community-chat'
-                        title='Чат сообщества'
-                        description={`Здесь встречаются с${NBSP}людьми, идеями и новыми вызовами`}
-                        buttonTitle='Вступить'
-                        onClick={() => alert('ВСТУПИ НЕ ТУПИ!')}
-                    /> */}
                 </div>
             </div>
         </div>
