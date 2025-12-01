@@ -31,39 +31,31 @@ const Card = ({ img, video, alt, title, description, buttonTitle, onClick }: Pro
         <div className='events-block-card-wrapper'>
             <div className='events-block-card-info'>
                 <div className='events-block-card-info-text-wrapper'>
-                    <Fade direction='up' triggerOnce>
-                        <h4 className={`${FONT_MONT_BOOK.className} events-block-card-info-title`}>{title}</h4>
-                    </Fade>
-                    <Fade delay={250} triggerOnce>
-                        <p className={`${FONT_MONT_BOOK.className} events-block-card-info-description`}>{description}</p>
-                    </Fade>
+                    <h4 className={`${FONT_MONT_BOOK.className} events-block-card-info-title`}>{title}</h4>
+                    <p className={`${FONT_MONT_BOOK.className} events-block-card-info-description`}>{description}</p>
                 </div>
-                <Fade delay={250} triggerOnce>
-                    <Button className={`${FONT_MONT_BOOK.className} events-block-card-info-button`} onClick={onClick} type='primary'>
-                        {buttonTitle}
-                    </Button>
-                </Fade>
+                <Button className={`${FONT_MONT_BOOK.className} events-block-card-info-button`} onClick={onClick} type='primary'>
+                    {buttonTitle}
+                </Button>
             </div>
 
-            <Fade direction='right' delay={250} triggerOnce>
-                <div>
-                    {img && (
-                        <Image
-                            src={img}
-                            alt={alt}
-                            width={313}
-                            height={209}
-                            priority
-                        />
-                    )}
-                    {video && (
-                        <video width="313" height="209" autoPlay loop muted>
-                            <source src={video} type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" />
-                            Your browser does not support the video tag.
-                        </video>
-                    )}
-                </div>
-            </Fade>
+            <div>
+                {img && (
+                    <Image
+                        src={img}
+                        alt={alt}
+                        width={313}
+                        height={209}
+                        priority
+                    />
+                )}
+                {video && (
+                    <video width="313" height="209" autoPlay loop muted>
+                        <source src={video} type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" />
+                        Your browser does not support the video tag.
+                    </video>
+                )}
+            </div>
         </div>
     );
 };
@@ -74,7 +66,6 @@ export const GrowthPointsScrollableBlock = () => {
         gsap.registerPlugin(ScrollTrigger);
 
         const delay = 0.5;
-
         const items: Element[] = gsap.utils.toArray(".events-block-card-wrapper");
 
         const tl = gsap.timeline({
@@ -87,56 +78,52 @@ export const GrowthPointsScrollableBlock = () => {
                 end: "+=" + (items.length - 1) * 100 + "%",
                 pin: '.growth-points-scrollable-block',
                 scrub: true,
-                // markers: true,
                 anticipatePin: 1,
-                snap: {
-                    snapTo: 1 / (items.length - 1),
-                    duration: { min: 0.4, max: 0.8 },
-                    ease: "power1.inOut",
-                }
             }
         });
 
+        // Инициализация
         gsap.set(items, {
             opacity: 0,
-            y: 30,
-            scale: 0.8,
+            y: 100,
         });
 
         // Первый элемент видим изначально
         gsap.set(items[0], {
             opacity: 1,
             y: 0,
-            scale: 1
         });
 
         items.forEach((item, i) => {
             const nextSlide = items[i + 1];
+
             if (!nextSlide) {
                 return;
             }
 
-            // Исчезание текущего элемента - opacity меняется быстрее
+            // Фаза 1: Текущая карточка уходит вниз
+            // opacity меняется только в конце движения
             tl.to(item, {
-                opacity: 0, // Opacity меняется быстро
-                duration: 0.2, // Быстрое исчезновение
-                ease: "power2.in"
-            }, "+=" + delay)
-            // Движение и масштаб - медленнее
-            .to(item, {
-                y: -30,
-                scale: 0.8,
-                duration: 0.6, // Медленнее для движения
-                ease: "power1.out"
-            }, "<") // Начинаем одновременно с opacity
-            // Появление следующего элемента
-            .to(nextSlide, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
+                y: 100,
                 duration: 0.8,
-                ease: "power2.out"
-            }, "<"); // Начинаем одновременно с исчезновением предыдущего
+                ease: "power1.in"
+            }, "+=" + delay)
+            .to(item, {
+                opacity: 0,
+                duration: 0.1, // Быстро скрываем после движения
+                ease: "none"
+            }, ">") // ">" означает после предыдущей анимации
+            
+            // Фаза 2: Следующая карточка появляется
+            .set(nextSlide, {
+                opacity: 1,
+                y: 100 // Начинаем снизу
+            })
+            .to(nextSlide, {
+                y: 0,
+                duration: 0.8,
+                ease: "power1.out"
+            }, ">"); // Начинаем после полного скрытия предыдущей
         });
 
         // Добавляем финальную паузу
@@ -151,17 +138,13 @@ export const GrowthPointsScrollableBlock = () => {
         <div className='growth-points-scrollable-block-wrapper' id='growth-points-block'>
             <div className='growth-points-scrollable-block'>
                 <div className='growth-points-block-wrapper'>
-                    <Fade direction='up' triggerOnce>
-                        <h2 className={`${FONT_MONT_BOOK.className} growth-points-block-title`}>
-                            {'Точки роста'}
-                        </h2>
-                    </Fade>
+                    <h2 className={`${FONT_MONT_BOOK.className} growth-points-block-title`}>
+                        {'Точки роста'}
+                    </h2>
 
-                    <Fade delay={250} triggerOnce>
-                        <p className={`${FONT_MONT_BOOK.className} growth-points-block-description`}>
-                            {'Форматы взаимодействия сообщества'}
-                        </p>
-                    </Fade>
+                    <p className={`${FONT_MONT_BOOK.className} growth-points-block-description`}>
+                        {'Форматы взаимодействия сообщества'}
+                    </p>
                 </div>
 
                 <div className='events-block-wrapper'>
