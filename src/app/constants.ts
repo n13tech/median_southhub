@@ -15,3 +15,6 @@ export const SNOWBASE_LINK = process.env.NEXT_PUBLIC_SNOWBASE || 'https://southh
 export const SOUTHHUB_LINK = process.env.NEXT_PUBLIC_SOUTHHUB || 'https://southhub.ru/southub/';
 export const YOUTUBE_PLAYLIST_LINK = process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST || 'https://www.youtube.com/playlist?list=PL1GqRF3TOpZAHPTOiNLLXByfEwVjHvvLO';
 export const ENABLE_METRIC = process.env.ENABLE_METRIC ?? true;
+
+export const SHSITES_URL = process.env.NEXT_PUBLIC_SHSITES_URL;
+export const SHSITES_API_KEY = process.env.NEXT_PUBLIC_SHSITES_API_KEY;
