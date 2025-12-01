@@ -66,7 +66,6 @@ export const GrowthPointsScrollableBlock = () => {
         gsap.registerPlugin(ScrollTrigger);
 
         const delay = 0.5;
-
         const items: Element[] = gsap.utils.toArray(".events-block-card-wrapper");
 
         const tl = gsap.timeline({
@@ -79,14 +78,14 @@ export const GrowthPointsScrollableBlock = () => {
                 end: "+=" + (items.length - 1) * 100 + "%",
                 pin: '.growth-points-scrollable-block',
                 scrub: true,
-                // markers: true,
                 anticipatePin: 1,
             }
         });
 
+        // Инициализация
         gsap.set(items, {
             opacity: 0,
-            y: 50,
+            y: 100,
         });
 
         // Первый элемент видим изначально
@@ -102,25 +101,29 @@ export const GrowthPointsScrollableBlock = () => {
                 return;
             }
 
-            // Исчезание текущего элемента - opacity меняется быстрее
+            // Фаза 1: Текущая карточка уходит вниз
+            // opacity меняется только в конце движения
             tl.to(item, {
-                opacity: 0, // Opacity меняется быстро
-                duration: 0.1, // Быстрое исчезновение
-                ease: "power2.in"
+                y: 100,
+                duration: 0.8,
+                ease: "power1.in"
             }, "+=" + delay)
-            // Движение - медленнее
             .to(item, {
-                y: -50,
-                duration: 0.6, // Медленнее для движения
-                ease: "power1.out"
-            }, "<") // Начинаем одновременно с opacity
-            // Появление следующего элемента
-            .to(nextSlide, {
+                opacity: 0,
+                duration: 0.1, // Быстро скрываем после движения
+                ease: "none"
+            }, ">") // ">" означает после предыдущей анимации
+            
+            // Фаза 2: Следующая карточка появляется
+            .set(nextSlide, {
                 opacity: 1,
+                y: 100 // Начинаем снизу
+            })
+            .to(nextSlide, {
                 y: 0,
                 duration: 0.8,
-                ease: "power2.out"
-            }, "<"); // Начинаем одновременно с исчезновением предыдущего
+                ease: "power1.out"
+            }, ">"); // Начинаем после полного скрытия предыдущей
         });
 
         // Добавляем финальную паузу
