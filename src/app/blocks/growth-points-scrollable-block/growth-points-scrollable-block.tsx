@@ -65,12 +65,14 @@ export const GrowthPointsScrollableBlock = () => {
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
 
+        // Получаем все карточки
         const items: Element[] = gsap.utils.toArray(".events-block-card-wrapper");
         const totalTransitions = items.length - 1;
         
         let lastProgress = 0;
         let direction: 'up' | 'down' = 'down';
 
+        // Создаем timeline с настройками ScrollTrigger
         const tl = gsap.timeline({
             defaults: {
                 ease: "power2.inOut",
@@ -80,7 +82,7 @@ export const GrowthPointsScrollableBlock = () => {
                 start: "top top",
                 end: "+=" + totalTransitions * 100 + "%",
                 pin: '.growth-points-scrollable-block',
-                scrub: 1.5, // Увеличиваем scrub для большей плавности
+                scrub: 1.5,
                 anticipatePin: 1,
                 onUpdate: (self) => {
                     direction = self.progress > lastProgress ? 'down' : 'up';
@@ -88,7 +90,10 @@ export const GrowthPointsScrollableBlock = () => {
                 },
                 snap: {
                     snapTo: (progress) => {
+                        // Рассчитываем текущую карточку
                         const currentIndex = Math.min(Math.floor(progress * totalTransitions), totalTransitions - 1);
+                        
+                        // Создаем точки остановки (равномерно распределенные)
                         const snapPoints = Array(items.length).fill(0)
                             .map((_, i) => i / totalTransitions);
                         
@@ -96,75 +101,98 @@ export const GrowthPointsScrollableBlock = () => {
                         const nextSnap = snapPoints[currentIndex + 1];
                         const prevSnap = snapPoints[currentIndex - 1];
                         
+                        // Рассчитываем прогресс внутри текущей секции (от 0 до 1)
+                        const sectionProgress = (progress - currentSnap) * totalTransitions;
+                        
+                        // Если скроллим ВНИЗ и есть следующая карточка
                         if (direction === 'down' && nextSnap !== undefined) {
-                            const threshold = currentSnap + (nextSnap - currentSnap) * 0.25;
-                            if (progress >= threshold) {
-                                return nextSnap;
+                            // ТОЛЬКО если прокрутили БОЛЕЕ 10% текущей карточки
+                            if (sectionProgress > 0.5) {
+                                const threshold = currentSnap + (nextSnap - currentSnap) * 0.05;
+                                if (progress >= threshold) {
+                                    return nextSnap;
+                                }
                             }
+                            // Иначе возвращаем текущую карточку (не делаем snap)
+                            return currentSnap;
                         }
                         
+                        // Если скроллим ВВЕРХ и есть предыдущая карточка
                         if (direction === 'up' && prevSnap !== undefined) {
-                            const threshold = currentSnap - (currentSnap - prevSnap) * 0.25;
-                            if (progress <= threshold) {
-                                return prevSnap;
+                            // ТОЛЬКО если ОСТАЛОСЬ менее 90% текущей карточки
+                            // (то есть прокрутили более 10% от следующей карточки при движении вверх)
+                            if (sectionProgress < 0.5) {
+                                const threshold = currentSnap - (currentSnap - prevSnap) * 0.05;
+                                if (progress <= threshold) {
+                                    return prevSnap;
+                                }
                             }
+                            // Иначе возвращаем текущую карточку (не делаем snap)
+                            return currentSnap;
                         }
                         
+                        // Если мы в крайних положениях или не выполнили условия выше
                         return currentSnap;
                     },
-                    duration: { min: 0.1, max: 0.2 }, // Увеличиваем duration для плавности
-                    ease: "power1.out"
+                    duration: { min: 0.1, max: 0.2 },
+                    ease: "power2.inOut"
                 }
             }
         });
 
-        // Инициализация с плавными начальными значениями
+        // ИНИЦИАЛИЗАЦИЯ
         gsap.set(items, {
             opacity: 0,
             y: 150,
         });
 
-        // Первая карточка видима
+        // Первая карточка изначально видима
         gsap.set(items[0], {
             opacity: 1,
             y: 0,
             zIndex: 9999,
         });
 
-        // Создаем плавные анимации для каждого перехода
+        // АНИМАЦИЯ ПЕРЕХОДОВ
         for (let i = 0; i < totalTransitions; i++) {
             const currentCard = items[i];
             const nextCard = items[i + 1];
             
+            // Рассчитываем время в timeline (от 0 до 1)
             const sectionStart = i / totalTransitions;
             const sectionDuration = 1 / totalTransitions;
             
-            // Разбиваем на фазы с перекрытием для плавности
-            const fadeOutStart = sectionStart;
-            const fadeOutDuration = sectionDuration * 0.7;
+            // Быстрое исчезновение текущей карточки (40% времени)
+            const fadeOutDuration = sectionDuration * 0.4;
             
-            const fadeInDelay = sectionDuration * 0.3; // Небольшая задержка перед появлением
-            const fadeInStart = sectionStart + fadeInDelay;
-            const fadeInDuration = sectionDuration * 0.7;
+            // Маленькая пауза (5% времени)
+            const pauseDuration = sectionDuration * 0.05;
             
-            // Фаза 1: плавное исчезновение текущей карточки
+            // Появление следующей карточки (45% времени)
+            const fadeInStart = sectionStart + fadeOutDuration + pauseDuration;
+            const fadeInDuration = sectionDuration * 0.45;
+            
+            // Минимальная пауза в конце (10% времени)
+            const endPause = sectionDuration * 0.1;
+            
+            // Анимация исчезновения текущей карточки
             tl.to(currentCard, {
                 y: 150,
                 duration: fadeOutDuration,
                 ease: "power2.in"
-            }, fadeOutStart)
+            }, sectionStart)
             .to(currentCard, {
                 opacity: 0,
-                duration: fadeOutDuration * 0.3, // Opacity меняется медленнее
+                duration: fadeOutDuration * 0.7,
                 ease: "power2.in"
-            }, fadeOutStart)
+            }, sectionStart)
             
-            // Небольшая пауза перед появлением следующей
+            // Короткая пауза
             .to({}, {
-                duration: fadeInDelay * 0.5
-            }, `+=${fadeInDelay * 0.5}`)
+                duration: pauseDuration
+            })
             
-            // Фаза 2: плавное появление следующей карточки
+            // Анимация появления следующей карточки
             .to(nextCard, {
                 opacity: 1,
                 duration: fadeInDuration * 0.3,
@@ -179,9 +207,15 @@ export const GrowthPointsScrollableBlock = () => {
                     ease: "power2.out"
                 },
                 fadeInStart
-            );
+            )
+            
+            // Минимальная пауза в конце
+            .to({}, {
+                duration: endPause
+            });
         }
 
+        // Очистка
         return () => {
             ScrollTrigger.getAll().forEach(trigger => trigger.kill());
         };

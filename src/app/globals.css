@@ -6,6 +6,15 @@
   --ibm-serif-font: var(--ibm-serif-font);
 }
 
+html {
+  scroll-behavior: auto !important;
+}
+
+body {
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
 body,
 html {
   overflow-x: hidden;
