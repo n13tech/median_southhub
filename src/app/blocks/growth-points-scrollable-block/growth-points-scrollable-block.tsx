@@ -65,69 +65,122 @@ export const GrowthPointsScrollableBlock = () => {
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
 
-        const delay = 0.5;
         const items: Element[] = gsap.utils.toArray(".events-block-card-wrapper");
+        const totalTransitions = items.length - 1;
+        
+        let lastProgress = 0;
+        let direction: 'up' | 'down' = 'down';
 
         const tl = gsap.timeline({
             defaults: {
-                ease: "power1.inOut",
+                ease: "power2.inOut",
             },
             scrollTrigger: {
                 trigger: "#growth-points-block",
                 start: "top top",
-                end: "+=" + (items.length - 1) * 100 + "%",
+                end: "+=" + totalTransitions * 100 + "%",
                 pin: '.growth-points-scrollable-block',
-                scrub: true,
+                scrub: 1.5, // Увеличиваем scrub для большей плавности
                 anticipatePin: 1,
+                onUpdate: (self) => {
+                    direction = self.progress > lastProgress ? 'down' : 'up';
+                    lastProgress = self.progress;
+                },
+                snap: {
+                    snapTo: (progress) => {
+                        const currentIndex = Math.min(Math.floor(progress * totalTransitions), totalTransitions - 1);
+                        const snapPoints = Array(items.length).fill(0)
+                            .map((_, i) => i / totalTransitions);
+                        
+                        const currentSnap = snapPoints[currentIndex];
+                        const nextSnap = snapPoints[currentIndex + 1];
+                        const prevSnap = snapPoints[currentIndex - 1];
+                        
+                        if (direction === 'down' && nextSnap !== undefined) {
+                            const threshold = currentSnap + (nextSnap - currentSnap) * 0.25;
+                            if (progress >= threshold) {
+                                return nextSnap;
+                            }
+                        }
+                        
+                        if (direction === 'up' && prevSnap !== undefined) {
+                            const threshold = currentSnap - (currentSnap - prevSnap) * 0.25;
+                            if (progress <= threshold) {
+                                return prevSnap;
+                            }
+                        }
+                        
+                        return currentSnap;
+                    },
+                    duration: { min: 0.1, max: 0.2 }, // Увеличиваем duration для плавности
+                    ease: "power1.out"
+                }
             }
         });
 
-        // Инициализация
+        // Инициализация с плавными начальными значениями
         gsap.set(items, {
             opacity: 0,
-            y: 100,
+            y: 150,
         });
 
-        // Первый элемент видим изначально
+        // Первая карточка видима
         gsap.set(items[0], {
             opacity: 1,
             y: 0,
+            zIndex: 9999,
         });
 
-        items.forEach((item, i) => {
-            const nextSlide = items[i + 1];
-
-            if (!nextSlide) {
-                return;
-            }
-
-            // Фаза 1: Текущая карточка уходит вниз
-            // opacity меняется только в конце движения
-            tl.to(item, {
-                y: 100,
-                duration: 0.8,
-                ease: "power1.in"
-            }, "+=" + delay)
-            .to(item, {
-                opacity: 0,
-                duration: 0.1, // Быстро скрываем после движения
-                ease: "none"
-            }, ">") // ">" означает после предыдущей анимации
+        // Создаем плавные анимации для каждого перехода
+        for (let i = 0; i < totalTransitions; i++) {
+            const currentCard = items[i];
+            const nextCard = items[i + 1];
             
-            // Фаза 2: Следующая карточка появляется
-            .set(nextSlide, {
+            const sectionStart = i / totalTransitions;
+            const sectionDuration = 1 / totalTransitions;
+            
+            // Разбиваем на фазы с перекрытием для плавности
+            const fadeOutStart = sectionStart;
+            const fadeOutDuration = sectionDuration * 0.7;
+            
+            const fadeInDelay = sectionDuration * 0.3; // Небольшая задержка перед появлением
+            const fadeInStart = sectionStart + fadeInDelay;
+            const fadeInDuration = sectionDuration * 0.7;
+            
+            // Фаза 1: плавное исчезновение текущей карточки
+            tl.to(currentCard, {
+                y: 150,
+                duration: fadeOutDuration,
+                ease: "power2.in"
+            }, fadeOutStart)
+            .to(currentCard, {
+                opacity: 0,
+                duration: fadeOutDuration * 0.3, // Opacity меняется медленнее
+                ease: "power2.in"
+            }, fadeOutStart)
+            
+            // Небольшая пауза перед появлением следующей
+            .to({}, {
+                duration: fadeInDelay * 0.5
+            }, `+=${fadeInDelay * 0.5}`)
+            
+            // Фаза 2: плавное появление следующей карточки
+            .to(nextCard, {
                 opacity: 1,
-                y: 100 // Начинаем снизу
-            })
-            .to(nextSlide, {
-                y: 0,
-                duration: 0.8,
-                ease: "power1.out"
-            }, ">"); // Начинаем после полного скрытия предыдущей
-        });
-
-        // Добавляем финальную паузу
-        tl.to({}, { duration: delay });
+                duration: fadeInDuration * 0.3,
+                ease: "power2.out"
+            }, fadeInStart)
+            .fromTo(nextCard,
+                { y: 150 },
+                {
+                    y: 0,
+                    zIndex: 9999,
+                    duration: fadeInDuration,
+                    ease: "power2.out"
+                },
+                fadeInStart
+            );
+        }
 
         return () => {
             ScrollTrigger.getAll().forEach(trigger => trigger.kill());
