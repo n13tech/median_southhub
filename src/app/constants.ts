@@ -16,5 +16,5 @@ export const SOUTHHUB_LINK = process.env.NEXT_PUBLIC_SOUTHHUB || 'https://southh
 export const YOUTUBE_PLAYLIST_LINK = process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST || 'https://www.youtube.com/playlist?list=PL1GqRF3TOpZAHPTOiNLLXByfEwVjHvvLO';
 export const ENABLE_METRIC = process.env.ENABLE_METRIC ?? true;
 
-export const SHSITES_URL = process.env.NEXT_PUBLIC_SHSITES_URL;
-export const SHSITES_API_KEY = process.env.NEXT_PUBLIC_SHSITES_API_KEY;
+export const SHSITES_URL = process.env.NEXT_PUBLIC_SHSITES_URL || 'https://shmain.n13dev.ru';
+export const SHSITES_API_KEY = process.env.NEXT_PUBLIC_SHSITES_API_KEY || '4a55372764240a667a05989466fb21127271d06bd9377d3e6652e3ab8a353749';
