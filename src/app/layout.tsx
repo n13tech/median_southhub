@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import { ReactNode } from "react";
 import { YandexMetrika } from "./ya-metric";
+import { Metadata } from "next";
+import { SHSITES_URL } from "./constants";
 
 export const metadata: Metadata = {
+  metadataBase: SHSITES_URL,
   title: "Southuuub",
   description: "South HUB – пространство, где участники получают доступ к коллективному разуму C-level в IT и становятся его частью. Мы создаём безопасную среду для свободного высказывания и обмена опытом. Участники сообщества — IT-лидеры, которые делают бизнес в России и мыслят масштабно. Попадите в круг равных, где доверие и открытость вдохновляют создавать новое вместе.",
   openGraph: {
