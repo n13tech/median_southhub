@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -20,8 +20,20 @@ export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const rightColumnRef = useRef<HTMLDivElement>(null);
+  const leftColumnRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Проверка на мобильное устройство
+    const checkMobile = () => {
+      const mobile = window.matchMedia("(max-width: 1024px)").matches;
+      setIsMobile(mobile);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    // Lenis initialization
     lenisRef.current = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -49,16 +61,21 @@ export const GrowthPointsScrollableBlock = () => {
 
     // GSAP Animation
     const imgs = gsap.utils.toArray('.growth-points-item-right-img') as HTMLImageElement[];
+    const infoSections = gsap.utils.toArray('.growth-points-item-left-info') as HTMLElement[];
 
-    // Desktop animation
-    if (window.matchMedia("(min-width: 769px)").matches) {
+    // Очищаем все предыдущие ScrollTrigger
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
+    // Десктоп анимация (1025px+)
+    if (!isMobile) {
       const mainTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: ".growth-points-scrollable-block",
           start: "top top",
           end: "bottom bottom",
           pin: ".growth-points-item-right",
-          scrub: true
+          scrub: true,
+          invalidateOnRefresh: true
         }
       });
 
@@ -98,31 +115,118 @@ export const GrowthPointsScrollableBlock = () => {
 
         mainTimeline.add(sectionTimeline);
       });
-      // Mobile animation
+
+    // Мобильная анимация (до 1024px)
     } else {
-      const mbTimeline = gsap.timeline();
+      // Переопределяем высоту контейнера для мобильных
+      if (rightColumnRef.current) {
+        rightColumnRef.current.style.height = '275px';
+        rightColumnRef.current.style.marginTop = '90px';
+      }
+
+      // Устанавливаем начальные стили для картинок
       gsap.set(imgs, {
-        objectPosition: "0px 60%"
+        objectPosition: "center center"
       });
 
-      imgs.forEach((image) => {
-        const innerTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: image,
-            start: "top-=70% top+=50%",
-            end: "bottom+=200% bottom",
-            scrub: true
-          }
+      // ПЕРВАЯ КАРТИНКА: полностью видна
+      if (imgs[0]) {
+        gsap.set(imgs[0], {
+          clipPath: "inset(0px 0px 0px 0px)",
+          objectPosition: "center 50%"
         });
+      }
 
-        innerTimeline
-          .to(image, {
-            objectPosition: "0px 30%",
-            duration: 5,
-            ease: "none"
+      // ОСТАЛЬНЫЕ КАРТИНКИ: полностью скрыты
+      for (let i = 1; i < imgs.length; i++) {
+        if (imgs[i]) {
+          gsap.set(imgs[i], {
+            clipPath: "inset(100% 0px 0px 0px)",
+            objectPosition: "center 50%"
           });
+        }
+      }
 
-        mbTimeline.add(innerTimeline);
+      // Создаем ScrollTrigger для каждого текстового блока
+      infoSections.forEach((section, index) => {
+        const currentImage = imgs[index];
+        const nextImage = imgs[index + 1];
+        
+        // Убираем все анимации opacity и scale у текста
+        // Текст просто появляется и исчезает
+        
+        if (nextImage) {
+          // Создаем ScrollTrigger для синхронизации анимации картинки с текстовым блоком
+          ScrollTrigger.create({
+            trigger: section,
+            start: "top center", // Когда блок появляется в центре экрана
+            end: "bottom center", // Когда блок уходит из центра экрана
+            scrub: true, // Линейная привязка к скроллу
+            onUpdate: (self) => {
+              const progress = self.progress;
+              
+              if (currentImage && nextImage) {
+                // Текущая картинка скрывается снизу
+                gsap.set(currentImage, {
+                  clipPath: `inset(0px 0px ${progress * 100}%)`,
+                  objectPosition: `center ${50 + progress * 20}%`
+                });
+                
+                // Следующая картинка "заезжает" сверху
+                gsap.set(nextImage, {
+                  clipPath: `inset(${(1 - progress) * 100}% 0px 0px 0px)`,
+                  objectPosition: `center ${30 + progress * 20}%`
+                });
+                
+                // Скрываем предыдущие картинки
+                for (let i = 0; i < index; i++) {
+                  if (imgs[i]) {
+                    gsap.set(imgs[i], {
+                      clipPath: "inset(0px 0px 100%)"
+                    });
+                  }
+                }
+                
+                // Скрываем будущие картинки
+                for (let i = index + 2; i < imgs.length; i++) {
+                  if (imgs[i]) {
+                    gsap.set(imgs[i], {
+                      clipPath: "inset(100% 0px 0px 0px)"
+                    });
+                  }
+                }
+              }
+            },
+            onEnterBack: () => {
+              // При скролле обратно
+              if (index > 0) {
+                const prevImage = imgs[index - 1];
+                if (prevImage && currentImage) {
+                  // Показываем предыдущую картинку
+                  gsap.set(prevImage, {
+                    clipPath: "inset(0px 0px 0px 0px)",
+                    objectPosition: "center 50%"
+                  });
+                  
+                  // Скрываем текущую
+                  gsap.set(currentImage, {
+                    clipPath: "inset(100% 0px 0px 0px)",
+                    objectPosition: "center 30%"
+                  });
+                }
+              }
+            }
+          });
+        }
+      });
+
+      // ПИН для картинки - чтобы она оставалась наверху
+      ScrollTrigger.create({
+        trigger: ".growth-points-scrollable-block",
+        start: "top top",
+        end: "bottom bottom",
+        pin: ".growth-points-item-right",
+        pinSpacing: false
       });
     }
 
@@ -130,8 +234,9 @@ export const GrowthPointsScrollableBlock = () => {
     return () => {
       lenisRef.current?.destroy();
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      window.removeEventListener('resize', checkMobile);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <>
@@ -147,7 +252,8 @@ export const GrowthPointsScrollableBlock = () => {
 
       <div className="growth-points-scrollable-block-wrapper" ref={containerRef}>
         <div className="growth-points-scrollable-block">
-          <div className="growth-points-item-left">
+          {/* Левая колонка - текст */}
+          <div className="growth-points-item-left" ref={leftColumnRef}>
             {GROWTH_POINT_ITEMS.map((item) => (
               <div key={item.id} className="growth-points-item-left-info" id={item.id}>
                 <h2 className={`${FONT_MONT_BOOK.className} growth-points-item-left-info-title`}>
@@ -171,6 +277,7 @@ export const GrowthPointsScrollableBlock = () => {
             ))}
           </div>
 
+          {/* Правая колонка - картинки */}
           <div className="growth-points-item-right" ref={rightColumnRef}>
             {GROWTH_POINT_ITEMS.slice().map((item, index) => (
               <div
@@ -181,10 +288,13 @@ export const GrowthPointsScrollableBlock = () => {
                 <Image
                   src={item.imageSrc}
                   alt={item.imageAlt}
-                  width={900}
-                  height={536}
+                  width={isMobile ? 612 : 900}
+                  height={isMobile ? 275 : 536}
                   priority
                   className="growth-points-item-right-img"
+                  style={{
+                    objectFit: 'cover'
+                  }}
                 />
               </div>
             ))}
