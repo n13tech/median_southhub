@@ -11,11 +11,6 @@ import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
 import { NBSP } from '@/app/constants';
 
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
 export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
@@ -23,8 +18,11 @@ export const GrowthPointsScrollableBlock = () => {
   const leftColumnRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const mobileAnimationRef = useRef<gsap.core.Timeline | null>(null);
+  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
     // Проверка на мобильное устройство
     const checkMobile = () => {
       const mobile = window.matchMedia("(max-width: 1024px)").matches;
@@ -64,8 +62,9 @@ export const GrowthPointsScrollableBlock = () => {
     const imgs = gsap.utils.toArray('.growth-points-item-right-img') as HTMLImageElement[];
     const infoSections = gsap.utils.toArray('.growth-points-item-left-info') as HTMLElement[];
 
-    // Очищаем все предыдущие ScrollTrigger
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    // Очищаем только наши предыдущие ScrollTrigger
+    scrollTriggersRef.current.forEach(trigger => trigger.kill());
+    scrollTriggersRef.current = [];
     
     // Убиваем предыдущие анимации
     if (mobileAnimationRef.current) {
@@ -85,6 +84,11 @@ export const GrowthPointsScrollableBlock = () => {
           invalidateOnRefresh: true
         }
       });
+
+      // Сохраняем созданный триггер
+      if (mainTimeline.scrollTrigger) {
+        scrollTriggersRef.current.push(mainTimeline.scrollTrigger);
+      }
 
       gsap.set(imgs, {
         clipPath: "inset(0)",
@@ -142,8 +146,8 @@ export const GrowthPointsScrollableBlock = () => {
         scrollTrigger: {
           trigger: ".growth-points-scrollable-block",
           start: "top top",
-          end: () => `+=${infoSections.length * 100}%`, // Динамический end
-          scrub: 0.5, // Плавный скраб
+          end: "bottom bottom",
+          scrub: 0.5,
           pin: ".growth-points-item-right",
           pinSpacing: false,
           anticipatePin: 1,
@@ -162,6 +166,11 @@ export const GrowthPointsScrollableBlock = () => {
           }
         }
       });
+
+      // Сохраняем созданный триггер
+      if (mobileTimeline.scrollTrigger) {
+        scrollTriggersRef.current.push(mobileTimeline.scrollTrigger);
+      }
 
       // Устанавливаем начальные состояния
       imgs.forEach((img, index) => {
@@ -219,7 +228,11 @@ export const GrowthPointsScrollableBlock = () => {
     // Cleanup
     return () => {
       lenisRef.current?.destroy();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      
+      // Убиваем только наши триггеры
+      scrollTriggersRef.current.forEach(trigger => trigger.kill());
+      scrollTriggersRef.current = [];
+      
       if (mobileAnimationRef.current) {
         mobileAnimationRef.current.kill();
         mobileAnimationRef.current = null;
@@ -284,7 +297,7 @@ export const GrowthPointsScrollableBlock = () => {
                   className="growth-points-item-right-img"
                   style={{
                     objectFit: 'cover',
-                    willChange: 'transform' // Оптимизация для Chrome
+                    willChange: 'transform'
                   }}
                 />
               </div>
