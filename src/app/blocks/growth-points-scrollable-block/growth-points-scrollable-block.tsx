@@ -72,8 +72,32 @@ export const GrowthPointsScrollableBlock = () => {
       mobileAnimationRef.current = null;
     }
 
+    // СБРАСЫВАЕМ СТИЛИ ПРАВОЙ КОЛОНКИ ПЕРЕД ПРИМЕНЕНИЕМ НОВЫХ
+    if (rightColumnRef.current) {
+      // Сбрасываем все инлайновые стили
+      rightColumnRef.current.removeAttribute('style');
+      
+      // Также сбрасываем стили для всех картинок
+      imgs.forEach(img => {
+        if (img && img.style) {
+          img.removeAttribute('style');
+        }
+      });
+    }
+
     // Десктоп анимация (1025px+)
     if (!isMobile) {
+      // Убедимся, что правый столбец имеет правильные стили для десктопа
+      if (rightColumnRef.current) {
+        // Сбрасываем мобильные стили
+        rightColumnRef.current.style.height = '';
+        rightColumnRef.current.style.marginTop = '';
+        
+        // Добавляем класс для десктопа если нужно
+        rightColumnRef.current.classList.remove('mobile');
+        rightColumnRef.current.classList.add('desktop');
+      }
+
       const mainTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: ".growth-points-scrollable-block",
@@ -90,9 +114,16 @@ export const GrowthPointsScrollableBlock = () => {
         scrollTriggersRef.current.push(mainTimeline.scrollTrigger);
       }
 
+      // Сбрасываем стили картинок для десктопа
+      gsap.set(imgs, {
+        clearProps: "all", // Очищаем все предыдущие свойства
+      });
+
+      // Устанавливаем начальные стили для десктопа
       gsap.set(imgs, {
         clipPath: "inset(0)",
-        objectPosition: "0px 0%"
+        objectPosition: "0px 0%",
+        objectFit: "cover"
       });
 
       imgs.forEach((_, index) => {
@@ -133,12 +164,24 @@ export const GrowthPointsScrollableBlock = () => {
       if (rightColumnRef.current) {
         rightColumnRef.current.style.height = '275px';
         rightColumnRef.current.style.marginTop = '90px';
+        
+        // Добавляем класс для мобилки если нужно
+        rightColumnRef.current.classList.remove('desktop');
+        rightColumnRef.current.classList.add('mobile');
       }
 
       // Оптимизация: включаем аппаратное ускорение
+      // Сначала очищаем все стили
+      gsap.set(imgs, {
+        clearProps: "all",
+      });
+
+      // Затем устанавливаем мобильные стили
       gsap.set(imgs, {
         willChange: 'clip-path',
-        force3D: true
+        force3D: true,
+        objectFit: 'cover',
+        objectPosition: 'center center'
       });
 
       // Создаем одну общую timeline для всей анимации
@@ -172,7 +215,7 @@ export const GrowthPointsScrollableBlock = () => {
         scrollTriggersRef.current.push(mobileTimeline.scrollTrigger);
       }
 
-      // Устанавливаем начальные состояния
+      // Устанавливаем начальные состояния для мобилки
       imgs.forEach((img, index) => {
         if (index === 0) {
           // Первая картинка - видима
@@ -227,6 +270,7 @@ export const GrowthPointsScrollableBlock = () => {
 
     // Cleanup
     return () => {
+      console.log('CLEAN');
       lenisRef.current?.destroy();
       
       // Убиваем только наши триггеры
@@ -296,8 +340,7 @@ export const GrowthPointsScrollableBlock = () => {
                   priority
                   className="growth-points-item-right-img"
                   style={{
-                    objectFit: 'cover',
-                    willChange: 'transform'
+                    objectFit: 'cover'
                   }}
                 />
               </div>
