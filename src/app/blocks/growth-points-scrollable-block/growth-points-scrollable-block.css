@@ -104,6 +104,16 @@
     }
 }
 
+.growth-points-item-left-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+    height: 100vh;
+}
+
+
 /** ------------------------ */
 .growth-points-block-title {
     font-weight: 500;
@@ -138,16 +148,6 @@
     @media screen and (max-width: 1024px) {
         font-size: 16px;
     }
-}
-
-
-.growth-points-item-left-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 24px;
-    width: 100%;
-    height: 100vh;
 }
 
 .growth-points-item-left-info-title {
