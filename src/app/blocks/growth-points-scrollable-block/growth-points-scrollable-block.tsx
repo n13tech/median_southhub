@@ -22,6 +22,7 @@ export const GrowthPointsScrollableBlock = () => {
   const rightColumnRef = useRef<HTMLDivElement>(null);
   const leftColumnRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const mobileAnimationRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     // Проверка на мобильное устройство
@@ -65,6 +66,12 @@ export const GrowthPointsScrollableBlock = () => {
 
     // Очищаем все предыдущие ScrollTrigger
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    
+    // Убиваем предыдущие анимации
+    if (mobileAnimationRef.current) {
+      mobileAnimationRef.current.kill();
+      mobileAnimationRef.current = null;
+    }
 
     // Десктоп анимация (1025px+)
     if (!isMobile) {
@@ -124,116 +131,99 @@ export const GrowthPointsScrollableBlock = () => {
         rightColumnRef.current.style.marginTop = '90px';
       }
 
-      // Устанавливаем начальные стили для картинок
+      // Оптимизация: включаем аппаратное ускорение
       gsap.set(imgs, {
-        objectPosition: "center center"
+        willChange: 'clip-path',
+        force3D: true
       });
 
-      // ПЕРВАЯ КАРТИНКА: полностью видна
-      if (imgs[0]) {
-        gsap.set(imgs[0], {
-          clipPath: "inset(0px 0px 0px 0px)",
-          objectPosition: "center 50%"
-        });
-      }
+      // Создаем одну общую timeline для всей анимации
+      const mobileTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".growth-points-scrollable-block",
+          start: "top top",
+          end: () => `+=${infoSections.length * 100}%`, // Динамический end
+          scrub: 0.5, // Плавный скраб
+          pin: ".growth-points-item-right",
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            // Синхронизация с текстовыми блоками
+            const progress = self.progress;
+            const activeIndex = Math.floor(progress * infoSections.length);
+            
+            // Показываем/скрываем текстовые блоки
+            infoSections.forEach((section, index) => {
+              if (index === activeIndex) {
+                gsap.set(section, { opacity: 1, scale: 1 });
+              }
+            });
+          }
+        }
+      });
 
-      // ОСТАЛЬНЫЕ КАРТИНКИ: полностью скрыты
-      for (let i = 1; i < imgs.length; i++) {
-        if (imgs[i]) {
-          gsap.set(imgs[i], {
-            clipPath: "inset(100% 0px 0px 0px)",
+      // Устанавливаем начальные состояния
+      imgs.forEach((img, index) => {
+        if (index === 0) {
+          // Первая картинка - видима
+          gsap.set(img, {
+            clipPath: "inset(0% 0% 0% 0%)",
+            objectPosition: "center 50%"
+          });
+        } else {
+          // Остальные - скрыты
+          gsap.set(img, {
+            clipPath: "inset(100% 0% 0% 0%)",
             objectPosition: "center 50%"
           });
         }
+      });
+
+      // Создаем анимации переходов между картинками
+      const sectionDuration = 1 / infoSections.length;
+      
+      for (let i = 0; i < imgs.length - 1; i++) {
+        const currentImg = imgs[i];
+        const nextImg = imgs[i + 1];
+        const startPosition = i * sectionDuration;
+        const endPosition = (i + 1) * sectionDuration;
+        
+        // Анимация скрытия текущей картинки
+        mobileTimeline.to(currentImg, {
+          clipPath: "inset(0% 0% 100% 0%)",
+          objectPosition: "center 70%",
+          duration: sectionDuration * 0.8, // 80% секции на переход
+          ease: "none"
+        }, startPosition + sectionDuration * 0.1); // Начинаем через 10% секции
+        
+        // Анимация появления следующей картинки
+        mobileTimeline.fromTo(nextImg,
+          {
+            clipPath: "inset(100% 0% 0% 0%)",
+            objectPosition: "center 30%"
+          },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            objectPosition: "center 50%",
+            duration: sectionDuration * 0.8,
+            ease: "none"
+          },
+          startPosition + sectionDuration * 0.1
+        );
       }
 
-      // Создаем ScrollTrigger для каждого текстового блока
-      infoSections.forEach((section, index) => {
-        const currentImage = imgs[index];
-        const nextImage = imgs[index + 1];
-        
-        // Убираем все анимации opacity и scale у текста
-        // Текст просто появляется и исчезает
-        
-        if (nextImage) {
-          // Создаем ScrollTrigger для синхронизации анимации картинки с текстовым блоком
-          ScrollTrigger.create({
-            trigger: section,
-            start: "top center", // Когда блок появляется в центре экрана
-            end: "bottom center", // Когда блок уходит из центра экрана
-            scrub: true, // Линейная привязка к скроллу
-            onUpdate: (self) => {
-              const progress = self.progress;
-              
-              if (currentImage && nextImage) {
-                // Текущая картинка скрывается снизу
-                gsap.set(currentImage, {
-                  clipPath: `inset(0px 0px ${progress * 100}%)`,
-                  objectPosition: `center ${50 + progress * 20}%`
-                });
-                
-                // Следующая картинка "заезжает" сверху
-                gsap.set(nextImage, {
-                  clipPath: `inset(${(1 - progress) * 100}% 0px 0px 0px)`,
-                  objectPosition: `center ${30 + progress * 20}%`
-                });
-                
-                // Скрываем предыдущие картинки
-                for (let i = 0; i < index; i++) {
-                  if (imgs[i]) {
-                    gsap.set(imgs[i], {
-                      clipPath: "inset(0px 0px 100%)"
-                    });
-                  }
-                }
-                
-                // Скрываем будущие картинки
-                for (let i = index + 2; i < imgs.length; i++) {
-                  if (imgs[i]) {
-                    gsap.set(imgs[i], {
-                      clipPath: "inset(100% 0px 0px 0px)"
-                    });
-                  }
-                }
-              }
-            },
-            onEnterBack: () => {
-              // При скролле обратно
-              if (index > 0) {
-                const prevImage = imgs[index - 1];
-                if (prevImage && currentImage) {
-                  // Показываем предыдущую картинку
-                  gsap.set(prevImage, {
-                    clipPath: "inset(0px 0px 0px 0px)",
-                    objectPosition: "center 50%"
-                  });
-                  
-                  // Скрываем текущую
-                  gsap.set(currentImage, {
-                    clipPath: "inset(100% 0px 0px 0px)",
-                    objectPosition: "center 30%"
-                  });
-                }
-              }
-            }
-          });
-        }
-      });
-
-      // ПИН для картинки - чтобы она оставалась наверху
-      ScrollTrigger.create({
-        trigger: ".growth-points-scrollable-block",
-        start: "top top",
-        end: "bottom bottom",
-        pin: ".growth-points-item-right",
-        pinSpacing: false
-      });
+      mobileAnimationRef.current = mobileTimeline;
     }
 
     // Cleanup
     return () => {
       lenisRef.current?.destroy();
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      if (mobileAnimationRef.current) {
+        mobileAnimationRef.current.kill();
+        mobileAnimationRef.current = null;
+      }
       window.removeEventListener('resize', checkMobile);
     };
   }, [isMobile]);
@@ -293,7 +283,8 @@ export const GrowthPointsScrollableBlock = () => {
                   priority
                   className="growth-points-item-right-img"
                   style={{
-                    objectFit: 'cover'
+                    objectFit: 'cover',
+                    willChange: 'transform' // Оптимизация для Chrome
                   }}
                 />
               </div>
