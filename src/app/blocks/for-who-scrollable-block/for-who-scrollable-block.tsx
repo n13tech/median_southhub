@@ -1,3 +1,5 @@
+'use client';
+
 import { NBSP } from '@/app/constants';
 import { FONT_MONT_BOOK } from '../../fonts';
 

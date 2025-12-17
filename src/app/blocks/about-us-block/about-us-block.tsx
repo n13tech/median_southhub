@@ -4,10 +4,10 @@ import { FONT_MONT_BOOK } from '../../fonts';
 import './about-us-block.css';
 import Image from 'next/image';
 
-import AboutUsImg from '../../../../public/about-us-img.jpg';
+import AboutUsImg from '../../../../public/about-us-img.webp';
 import MedianLogo from '../../../../public/median-logo.png';
 import { AboutUsBlockButton } from './about-us-block-button';
-import { NBSP } from '@/app/constants';
+import { MEDIAN_LINK, NBSP } from '@/app/constants';
 
 export const AboutUsBlock = () => {
     return (
@@ -43,7 +43,7 @@ export const AboutUsBlock = () => {
                         </p>
 
                         <div>
-                            <a href='https://median.agency/' target='_blank' className={`${FONT_MONT_BOOK.className} about-us-block-info-text-median`}>
+                            <a href={MEDIAN_LINK} target='_blank' className={`${FONT_MONT_BOOK.className} about-us-block-info-text-median`}>
                                 median.agency
                             </a>
                             <p className={`${FONT_MONT_BOOK.className} about-us-block-info-text`}>

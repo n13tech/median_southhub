@@ -1,227 +1,353 @@
 'use client';
 
-import { Fade } from 'react-awesome-reveal';
-import { FONT_MONT_BOOK } from '../../fonts';
-import ClubMeet from '../../../../public/встречи.jpg'
-import YoutubeChanell from '../../../../public/ютуб.jpg'
-import TelegramChanell from '../../../../public/тг.jpg'
-import OnlineBroadcast from '../../../../public/эфир.jpg'
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-import { Button } from 'antd';
-import Image, { StaticImageData } from 'next/image';
-import { NBSP } from '@/app/constants';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 import './growth-points-scrollable-block.css';
-
-type Props = {
-    img?: StaticImageData | string;
-    video?: string;
-    alt: string;
-    title: string;
-    description: string;
-    buttonTitle: string;
-    onClick: () => void;
-}
-
-const Card = ({ img, video, alt, title, description, buttonTitle, onClick }: Props) => {
-    return (
-        <div className='events-block-card-wrapper'>
-            <div className='events-block-card-info'>
-                <div className='events-block-card-info-text-wrapper'>
-                    <Fade direction='up' triggerOnce>
-                        <h4 className={`${FONT_MONT_BOOK.className} events-block-card-info-title`}>{title}</h4>
-                    </Fade>
-                    <Fade delay={250} triggerOnce>
-                        <p className={`${FONT_MONT_BOOK.className} events-block-card-info-description`}>{description}</p>
-                    </Fade>
-                </div>
-                <Fade delay={250} triggerOnce>
-                    <Button className={`${FONT_MONT_BOOK.className} events-block-card-info-button`} onClick={onClick} type='primary'>
-                        {buttonTitle}
-                    </Button>
-                </Fade>
-            </div>
-
-            <Fade direction='right' delay={250} triggerOnce>
-                <div>
-                    {img && (
-                        <Image
-                            src={img}
-                            alt={alt}
-                            width={313}
-                            height={209}
-                            priority
-                        />
-                    )}
-                    {video && (
-                        <video width="313" height="209" autoPlay loop muted>
-                            <source src={video} type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" />
-                            Your browser does not support the video tag.
-                        </video>
-                    )}
-                </div>
-            </Fade>
-        </div>
-    );
-};
-
+import Image from 'next/image';
+import { GROWTH_POINT_ITEMS } from './constants';
+import { FONT_MONT_BOOK } from '@/app/fonts';
+import { Button } from 'antd';
+import { NBSP } from '@/app/constants';
 
 export const GrowthPointsScrollableBlock = () => {
-    useEffect(() => {
-        gsap.registerPlugin(ScrollTrigger);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<Lenis | null>(null);
+  const rightColumnRef = useRef<HTMLDivElement>(null);
+  const leftColumnRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const mobileAnimationRef = useRef<gsap.core.Timeline | null>(null);
+  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
 
-        const delay = 0.5;
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
 
-        const items: Element[] = gsap.utils.toArray(".events-block-card-wrapper");
+    // Проверка на мобильное устройство
+    const checkMobile = () => {
+      const mobile = window.matchMedia("(max-width: 1024px)").matches;
+      setIsMobile(mobile);
+    };
 
-        const tl = gsap.timeline({
-            defaults: {
-                ease: "power1.inOut",
-            },
-            scrollTrigger: {
-                trigger: "#growth-points-block",
-                start: "top top",
-                end: "+=" + (items.length - 1) * 100 + "%",
-                pin: '.growth-points-scrollable-block',
-                scrub: true,
-                // markers: true,
-                anticipatePin: 1,
-                snap: {
-                    snapTo: 1 / (items.length - 1), // Привязка к прогрессу каждого слайда
-                    duration: { min: 0.2, max: 0.8 },
-                    ease: "power1.inOut",
-                }
-            }
-        });
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
 
-        gsap.set(items, {
-            opacity: 0,
-            y: 30,
-            scale: 0.8,
-        });
+    // Lenis initialization
+    lenisRef.current = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      gestureOrientation: "vertical",
+      syncTouch: true,
+      touchMultiplier: 2
+    });
 
-        // Первый элемент видим изначально
-        gsap.set(items[0], {
-            opacity: 1,
-            y: 0,
-            scale: 1
-        });
+    const raf = (time: number) => {
+      lenisRef.current?.raf(time);
+      ScrollTrigger.update();
+      requestAnimationFrame(raf);
+    };
 
-        items.forEach((item, i) => {
-            const nextSlide = items[i + 1];
-            if (!nextSlide) {
-                return;
-            }
+    requestAnimationFrame(raf);
 
-            // Исчезание текущего элемента
-            tl.to(item, {
-                opacity: 0,
-                y: -30,
-                scale: 0.8,
-                duration: 0.8
-            }, "+=" + delay)
-            // Появление следующего элемента
-            .to(nextSlide, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.8
-            }, "<");
-        });
+    // Set z-index for images
+    const imgWrappers = document.querySelectorAll('.growth-points-item-right-img-wrapper');
+    imgWrappers.forEach((wrapper, index) => {
+      if (wrapper) {
+        wrapper.setAttribute('data-index', (index + 1).toString());
+        (wrapper as HTMLElement).style.zIndex = (imgWrappers.length - index).toString();
+      }
+    });
 
-        // Добавляем финальную паузу
-        tl.to({}, { duration: delay });
+    // GSAP Animation
+    const imgs = gsap.utils.toArray('.growth-points-item-right-img') as HTMLImageElement[];
+    const infoSections = gsap.utils.toArray('.growth-points-item-left-info') as HTMLElement[];
 
-        return () => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-        };
-    }, []);
+    // Очищаем только наши предыдущие ScrollTrigger
+    scrollTriggersRef.current.forEach(trigger => trigger.kill());
+    scrollTriggersRef.current = [];
+    
+    // Убиваем предыдущие анимации
+    if (mobileAnimationRef.current) {
+      mobileAnimationRef.current.kill();
+      mobileAnimationRef.current = null;
+    }
 
-    return (
-        <div className='growth-points-scrollable-block-wrapper' id='growth-points-block'>
-            <div className='growth-points-scrollable-block'>
-                <div className='growth-points-block-wrapper'>
-                    <Fade direction='up' triggerOnce>
-                        <h2 className={`${FONT_MONT_BOOK.className} growth-points-block-title`}>
-                            {'Точки роста'}
-                        </h2>
-                    </Fade>
+    // СБРАСЫВАЕМ СТИЛИ ПРАВОЙ КОЛОНКИ ПЕРЕД ПРИМЕНЕНИЕМ НОВЫХ
+    if (rightColumnRef.current) {
+      // Сбрасываем все инлайновые стили
+      rightColumnRef.current.removeAttribute('style');
+      
+      // Также сбрасываем стили для всех картинок
+      imgs.forEach(img => {
+        if (img && img.style) {
+          img.removeAttribute('style');
+        }
+      });
+    }
 
-                    <Fade delay={250} triggerOnce>
-                        <p className={`${FONT_MONT_BOOK.className} growth-points-block-description`}>
-                            {'Форматы взаимодействия сообщества'}
-                        </p>
-                    </Fade>
-                </div>
+    // Десктоп анимация (1025px+)
+    if (!isMobile) {
+      // Убедимся, что правый столбец имеет правильные стили для десктопа
+      if (rightColumnRef.current) {
+        // Сбрасываем мобильные стили
+        rightColumnRef.current.style.height = '';
+        rightColumnRef.current.style.marginTop = '';
+        
+        // Добавляем класс для десктопа если нужно
+        rightColumnRef.current.classList.remove('mobile');
+        rightColumnRef.current.classList.add('desktop');
+      }
 
-                <div className='events-block-wrapper'>
-                    <Card
-                        img='/SB-4.gif'
-                        alt='snow-base-camp'
-                        title='Snow BASE Camp'
-                        description={`19–22 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`}
-                        buttonTitle='Участвовать'
-                        onClick={() => window.open('https://southhub.ru/snowbase/', '_blank')}
-                    />
+      const mainTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".growth-points-scrollable-block",
+          start: "top top",
+          end: "bottom bottom",
+          pin: ".growth-points-item-right",
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      });
 
-                    <Card
-                        img='/SH2-2.gif'
-                        alt='south-hub-camp'
-                        title='South HUB Camp'
-                        description={`10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в${NBSP}ІТ`}
-                        buttonTitle='УЧАСТВОВАТЬ'
-                        onClick={() => window.open('https://southhub.ru/southub/', '_blank')}
-                    />
+      // Сохраняем созданный триггер
+      if (mainTimeline.scrollTrigger) {
+        scrollTriggersRef.current.push(mainTimeline.scrollTrigger);
+      }
 
-                    <Card
-                        img={ClubMeet}
-                        alt='club-meet'
-                        title='Клубные встречи'
-                        description={`Камерные события, где вы сами задаёте формат: пробежки, воркшопы, дискуссии. Здесь начинаются новые идеи и${NBSP}партнёрства`}
-                        buttonTitle='Участвовать'
-                        onClick={() => window.open('https://lk.southhub.ru/', '_blank')}
-                    />
+      // Сбрасываем стили картинок для десктопа
+      gsap.set(imgs, {
+        clearProps: "all", // Очищаем все предыдущие свойства
+      });
 
-                    <Card
-                        img={YoutubeChanell}
-                        alt='youtube-chanell'
-                        title='YouTube-канал'
-                        description={`Все записи встреч и${NBSP}вдохновляющие речи лидеров индустрии`}
-                        buttonTitle='СМОТРЕТЬ'
-                        onClick={() => window.open('https://www.youtube.com/@sthhb', '_blank')}
-                    />
+      // Устанавливаем начальные стили для десктопа
+      gsap.set(imgs, {
+        clipPath: "inset(0)",
+        objectPosition: "0px 0%",
+        objectFit: "cover"
+      });
 
-                    <Card
-                        img={TelegramChanell}
-                        alt='telegramm-chanell'
-                        title='Telegram-канал'
-                        description={`Медиа, чтобы держать руку на пульсе cообщества, быть в${NBSP}курсе новых событий и${NBSP}находить поводы для живого диалога`}
-                        buttonTitle='Подписаться'
-                        onClick={() => window.open('https://t.me/+A-vMV8yq_6M3ZjFi', '_blank')}
-                    />
+      imgs.forEach((_, index) => {
+        const currentImage = imgs[index];
+        const nextImage = imgs[index + 1] ? imgs[index + 1] : null;
 
-                    <Card
-                        img={OnlineBroadcast}
-                        alt='online-broadcast'
-                        title='Онлайн-эфиры'
-                        description={`Каждый раз новый формат: мок-интервью, дискуссии на злободневные темы и${NBSP}живые обсуждения с${NBSP}лидерами рынка`}
-                        buttonTitle='смотреть'
-                        onClick={() => window.open('https://www.youtube.com/playlist?list=PL1GqRF3TOpZAHPTOiNLLXByfEwVjHvvLO', '_blank')}
-                    />
+        const sectionTimeline = gsap.timeline();
 
-                    {/* <Card
-                        img={CommunityChat}
-                        alt='community-chat'
-                        title='Чат сообщества'
-                        description={`Здесь встречаются с${NBSP}людьми, идеями и новыми вызовами`}
-                        buttonTitle='Вступить'
-                        onClick={() => alert('ВСТУПИ НЕ ТУПИ!')}
-                    /> */}
-                </div>
-            </div>
+        if (nextImage) {
+          sectionTimeline
+            .to(
+              currentImage,
+              {
+                clipPath: "inset(0px 0px 100%)",
+                objectPosition: "0px 60%",
+                duration: 1.5,
+                ease: "none"
+              },
+              0
+            )
+            .to(
+              nextImage,
+              {
+                objectPosition: "0px 40%",
+                duration: 1.5,
+                ease: "none"
+              },
+              0
+            );
+        }
+
+        mainTimeline.add(sectionTimeline);
+      });
+
+    // Мобильная анимация (до 1024px)
+    } else {
+      // Переопределяем высоту контейнера для мобильных
+      if (rightColumnRef.current) {
+        rightColumnRef.current.style.height = '275px';
+        rightColumnRef.current.style.marginTop = '90px';
+        
+        // Добавляем класс для мобилки если нужно
+        rightColumnRef.current.classList.remove('desktop');
+        rightColumnRef.current.classList.add('mobile');
+      }
+
+      // Оптимизация: включаем аппаратное ускорение
+      // Сначала очищаем все стили
+      gsap.set(imgs, {
+        clearProps: "all",
+      });
+
+      // Затем устанавливаем мобильные стили
+      gsap.set(imgs, {
+        willChange: 'clip-path',
+        force3D: true,
+        objectFit: 'cover',
+        objectPosition: 'center center'
+      });
+
+      // Создаем одну общую timeline для всей анимации
+      const mobileTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".growth-points-scrollable-block",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.5,
+          pin: ".growth-points-item-right",
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            // Синхронизация с текстовыми блоками
+            const progress = self.progress;
+            const activeIndex = Math.floor(progress * infoSections.length);
+            
+            // Показываем/скрываем текстовые блоки
+            infoSections.forEach((section, index) => {
+              if (index === activeIndex) {
+                gsap.set(section, { opacity: 1, scale: 1 });
+              }
+            });
+          }
+        }
+      });
+
+      // Сохраняем созданный триггер
+      if (mobileTimeline.scrollTrigger) {
+        scrollTriggersRef.current.push(mobileTimeline.scrollTrigger);
+      }
+
+      // Устанавливаем начальные состояния для мобилки
+      imgs.forEach((img, index) => {
+        if (index === 0) {
+          // Первая картинка - видима
+          gsap.set(img, {
+            clipPath: "inset(0% 0% 0% 0%)",
+            objectPosition: "center 50%"
+          });
+        } else {
+          // Остальные - скрыты
+          gsap.set(img, {
+            clipPath: "inset(100% 0% 0% 0%)",
+            objectPosition: "center 50%"
+          });
+        }
+      });
+
+      // Создаем анимации переходов между картинками
+      const sectionDuration = 1 / infoSections.length;
+      
+      for (let i = 0; i < imgs.length - 1; i++) {
+        const currentImg = imgs[i];
+        const nextImg = imgs[i + 1];
+        const startPosition = i * sectionDuration;
+        const endPosition = (i + 1) * sectionDuration;
+        
+        // Анимация скрытия текущей картинки
+        mobileTimeline.to(currentImg, {
+          clipPath: "inset(0% 0% 100% 0%)",
+          objectPosition: "center 70%",
+          duration: sectionDuration * 0.8, // 80% секции на переход
+          ease: "none"
+        }, startPosition + sectionDuration * 0.1); // Начинаем через 10% секции
+        
+        // Анимация появления следующей картинки
+        mobileTimeline.fromTo(nextImg,
+          {
+            clipPath: "inset(100% 0% 0% 0%)",
+            objectPosition: "center 30%"
+          },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            objectPosition: "center 50%",
+            duration: sectionDuration * 0.8,
+            ease: "none"
+          },
+          startPosition + sectionDuration * 0.1
+        );
+      }
+
+      mobileAnimationRef.current = mobileTimeline;
+    }
+
+    // Cleanup
+    return () => {
+      console.log('CLEAN');
+      lenisRef.current?.destroy();
+      
+      // Убиваем только наши триггеры
+      scrollTriggersRef.current.forEach(trigger => trigger.kill());
+      scrollTriggersRef.current = [];
+      
+      if (mobileAnimationRef.current) {
+        mobileAnimationRef.current.kill();
+        mobileAnimationRef.current = null;
+      }
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, [isMobile]);
+
+  return (
+    <>
+      <div className='growth-points-block-wrapper' id='growth-points-block'>
+        <h2 className={`${FONT_MONT_BOOK.className} growth-points-block-title`}>
+          {'Точки роста'}
+        </h2>
+
+        <p className={`${FONT_MONT_BOOK.className} growth-points-block-description`}>
+          {'Форматы взаимодействия сообщества'}
+        </p>
+      </div>
+
+      <div className="growth-points-scrollable-block-wrapper" ref={containerRef}>
+        <div className="growth-points-scrollable-block">
+          {/* Левая колонка - текст */}
+          <div className="growth-points-item-left" ref={leftColumnRef}>
+            {GROWTH_POINT_ITEMS.map((item) => (
+              <div key={item.id} className="growth-points-item-left-info" id={item.id}>
+                <h2 className={`${FONT_MONT_BOOK.className} growth-points-item-left-info-title`}>
+                  {item.title}
+                </h2>
+                <p className={`${FONT_MONT_BOOK.className} growth-points-item-left-info-description`}>
+                  {item.description}
+                </p>
+                <Button
+                  className={`${FONT_MONT_BOOK.className} growth-points-item-left-info-button`}
+                  onClick={item.onClick}
+                  type='text'
+                >
+                  {item.buttonTitle}
+                  {NBSP}
+                  <svg width="20" height="17" viewBox="0 0 20 17" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.16671e-06 7.49902L9.72279e-07 8.99902L15.4648 8.99902L15.4648 7.49902L1.16671e-06 7.49902ZM17.918 12.3154C20.1633 10.07 20.1631 6.42911 17.918 4.18359L13.7344 -7.78427e-07L12.6738 1.06055L16.8574 5.24414C18.5168 6.90387 18.517 9.59526 16.8574 11.2549L12.6738 15.4385L13.7344 16.5L17.918 12.3154Z" fill="#18436D" />
+                  </svg>
+                </Button>
+              </div>
+            ))}
+          </div>
+
+          {/* Правая колонка - картинки */}
+          <div className="growth-points-item-right" ref={rightColumnRef}>
+            {GROWTH_POINT_ITEMS.slice().map((item, index) => (
+              <div
+                key={`img-${item.id}`}
+                className="growth-points-item-right-img-wrapper"
+                data-index={GROWTH_POINT_ITEMS.length - index}
+              >
+                <Image
+                  src={item.imageSrc}
+                  alt={item.imageAlt}
+                  width={isMobile ? 612 : 900}
+                  height={isMobile ? 275 : 536}
+                  priority
+                  className="growth-points-item-right-img"
+                  style={{
+                    objectFit: 'cover'
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-    );
-}
+      </div>
+    </>
+  );
+};

@@ -1,16 +1,21 @@
 .netwarming-block-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 0 100px;
+    max-height: 370px;
     max-width: 1920px;
     margin: 0 auto;
+}
 
-    @media screen and (max-width: 1280px) {
-        padding: 0 40px;
-    }
+.netwarming-block-wrapper_mobile {
+    height: auto !important;
+}
 
-    @media screen and (max-width: 1024px) {
-        padding: 0 16px;
-    }
+.netwarming-block-wrapper canvas {
+    -webkit-user-select: none; /* Запрет выделения на iOS */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent; /* Убирает подсветку при тапе на iOS */
 }

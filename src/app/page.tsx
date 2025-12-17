@@ -1,99 +1,71 @@
-'use client';
-import { AccordionsBlock } from "./blocks/accordions-block";
-import { GrowthPointsScrollableBlock } from "./blocks/growth-points-scrollable-block";
-import { Footer } from "./blocks/footer";
-import { Header } from "./blocks/header"
-import { InfinityBanner } from "./blocks/infinity-banner";
-import { MainBanner } from "./blocks/main-banner";
-import { SimpleBlock } from "./blocks/simple-block";
-import { CommunityInNumbers } from "./blocks/community-in-numbers";
-import { AboutUsBlock } from "./blocks/about-us-block";
-import { useEffect, useState } from "react";
-import { Button } from "antd";
-import { NBSP } from "./constants";
-import { FONT_MONT_BOOK } from "./fonts";
-import { AccessibleBlock } from "./blocks/accessible-block";
-import { HowBecomeCommunityBlock } from "./blocks/how-become-community-block";
-import { NetwarmingBlock } from "./blocks/netwarming-block";
-import { PhilosophyBlock } from "./blocks/philosophy-block/philosophy-block";
-import { HotToSouthubBlock } from "./blocks/hot-to-southub-block/hot-to-southub-block";
-import { CarouselBlock } from "./blocks/carousel-block";
-import { ForWhoScrollableBlock } from "./blocks/for-who-scrollable-block";
+import { Metadata } from "next";
+import { getSeoData } from "./lib/seo";
+import HomeContent from "./home-content";
 
-export default function Home() {
-  const [isOpenCookieModal, setOpenCookieModal] = useState(false);
 
-  useEffect(() => {
-    window.scrollTo(0,0);
-  }, []);
+export async function generateMetadata({ params }: { params: Promise<{ slug?: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const data = await getSeoData(slug);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && !window.localStorage.getItem('isVisibleCookieAlert')) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setOpenCookieModal(true);
+    if (!data || !data.page) {
+        return {
+            title: 'Southuuub',
+            description: "South HUB – пространство, где участники получают доступ к коллективному разуму C-level в IT и становятся его частью. Мы создаём безопасную среду для свободного высказывания и обмена опытом. Участники сообщества — IT-лидеры, которые делают бизнес в России и мыслят масштабно. Попадите в круг равных, где доверие и открытость вдохновляют создавать новое вместе.",
+        };
     }
-  }, []);
 
-  useEffect(() => {
-      setTimeout(() => {
-        const video = document.querySelector('#home-video');
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        video?.play();
-      }, 250);
-  }, []);
+    const { page, site } = data;
+    
+    // Основные метаданные
+    const metadata: Metadata = {
+        title: page.seo_title || page.title,
+        description: page.search_description,
+        keywords: page.meta_keywords,
+        authors: page.seo_author ? [{ name: page.seo_author }] : undefined,
+    
+        // Open Graph
+        openGraph: {
+            title: page.og_title || page.seo_title || page.title,
+            description: page.og_description || page.search_description,
+            images: page.og_image_url ? [
+                {
+                    url: page.og_image_url,
+                    width: 1200,
+                    height: 630,
+                    alt: page.title,
+                }
+            ] : [],
+            siteName: page.og_site_name || site?.org_name,
+            url: page.canonical_url,
+            type: 'website',
+        },
+    
+        // Twitter
+        twitter: {
+            card: page.twitter_card as 'summary' | 'summary_large_image' | 'app' | 'player' || 'summary_large_image',
+            title: page.og_title || page.seo_title || page.title,
+            description: page.og_description || page.search_description,
+            images: page.og_image_url ? [page.og_image_url] : [],
+        },
+        
+        // Каноническая ссылка
+        alternates: {
+            canonical: page.canonical_url,
+        },
+    
+        // Robots
+        robots: {
+            index: true,
+            follow: true,
+        },
+  };
 
-  return (
-    <div style={{ position: 'relative', top: '0', left: '0' }}>
-        <Header />
+  return metadata;
+}
 
-        <div className="video-wrapper">
-          <video muted className='home-video' id='home-video' loop={false} playsInline>
-              <source src={'/AnimLettera.mp4'} type="video/mp4"  />
-          </video>
-        </div>
+export default async function Home({ params }: { params: Promise<{ slug?: string }> }) {
+    const { slug } = await params;
+    const data = await getSeoData(slug);
 
-        <main >
-            <MainBanner />
-            <SimpleBlock />
-            <AccordionsBlock />
-
-            <InfinityBanner />
-
-            <GrowthPointsScrollableBlock />
-            <CommunityInNumbers />
-
-            <InfinityBanner />
-
-            <ForWhoScrollableBlock />
-            <HotToSouthubBlock />
-            <CarouselBlock />
-            <PhilosophyBlock />
-            <NetwarmingBlock />
-            <HowBecomeCommunityBlock />
-            <AccessibleBlock />
-            <AboutUsBlock />
-        </main>
-
-        <Footer />
-
-        {isOpenCookieModal && (
-            <div className="cookie-banner">
-                <p className={`${FONT_MONT_BOOK.className} cookie-banner-text`}>
-                    {`Мы собираем cookies, потому что они помогают сайту помнить вас и${NBSP}оставаться таким${NBSP}же внимательным, как${NBSP}люди в${NBSP}сообществе South${NBSP}HUВ. Просто скажите «да»`}
-                </p>
-
-                <Button
-                    className={`${FONT_MONT_BOOK.className} cookie-banner-button`}
-                    onClick={() => {
-                        setOpenCookieModal(false)
-                        window.localStorage.setItem('isVisibleCookieAlert', 'true')}
-                    }
-                >
-                    да
-                </Button>
-            </div>
-        )}
-    </div>
-  );
+    return <HomeContent data={data} />;
 }

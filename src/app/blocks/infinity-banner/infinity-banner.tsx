@@ -1,9 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import TelegaIcon from '../../../../public/telegramm-icon-white.svg';
 import LogoWhite from '../../../../public/logo-white.svg';
 
 import './infinity-banner.css';
 import { FONT_MONT_BOOK } from '@/app/fonts';
+import { TELEGRAM_CHANELL_LINK } from '@/app/constants';
 
 const Item = () => {
     return (
@@ -46,7 +49,7 @@ const Item = () => {
 
 export const InfinityBanner = () => {
     return (
-        <a className='infinity-banner-wrapper' id='infinity-banner' href='https://t.me/+A-vMV8yq_6M3ZjFi' target='_blank'>
+        <a className='infinity-banner-wrapper' id='infinity-banner' href={TELEGRAM_CHANELL_LINK} target='_blank'>
             <div className="infinity-banner-items infinity-banner-marquee">
                 <Item />
                 <Item />

@@ -7,13 +7,14 @@ import Logo from '../../../../public/telega-black.svg';
 import Login from '../../../../public/login.svg';
 
 import './header.css';
+import { LK_REGISTER_LINK, TELEGRAM_CHANELL_LINK } from '@/app/constants';
 
 export const HeaderLogin = () => {
     return (
         <div className='header-login-block'>
             <a
                 className={`${FONT_MONT_BOOK.className} header_item header_item_logo`}
-                href='https://lk.southhub.ru/accounts/register/'
+                href={LK_REGISTER_LINK}
                 target='_blank'
             >
                 <p>войти</p>
@@ -24,7 +25,7 @@ export const HeaderLogin = () => {
                     height={50}
                 />
             </a>
-            <a href='https://t.me/+A-vMV8yq_6M3ZjFi' target='_blank' className={`${FONT_MONT_BOOK.className} header_item header_item_logo`}>
+            <a href={TELEGRAM_CHANELL_LINK} target='_blank' className={`${FONT_MONT_BOOK.className} header_item header_item_logo`}>
                 <Image
                     src={Logo}
                     alt='telega'
