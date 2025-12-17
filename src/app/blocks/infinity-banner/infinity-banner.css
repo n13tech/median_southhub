@@ -9,6 +9,12 @@
     cursor: pointer;
     margin-bottom: 60px;
 
+    &:hover {
+      .infinity-banner-marquee {
+        animation-play-state: paused;
+      }
+    }
+
     @media screen and (max-width: 1024px) {
         gap: 32px;
 

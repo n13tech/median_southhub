@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -11,17 +11,28 @@ import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
 import { NBSP } from '@/app/constants';
 
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
 export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const rightColumnRef = useRef<HTMLDivElement>(null);
+  const leftColumnRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const mobileAnimationRef = useRef<gsap.core.Timeline | null>(null);
+  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Проверка на мобильное устройство
+    const checkMobile = () => {
+      const mobile = window.matchMedia("(max-width: 1024px)").matches;
+      setIsMobile(mobile);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    // Lenis initialization
     lenisRef.current = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -49,22 +60,70 @@ export const GrowthPointsScrollableBlock = () => {
 
     // GSAP Animation
     const imgs = gsap.utils.toArray('.growth-points-item-right-img') as HTMLImageElement[];
+    const infoSections = gsap.utils.toArray('.growth-points-item-left-info') as HTMLElement[];
 
-    // Desktop animation
-    if (window.matchMedia("(min-width: 769px)").matches) {
+    // Очищаем только наши предыдущие ScrollTrigger
+    scrollTriggersRef.current.forEach(trigger => trigger.kill());
+    scrollTriggersRef.current = [];
+    
+    // Убиваем предыдущие анимации
+    if (mobileAnimationRef.current) {
+      mobileAnimationRef.current.kill();
+      mobileAnimationRef.current = null;
+    }
+
+    // СБРАСЫВАЕМ СТИЛИ ПРАВОЙ КОЛОНКИ ПЕРЕД ПРИМЕНЕНИЕМ НОВЫХ
+    if (rightColumnRef.current) {
+      // Сбрасываем все инлайновые стили
+      rightColumnRef.current.removeAttribute('style');
+      
+      // Также сбрасываем стили для всех картинок
+      imgs.forEach(img => {
+        if (img && img.style) {
+          img.removeAttribute('style');
+        }
+      });
+    }
+
+    // Десктоп анимация (1025px+)
+    if (!isMobile) {
+      // Убедимся, что правый столбец имеет правильные стили для десктопа
+      if (rightColumnRef.current) {
+        // Сбрасываем мобильные стили
+        rightColumnRef.current.style.height = '';
+        rightColumnRef.current.style.marginTop = '';
+        
+        // Добавляем класс для десктопа если нужно
+        rightColumnRef.current.classList.remove('mobile');
+        rightColumnRef.current.classList.add('desktop');
+      }
+
       const mainTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: ".growth-points-scrollable-block",
           start: "top top",
           end: "bottom bottom",
           pin: ".growth-points-item-right",
-          scrub: true
+          scrub: true,
+          invalidateOnRefresh: true
         }
       });
 
+      // Сохраняем созданный триггер
+      if (mainTimeline.scrollTrigger) {
+        scrollTriggersRef.current.push(mainTimeline.scrollTrigger);
+      }
+
+      // Сбрасываем стили картинок для десктопа
+      gsap.set(imgs, {
+        clearProps: "all", // Очищаем все предыдущие свойства
+      });
+
+      // Устанавливаем начальные стили для десктопа
       gsap.set(imgs, {
         clipPath: "inset(0)",
-        objectPosition: "0px 0%"
+        objectPosition: "0px 0%",
+        objectFit: "cover"
       });
 
       imgs.forEach((_, index) => {
@@ -98,40 +157,133 @@ export const GrowthPointsScrollableBlock = () => {
 
         mainTimeline.add(sectionTimeline);
       });
-      // Mobile animation
+
+    // Мобильная анимация (до 1024px)
     } else {
-      const mbTimeline = gsap.timeline();
+      // Переопределяем высоту контейнера для мобильных
+      if (rightColumnRef.current) {
+        rightColumnRef.current.style.height = '275px';
+        rightColumnRef.current.style.marginTop = '90px';
+        
+        // Добавляем класс для мобилки если нужно
+        rightColumnRef.current.classList.remove('desktop');
+        rightColumnRef.current.classList.add('mobile');
+      }
+
+      // Оптимизация: включаем аппаратное ускорение
+      // Сначала очищаем все стили
       gsap.set(imgs, {
-        objectPosition: "0px 60%"
+        clearProps: "all",
       });
 
-      imgs.forEach((image) => {
-        const innerTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: image,
-            start: "top-=70% top+=50%",
-            end: "bottom+=200% bottom",
-            scrub: true
+      // Затем устанавливаем мобильные стили
+      gsap.set(imgs, {
+        willChange: 'clip-path',
+        force3D: true,
+        objectFit: 'cover',
+        objectPosition: 'center center'
+      });
+
+      // Создаем одну общую timeline для всей анимации
+      const mobileTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".growth-points-scrollable-block",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.5,
+          pin: ".growth-points-item-right",
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            // Синхронизация с текстовыми блоками
+            const progress = self.progress;
+            const activeIndex = Math.floor(progress * infoSections.length);
+            
+            // Показываем/скрываем текстовые блоки
+            infoSections.forEach((section, index) => {
+              if (index === activeIndex) {
+                gsap.set(section, { opacity: 1, scale: 1 });
+              }
+            });
           }
-        });
-
-        innerTimeline
-          .to(image, {
-            objectPosition: "0px 30%",
-            duration: 5,
-            ease: "none"
-          });
-
-        mbTimeline.add(innerTimeline);
+        }
       });
+
+      // Сохраняем созданный триггер
+      if (mobileTimeline.scrollTrigger) {
+        scrollTriggersRef.current.push(mobileTimeline.scrollTrigger);
+      }
+
+      // Устанавливаем начальные состояния для мобилки
+      imgs.forEach((img, index) => {
+        if (index === 0) {
+          // Первая картинка - видима
+          gsap.set(img, {
+            clipPath: "inset(0% 0% 0% 0%)",
+            objectPosition: "center 50%"
+          });
+        } else {
+          // Остальные - скрыты
+          gsap.set(img, {
+            clipPath: "inset(100% 0% 0% 0%)",
+            objectPosition: "center 50%"
+          });
+        }
+      });
+
+      // Создаем анимации переходов между картинками
+      const sectionDuration = 1 / infoSections.length;
+      
+      for (let i = 0; i < imgs.length - 1; i++) {
+        const currentImg = imgs[i];
+        const nextImg = imgs[i + 1];
+        const startPosition = i * sectionDuration;
+        const endPosition = (i + 1) * sectionDuration;
+        
+        // Анимация скрытия текущей картинки
+        mobileTimeline.to(currentImg, {
+          clipPath: "inset(0% 0% 100% 0%)",
+          objectPosition: "center 70%",
+          duration: sectionDuration * 0.8, // 80% секции на переход
+          ease: "none"
+        }, startPosition + sectionDuration * 0.1); // Начинаем через 10% секции
+        
+        // Анимация появления следующей картинки
+        mobileTimeline.fromTo(nextImg,
+          {
+            clipPath: "inset(100% 0% 0% 0%)",
+            objectPosition: "center 30%"
+          },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            objectPosition: "center 50%",
+            duration: sectionDuration * 0.8,
+            ease: "none"
+          },
+          startPosition + sectionDuration * 0.1
+        );
+      }
+
+      mobileAnimationRef.current = mobileTimeline;
     }
 
     // Cleanup
     return () => {
+      console.log('CLEAN');
       lenisRef.current?.destroy();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      
+      // Убиваем только наши триггеры
+      scrollTriggersRef.current.forEach(trigger => trigger.kill());
+      scrollTriggersRef.current = [];
+      
+      if (mobileAnimationRef.current) {
+        mobileAnimationRef.current.kill();
+        mobileAnimationRef.current = null;
+      }
+      window.removeEventListener('resize', checkMobile);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <>
@@ -147,7 +299,8 @@ export const GrowthPointsScrollableBlock = () => {
 
       <div className="growth-points-scrollable-block-wrapper" ref={containerRef}>
         <div className="growth-points-scrollable-block">
-          <div className="growth-points-item-left">
+          {/* Левая колонка - текст */}
+          <div className="growth-points-item-left" ref={leftColumnRef}>
             {GROWTH_POINT_ITEMS.map((item) => (
               <div key={item.id} className="growth-points-item-left-info" id={item.id}>
                 <h2 className={`${FONT_MONT_BOOK.className} growth-points-item-left-info-title`}>
@@ -171,6 +324,7 @@ export const GrowthPointsScrollableBlock = () => {
             ))}
           </div>
 
+          {/* Правая колонка - картинки */}
           <div className="growth-points-item-right" ref={rightColumnRef}>
             {GROWTH_POINT_ITEMS.slice().map((item, index) => (
               <div
@@ -181,10 +335,13 @@ export const GrowthPointsScrollableBlock = () => {
                 <Image
                   src={item.imageSrc}
                   alt={item.imageAlt}
-                  width={900}
-                  height={536}
+                  width={isMobile ? 612 : 900}
+                  height={isMobile ? 275 : 536}
                   priority
                   className="growth-points-item-right-img"
+                  style={{
+                    objectFit: 'cover'
+                  }}
                 />
               </div>
             ))}
