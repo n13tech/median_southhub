@@ -3,6 +3,8 @@ services:
     build:
       context: .
       target: prod
+    env_file:
+      - .env.production
     container_name: nextjs_prod
     ports:
       - "3000:3000"

@@ -14,6 +14,9 @@ CMD ["npm", "run", "dev"]
 # ================================
 # Этап 2: сборка PROD
 FROM base AS builder
+
+COPY .env.production .env.production
+
 RUN npm ci
 COPY . .
 RUN npm run build
