@@ -22,10 +22,12 @@ export const GrowthPointsScrollableBlock = () => {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    let currIsMobile = false;
+
     // Проверка на мобильное устройство
     const checkMobile = () => {
-      const mobile = window.matchMedia("(max-width: 1024px)").matches;
-      setIsMobile(mobile);
+      currIsMobile = window.matchMedia("(max-width: 1024px)").matches;
+      setIsMobile(currIsMobile);
     };
 
     checkMobile();
@@ -33,11 +35,15 @@ export const GrowthPointsScrollableBlock = () => {
 
     // Lenis initialization
     lenisRef.current = new Lenis({
-      duration: 1.2,
+      duration: currIsMobile ? 0.8 : 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       gestureOrientation: "vertical",
+      touchMultiplier: currIsMobile ? 1.5 : 2,
+      wheelMultiplier: currIsMobile ? 0.8 : 1,
+      smoothWheel: true,
+      infinite: false,
+      autoResize: true,
       syncTouch: true,
-      touchMultiplier: 2
     });
 
     const raf = (time: number) => {
@@ -85,7 +91,7 @@ export const GrowthPointsScrollableBlock = () => {
     }
 
     // Десктоп анимация (1025px+)
-    if (!isMobile) {
+    if (!currIsMobile) {
       // Убедимся, что правый столбец имеет правильные стили для десктопа
       if (rightColumnRef.current) {
         // Сбрасываем мобильные стили
@@ -162,7 +168,7 @@ export const GrowthPointsScrollableBlock = () => {
       // Переопределяем высоту контейнера для мобильных
       if (rightColumnRef.current) {
         rightColumnRef.current.style.height = '275px';
-        rightColumnRef.current.style.marginTop = '90px';
+        rightColumnRef.current.style.marginTop = '72px';
         
         // Добавляем класс для мобилки если нужно
         rightColumnRef.current.classList.remove('desktop');
@@ -280,7 +286,7 @@ export const GrowthPointsScrollableBlock = () => {
       }
       window.removeEventListener('resize', checkMobile);
     };
-  }, [isMobile]);
+  }, []);
 
   return (
     <>
