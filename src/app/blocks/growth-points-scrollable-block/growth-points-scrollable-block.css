@@ -234,7 +234,7 @@
     }
 
     @media screen and (max-width: 512px) {
-        font-size: 14px;
+        font-size: 16px;
     }
 }
 
@@ -242,13 +242,22 @@
     display: flex;
     align-items: center;
     width: fit-content;
-    color: #18436D;
     height: 44px;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 44px;
-    text-transform: uppercase;
     padding: 0;
+    color: #18436D;
+
+    span:first-child {
+        padding-top: 3px;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 125%;
+        text-transform: uppercase;
+
+        @media screen and (max-width: 512px) {
+            padding-top: 2px;
+            font-size: 18px;
+        }
+    }
 
     svg path {
         fill: #18436D;
@@ -262,15 +271,5 @@
         svg path {
             fill: #E55929;
         }
-    }
-
-    @media screen and (max-width: 1280px) {
-        height: 36px;
-    }
-
-    @media screen and (max-width: 512px) {
-        height: 44px;
-        font-size: 14px;
-        bottom: 0;
     }
 }
