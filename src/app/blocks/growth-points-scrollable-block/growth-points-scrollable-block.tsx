@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
 import './growth-points-scrollable-block.css';
 import { GROWTH_POINT_ITEMS } from './constants';
 import { FONT_MONT_BOOK } from '@/app/fonts';
@@ -12,7 +11,6 @@ import { ImageWithFallback } from '@/app/components/image-with-fallback';
 
 export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const lenisRef = useRef<Lenis | null>(null);
   const rightColumnRef = useRef<HTMLDivElement>(null);
   const leftColumnRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -31,17 +29,7 @@ export const GrowthPointsScrollableBlock = () => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    // Lenis initialization
-    lenisRef.current = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      gestureOrientation: "vertical",
-      syncTouch: true,
-      touchMultiplier: 2
-    });
-
-    const raf = (time: number) => {
-      lenisRef.current?.raf(time);
+    const raf = () => {
       ScrollTrigger.update();
       requestAnimationFrame(raf);
     };
@@ -122,7 +110,7 @@ export const GrowthPointsScrollableBlock = () => {
       gsap.set(imgs, {
         clipPath: "inset(0)",
         objectPosition: "0px 0%",
-        objectFit: "cover"
+        objectFit: "fill"
       });
 
       imgs.forEach((_, index) => {
@@ -162,7 +150,7 @@ export const GrowthPointsScrollableBlock = () => {
       // Переопределяем высоту контейнера для мобильных
       if (rightColumnRef.current) {
         rightColumnRef.current.style.height = '275px';
-        rightColumnRef.current.style.marginTop = '90px';
+        rightColumnRef.current.style.marginTop = '72px';
         
         // Добавляем класс для мобилки если нужно
         rightColumnRef.current.classList.remove('desktop');
@@ -189,7 +177,7 @@ export const GrowthPointsScrollableBlock = () => {
           trigger: ".growth-points-scrollable-block",
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.5,
+          scrub: 0.3,
           pin: ".growth-points-item-right",
           pinSpacing: false,
           anticipatePin: 1,
@@ -268,8 +256,6 @@ export const GrowthPointsScrollableBlock = () => {
     }
 
     return () => {
-      lenisRef.current?.destroy();
-      
       // Убиваем только наши триггеры
       scrollTriggersRef.current.forEach(trigger => trigger.kill());
       scrollTriggersRef.current = [];

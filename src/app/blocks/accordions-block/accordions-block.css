@@ -64,7 +64,6 @@
 
         @media screen and (max-width: 1024px) {
             padding: 0 0 12px !important;
-            margin-top: -12px;
         }
     }
 
@@ -76,7 +75,10 @@
             width: 48px !important;
             min-width: 48px !important;
             height: 48px !important;
-            transition: all 0.2s ease-out;
+
+            img {
+                transition: all 0.2s ease-out;
+            }
 
             @media screen and (max-width: 1024px) {
                 width: 24px !important;
@@ -87,7 +89,7 @@
     }
 
     .ant-collapse-item-active {
-        .ant-collapse-expand-icon {
+        .ant-collapse-expand-icon img {
             transform: rotate(45deg);
         }
     }
