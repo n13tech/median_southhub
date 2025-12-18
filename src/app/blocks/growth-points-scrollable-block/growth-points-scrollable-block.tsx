@@ -310,12 +310,11 @@ export const GrowthPointsScrollableBlock = () => {
                   {item.description}
                 </p>
                 <Button
-                  className={`${FONT_MONT_BOOK.className} growth-points-item-left-info-button`}
+                  className={`growth-points-item-left-info-button`}
                   onClick={item.onClick}
                   type='text'
                 >
-                  {item.buttonTitle}
-                  {NBSP}
+                  <span className={`${FONT_MONT_BOOK.className}`}>{item.buttonTitle}</span>
                   <svg width="20" height="17" viewBox="0 0 20 17" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.16671e-06 7.49902L9.72279e-07 8.99902L15.4648 8.99902L15.4648 7.49902L1.16671e-06 7.49902ZM17.918 12.3154C20.1633 10.07 20.1631 6.42911 17.918 4.18359L13.7344 -7.78427e-07L12.6738 1.06055L16.8574 5.24414C18.5168 6.90387 18.517 9.59526 16.8574 11.2549L12.6738 15.4385L13.7344 16.5L17.918 12.3154Z" fill="#18436D" />
                   </svg>
