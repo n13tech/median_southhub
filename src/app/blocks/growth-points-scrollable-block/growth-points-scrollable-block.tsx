@@ -5,10 +5,10 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import './growth-points-scrollable-block.css';
-import Image from 'next/image';
 import { GROWTH_POINT_ITEMS } from './constants';
 import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
+import { ImageWithFallback } from '@/app/components/image-with-fallback';
 
 export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -328,16 +328,14 @@ export const GrowthPointsScrollableBlock = () => {
                 className="growth-points-item-right-img-wrapper"
                 data-index={GROWTH_POINT_ITEMS.length - index}
               >
-                <Image
+                <ImageWithFallback
                   src={item.imageSrc}
+                  altSrc={item.altSrc}
                   alt={item.imageAlt}
                   width={isMobile ? 612 : 900}
                   height={isMobile ? 275 : 536}
                   priority
                   className="growth-points-item-right-img"
-                  style={{
-                    objectFit: 'cover'
-                  }}
                 />
               </div>
             ))}
