@@ -21,6 +21,7 @@ export const MainBanner = () => {
     const loadedFramesRef = useRef<Set<number>>(new Set());
     const loadingQueueRef = useRef<number[]>([]);
     const isCurrentlyLoadingRef = useRef(false);
+    const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
     // Используем ref для функции, чтобы избежать проблем с порядком объявления
     const processLoadingQueueRef = useRef<() => Promise<void>>();
@@ -150,8 +151,6 @@ export const MainBanner = () => {
         
         if (!section || !content || !pin || !canvas || !ctx || !windowHeight) return;
 
-        let scrollTrigger: ScrollTrigger | null = null;
-
         const calculateSectionHeight = () => {
             return 5000 + windowHeight;
         };
@@ -160,11 +159,10 @@ export const MainBanner = () => {
         section.style.minHeight = `${sectionHeight}px`;
 
         const initScrollAnimation = () => {
-            ScrollTrigger.getAll().forEach(trigger => {
-                if (trigger.trigger === section) {
-                    trigger.kill();
-                }
-            });
+            if (scrollTriggerRef.current) {
+                scrollTriggerRef.current.kill();
+                scrollTriggerRef.current = null;
+            }
 
             const isTablet = window.innerWidth <= 1280 && window.innerWidth > 1024;
             const isMobile = window.innerWidth <= 1024;
@@ -180,7 +178,7 @@ export const MainBanner = () => {
                 canvas.height = 572;
             }
 
-            scrollTrigger = ScrollTrigger.create({
+            scrollTriggerRef.current = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
                 end: `+=${5000}`,
@@ -232,10 +230,11 @@ export const MainBanner = () => {
         });
 
         return () => {
-            if (scrollTrigger) scrollTrigger.kill();
-            ScrollTrigger.getAll().forEach(trigger => {
-                if (trigger.trigger === section) trigger.kill();
-            });
+            if (scrollTriggerRef.current) {
+                console.log('END')
+                scrollTriggerRef.current.kill();
+                scrollTriggerRef.current = null;
+            }
         };
     }, [
         windowHeight, 

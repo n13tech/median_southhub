@@ -9,7 +9,6 @@ import Image from 'next/image';
 import { GROWTH_POINT_ITEMS } from './constants';
 import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
-import { NBSP } from '@/app/constants';
 
 export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -268,9 +267,7 @@ export const GrowthPointsScrollableBlock = () => {
       mobileAnimationRef.current = mobileTimeline;
     }
 
-    // Cleanup
     return () => {
-      console.log('CLEAN');
       lenisRef.current?.destroy();
       
       // Убиваем только наши триггеры
