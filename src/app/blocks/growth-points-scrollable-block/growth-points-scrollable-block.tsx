@@ -20,12 +20,10 @@ export const GrowthPointsScrollableBlock = () => {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    let currIsMobile = false;
-
     // Проверка на мобильное устройство
     const checkMobile = () => {
-      currIsMobile = window.matchMedia("(max-width: 1024px)").matches;
-      setIsMobile(currIsMobile);
+      const mobile = window.matchMedia("(max-width: 1024px)").matches;
+      setIsMobile(mobile);
     };
 
     checkMobile();
@@ -75,7 +73,7 @@ export const GrowthPointsScrollableBlock = () => {
     }
 
     // Десктоп анимация (1025px+)
-    if (!currIsMobile) {
+    if (!isMobile) {
       // Убедимся, что правый столбец имеет правильные стили для десктопа
       if (rightColumnRef.current) {
         // Сбрасываем мобильные стили
@@ -112,7 +110,7 @@ export const GrowthPointsScrollableBlock = () => {
       gsap.set(imgs, {
         clipPath: "inset(0)",
         objectPosition: "0px 0%",
-        objectFit: "cover"
+        objectFit: "fill"
       });
 
       imgs.forEach((_, index) => {
@@ -179,7 +177,7 @@ export const GrowthPointsScrollableBlock = () => {
           trigger: ".growth-points-scrollable-block",
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.5,
+          scrub: 0.3,
           pin: ".growth-points-item-right",
           pinSpacing: false,
           anticipatePin: 1,
@@ -268,7 +266,7 @@ export const GrowthPointsScrollableBlock = () => {
       }
       window.removeEventListener('resize', checkMobile);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <>
