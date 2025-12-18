@@ -7,7 +7,6 @@ import './for-who-scrollable-block.css';
 import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Fade } from 'react-awesome-reveal';
 
 export const ForWhoScrollableBlock = () => {
     useEffect(() => {
@@ -26,7 +25,7 @@ export const ForWhoScrollableBlock = () => {
                 start: "top top",
                 end: "+=" + (items.length - 1) * 100 + "%",
                 pin: '.for-who-scrollable-block',
-                scrub: true,
+                scrub: 0.5,
                 // markers: true,
                 anticipatePin: 1,
                 snap: {
@@ -83,11 +82,11 @@ export const ForWhoScrollableBlock = () => {
     return (
         <div className='for-who-scrollable-block-wrapper' id='for-who-scrollable-block'>
             <div className='for-who-scrollable-block'>
-                <Fade direction='up' triggerOnce>
+                <div>
                     <h2 className={`${FONT_MONT_BOOK.className} for-who-scrollable-block-title`}>
                         {'Для тех, кто...'}
                     </h2>
-                </Fade>
+                </div>
 
                 <div className={`${FONT_MONT_BOOK.className} for-who-scrollable-block-ul`}>
                     <div className={`${FONT_MONT_BOOK.className} for-who-scrollable-block-li`}>
