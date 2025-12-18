@@ -11,6 +11,9 @@ import './main-banner.css';
 
 const totalCountImg = 120;
 
+// > Дольше, < Быстрее
+const ANIMATION_SPEED_FACTOR = 0.8;
+
 export const MainBanner = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -152,7 +155,16 @@ export const MainBanner = () => {
         if (!section || !content || !pin || !canvas || !ctx || !windowHeight) return;
 
         const calculateSectionHeight = () => {
-            return 5000 + windowHeight;
+            const isMobile = window.innerWidth <= 1024;
+            
+            const scrollDistance = 5000;
+            const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR; // На 20% короче = на 20% быстрее
+            
+            if (isMobile) {
+                return mobileScrollDistance + windowHeight;
+            }
+            
+            return scrollDistance + windowHeight;
         };
 
         const sectionHeight = calculateSectionHeight();
@@ -178,10 +190,14 @@ export const MainBanner = () => {
                 canvas.height = 572;
             }
 
+            // Определяем расстояние для анимации
+            const scrollDistance = 5000;
+            const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR;
+            
             scrollTriggerRef.current = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
-                end: `+=${5000}`,
+                end: `+=${isMobile ? mobileScrollDistance : scrollDistance}`,
                 scrub: true,
                 pin: pin,
                 pinSpacing: false,
@@ -231,7 +247,6 @@ export const MainBanner = () => {
 
         return () => {
             if (scrollTriggerRef.current) {
-                console.log('END')
                 scrollTriggerRef.current.kill();
                 scrollTriggerRef.current = null;
             }
