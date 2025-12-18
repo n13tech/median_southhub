@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
 import './growth-points-scrollable-block.css';
 import { GROWTH_POINT_ITEMS } from './constants';
 import { FONT_MONT_BOOK } from '@/app/fonts';
@@ -12,7 +11,6 @@ import { ImageWithFallback } from '@/app/components/image-with-fallback';
 
 export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const lenisRef = useRef<Lenis | null>(null);
   const rightColumnRef = useRef<HTMLDivElement>(null);
   const leftColumnRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -33,21 +31,7 @@ export const GrowthPointsScrollableBlock = () => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    // Lenis initialization
-    lenisRef.current = new Lenis({
-      duration: currIsMobile ? 0.8 : 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      gestureOrientation: "vertical",
-      touchMultiplier: currIsMobile ? 1.5 : 2,
-      wheelMultiplier: currIsMobile ? 0.8 : 1,
-      smoothWheel: true,
-      infinite: false,
-      autoResize: true,
-      syncTouch: true,
-    });
-
-    const raf = (time: number) => {
-      lenisRef.current?.raf(time);
+    const raf = () => {
       ScrollTrigger.update();
       requestAnimationFrame(raf);
     };
@@ -274,8 +258,6 @@ export const GrowthPointsScrollableBlock = () => {
     }
 
     return () => {
-      lenisRef.current?.destroy();
-      
       // Убиваем только наши триггеры
       scrollTriggersRef.current.forEach(trigger => trigger.kill());
       scrollTriggersRef.current = [];
