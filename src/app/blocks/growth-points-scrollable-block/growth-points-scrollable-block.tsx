@@ -110,7 +110,7 @@ export const GrowthPointsScrollableBlock = () => {
       gsap.set(imgs, {
         clipPath: "inset(0)",
         objectPosition: "0px 0%",
-        objectFit: "fill"
+        objectFit: "cover"
       });
 
       imgs.forEach((_, index) => {
