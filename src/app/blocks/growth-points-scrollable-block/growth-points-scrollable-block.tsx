@@ -320,7 +320,6 @@ export const GrowthPointsScrollableBlock = () => {
                   alt={item.imageAlt}
                   width={isMobile ? 612 : 900}
                   height={isMobile ? 275 : 536}
-                  priority
                   className="growth-points-item-right-img"
                 />
               </div>

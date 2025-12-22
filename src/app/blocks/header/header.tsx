@@ -26,7 +26,6 @@ export const Header = () => {
                         alt="SOUTHUUUB"
                         width={180}
                         height={21}
-                        priority
                         onClick={handleScrollIntoView}
                         style={{ cursor: 'pointer' }}
                     />

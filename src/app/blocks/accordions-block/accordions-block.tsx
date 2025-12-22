@@ -64,7 +64,6 @@ export const AccordionsBlock = () => {
                             alt="accordion-plus"
                             width={47}
                             height={47}
-                            priority
                         />
                     )}
                 />

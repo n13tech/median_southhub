@@ -16,13 +16,11 @@ const Item = () => {
                 alt="telegramm-icon"
                 height={52}
                 width={52}
-                priority
             />
             <Image
                 src={LogoWhite}
                 alt="southuub"
                 height={52}
-                priority
             />
             <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>
                 Все инсайты и новости ближе, чем вы думаете
@@ -32,13 +30,11 @@ const Item = () => {
                 alt="telegramm-icon"
                 height={52}
                 width={52}
-                priority
             />
             <Image
                 src={LogoWhite}
                 alt="southuub"
                 height={52}
-                priority
             />
             <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>
                 Подпишитесь, чтобы оставаться на связи
