@@ -8,6 +8,7 @@ import { GROWTH_POINT_ITEMS } from './constants';
 import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
 import { ImageWithFallback } from '@/app/components/image-with-fallback';
+import { AnimateTitle } from '@/app/components/animate-title';
 
 export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -271,9 +272,10 @@ export const GrowthPointsScrollableBlock = () => {
   return (
     <>
       <div className='growth-points-block-wrapper' id='growth-points-block'>
-        <h2 className={`${FONT_MONT_BOOK.className} growth-points-block-title`}>
-          {'Точки роста'}
-        </h2>
+        <AnimateTitle
+            className={`${FONT_MONT_BOOK.className} growth-points-block-title`}
+            text={`Точки роста`}
+        />
 
         <p className={`${FONT_MONT_BOOK.className} growth-points-block-description`}>
           {'Форматы взаимодействия сообщества'}

@@ -3,15 +3,15 @@ import { FONT_MONT_BOOK } from '../../fonts';
 
 import './philosophy-block.css';
 import { NBSP } from '@/app/constants';
+import { AnimateTitle } from '@/app/components/animate-title';
 
 export const PhilosophyBlock = () => {
     return (
         <div className='philosophy-block-wrapper' id='philosophy-block'>
-            <Fade direction='up' triggerOnce>
-                <h2 className={`${FONT_MONT_BOOK.className} philosophy-block-title`}>
-                    {`Философия South${NBSP}HUB`}
-                </h2>
-            </Fade>
+            <AnimateTitle
+                className={`${FONT_MONT_BOOK.className} philosophy-block-title`}
+                text={`Философия South${NBSP}HUB`}
+            />
 
             <Fade delay={250} triggerOnce>
                 <p className={`${FONT_MONT_BOOK.className} philosophy-block-description`}>

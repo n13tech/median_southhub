@@ -4,16 +4,16 @@ import { FONT_MONT_BOOK } from '../../fonts';
 import './how-become-community-block.css';
 import { AccesibleButton } from './how-become-community-block-button';
 import { NBSP } from '@/app/constants';
+import { AnimateTitle } from '@/app/components/animate-title';
 
 export const HowBecomeCommunityBlock = () => {
     return (
         <div className='how-become-community-block-wrapper' id='how-become-community-block'>
             <div className='how-become-community-block-first'>
-                <Fade direction='up' triggerOnce>
-                    <h2 className={`${FONT_MONT_BOOK.className} how-become-community-block-title`}>
-                        {'Как стать частью\nсообщества?'}
-                    </h2>
-                </Fade>
+                <AnimateTitle
+                    className={`${FONT_MONT_BOOK.className} how-become-community-block-title`}
+                    text={`Как стать частью\nсообщества?`}
+                />
 
                 <Fade delay={250} triggerOnce>
                     <p className={`${FONT_MONT_BOOK.className} how-become-community-block-description`}>
@@ -23,11 +23,11 @@ export const HowBecomeCommunityBlock = () => {
             </div>
 
             <div className='how-become-community-block-second'>
-                <Fade direction='up' triggerOnce>
-                    <h2 className={`${FONT_MONT_BOOK.className} how-become-community-block-title`}>
-                        {'Всё просто:'}
-                    </h2>
-                </Fade>
+                <AnimateTitle
+                    className={`${FONT_MONT_BOOK.className} how-become-community-block-title`}
+                    text={`Всё просто:`}
+                    delay={1}
+                />
 
                 <Fade delay={250} triggerOnce>
                     <ul className='how-become-community-block-ul'>
