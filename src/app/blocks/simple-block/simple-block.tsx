@@ -3,15 +3,12 @@ import { FONT_MONT_BOOK } from '../../fonts';
 
 import './simple-block.css';
 import { NBSP } from '@/app/constants';
+import { AnimateTitle } from '@/app/components/animate-title';
 
 export const SimpleBlock = () => {
     return (
         <div className='simple-block-wrapper' id='simple-block'>
-            <Fade direction='up' triggerOnce>
-                <h2 className={`${FONT_MONT_BOOK.className} simple-block-title`}>
-                    {'а можно\nпопроще?'}
-                </h2>
-            </Fade>
+            <AnimateTitle text={'а можно\nпопроще?'} className={`${FONT_MONT_BOOK.className} simple-block-title`} />
 
             <Fade delay={250} triggerOnce>
                 <p className={`${FONT_MONT_BOOK.className} simple-block-description`}>

@@ -32,7 +32,6 @@ export const HeaderBurger = () => {
                         alt="SOUTHUUUB"
                         width={180}
                         height={21}
-                        priority
                     />
                 )}
                 open={isActive}
@@ -46,7 +45,6 @@ export const HeaderBurger = () => {
                         alt="crestnacrest"
                         width={24}
                         height={24}
-                        priority
                         className='header-burger-cross'
                     />
                 )}

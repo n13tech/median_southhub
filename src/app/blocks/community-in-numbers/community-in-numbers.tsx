@@ -9,6 +9,7 @@ import CommunityTwo from '../../../../public/number2.webp';
 import CommunityThree from '../../../../public/number3.webp';
 import CommunityFour from '../../../../public/number4.webp';
 import { NBSP } from '@/app/constants';
+import { AnimateTitle } from '@/app/components/animate-title';
 
 type Props = {
     src: StaticImageData;
@@ -37,11 +38,10 @@ const Card = ({ src, alt, description, title }: Props) => {
 export const CommunityInNumbers = () => {
     return (
         <div className='community-in-numbers-wrapper' id='community-in-numbers'>
-            <Fade direction='up' triggerOnce>
-                <h2 className={`${FONT_MONT_BOOK.className} community-in-numbers-title`}>
-                    {`Сообщество в${NBSP}цифрах`}
-                </h2>
-            </Fade>
+            <AnimateTitle
+                className={`${FONT_MONT_BOOK.className} community-in-numbers-title`}
+                text={`Сообщество в${NBSP}цифрах`}
+            />
 
             <Fade delay={250} triggerOnce>
                 <div className='community-in-numbers-cards-wrapper'>

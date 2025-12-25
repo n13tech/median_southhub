@@ -41,7 +41,6 @@ export const Footer = () => {
                         src={LogoWhite}
                         alt="southuub"
                         height={28}
-                        priority
                         className='footer-logo'
                     />
 
@@ -69,7 +68,6 @@ export const Footer = () => {
                                 src={YoutubeIcon}
                                 alt="youtube"
                                 height={52}
-                                priority
                             />
                         </a>
                         <a href={SOUTHHUB_LINKEDIN} target='_blank'>
@@ -77,7 +75,6 @@ export const Footer = () => {
                                 src={InstIcon}
                                 alt="linkedin"
                                 height={52}
-                                priority
                             />
                         </a>
                         <a href={TELEGRAM_CHANELL_LINK} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
@@ -85,7 +82,6 @@ export const Footer = () => {
                                 src={TelegrammIcon}
                                 alt="telegramm"
                                 height={52}
-                                priority
                             />
                         </a>
                     </div>
