@@ -172,17 +172,18 @@ export const MainBanner = () => {
         ];
 
         // Сначала скрываем все элементы
-        elements.forEach(({ element }) => {
+        elements.forEach(({ element }, index) => {
             if (element) {
                 gsap.set(element, {
                     opacity: 0,
-                    y: 30,
+                    scaleX: index !== 5 ? 1 : 0,
+                    y: index !== 5 ? 30 : 0,
                 });
             }
         });
 
         // Создаем анимации для каждого элемента
-        elements.forEach(({ element, percent }) => {
+        elements.forEach(({ element, percent }, index) => {
             if (!element) return;
 
             const animation = ScrollTrigger.create({
@@ -198,14 +199,16 @@ export const MainBanner = () => {
                     gsap.to(element, {
                         opacity: 1,
                         y: 0,
-                        duration: 1,
+                        scaleX: 1,
+                        duration: index !== 5 ? 1 : 0.5,
                         ease: "power3.out",
                     });
                 },
                 onLeaveBack: () => {
                     gsap.to(element, {
                         opacity: 0,
-                        y: 30,
+                        y: index !== 5 ? 30 : 0,
+                        scaleX: index !== 5 ? 1 : 0,
                         duration: 0.5,
                         ease: "power3.in",
                     });
