@@ -8,10 +8,17 @@ import { AnimateTitle } from '@/app/components/animate-title';
 export const PhilosophyBlock = () => {
     return (
         <div className='philosophy-block-wrapper' id='philosophy-block'>
-            <AnimateTitle
-                className={`${FONT_MONT_BOOK.className} philosophy-block-title`}
-                text={`Философия South${NBSP}HUB`}
-            />
+            <div>
+                <AnimateTitle
+                    className={`${FONT_MONT_BOOK.className} philosophy-block-title`}
+                    text={`Философия`}
+                />
+                <AnimateTitle
+                    className={`${FONT_MONT_BOOK.className} philosophy-block-title`}
+                    text={`South${NBSP}HUB`}
+                    delay={0.6}
+                />
+            </div>
 
             <Fade delay={250} triggerOnce>
                 <p className={`${FONT_MONT_BOOK.className} philosophy-block-description`}>
