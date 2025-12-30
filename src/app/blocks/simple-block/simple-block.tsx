@@ -8,7 +8,10 @@ import { AnimateTitle } from '@/app/components/animate-title';
 export const SimpleBlock = () => {
     return (
         <div className='simple-block-wrapper' id='simple-block'>
-            <AnimateTitle text={'а можно\nпопроще?'} className={`${FONT_MONT_BOOK.className} simple-block-title`} />
+            <div>
+                <AnimateTitle text={'а можно'} className={`${FONT_MONT_BOOK.className} simple-block-title`} />
+                <AnimateTitle delay={0.6} text={'попроще?'} className={`${FONT_MONT_BOOK.className} simple-block-title`} />
+            </div>
 
             <Fade delay={250} triggerOnce>
                 <p className={`${FONT_MONT_BOOK.className} simple-block-description`}>

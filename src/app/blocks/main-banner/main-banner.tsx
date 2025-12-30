@@ -20,11 +20,21 @@ export const MainBanner = () => {
     const pinRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(totalCountImg).fill(null));
+    
+    // Refs для текстовых элементов
+    const title1Ref = useRef<HTMLHeadingElement>(null);
+    const title2Ref = useRef<HTMLHeadingElement>(null);
+    const title3Ref = useRef<HTMLHeadingElement>(null);
+    const title4Ref = useRef<HTMLHeadingElement>(null);
+    const title5Ref = useRef<HTMLParagraphElement>(null);
+    const title6Ref = useRef<HTMLDivElement>(null);
+    
     const [windowHeight, setWindowHeight] = useState(0);
     const loadedFramesRef = useRef<Set<number>>(new Set());
     const loadingQueueRef = useRef<number[]>([]);
     const isCurrentlyLoadingRef = useRef(false);
     const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
+    const textAnimationsRef = useRef<ScrollTrigger[]>([]);
 
     // Используем ref для функции, чтобы избежать проблем с порядком объявления
     const processLoadingQueueRef = useRef<() => Promise<void>>();
@@ -85,7 +95,7 @@ export const MainBanner = () => {
             if (loadingQueueRef.current.length > 0) {
                 setTimeout(() => {
                     processLoadingQueueRef.current?.();
-                }, 30); // Уменьшаем задержку для более быстрой загрузки
+                }, 30);
             }
         };
 
@@ -143,6 +153,69 @@ export const MainBanner = () => {
         loadAllRemainingFrames();
     }, [loadFrameBatch, loadAllRemainingFrames]);
 
+    // Функция для настройки анимации появления текстовых элементов
+    const setupTextAnimations = useCallback(() => {
+        // Очищаем предыдущие анимации
+        textAnimationsRef.current.forEach(animation => animation.kill());
+        textAnimationsRef.current = [];
+
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const elements = [
+            { element: title1Ref.current, percent: 10 },
+            { element: title2Ref.current, percent: 20 },
+            { element: title3Ref.current, percent: 35 },
+            { element: title4Ref.current, percent: 50 },
+            { element: title5Ref.current, percent: 65 },
+            { element: title6Ref.current, percent: 75 },
+        ];
+
+        // Сначала скрываем все элементы
+        elements.forEach(({ element }) => {
+            if (element) {
+                gsap.set(element, {
+                    opacity: 0,
+                    y: 30,
+                });
+            }
+        });
+
+        // Создаем анимации для каждого элемента
+        elements.forEach(({ element, percent }) => {
+            if (!element) return;
+
+            const animation = ScrollTrigger.create({
+                trigger: section,
+                start: `top+=${percent}% top`,
+                end: `top+=${percent + 5}% top`,
+                toggleActions: "play reverse play reverse",
+                // play - когда триггер входит в viewport (onEnter)
+                // reverse - когда триггер выходит из viewport (onLeaveBack)
+                // play - когда триггер снова входит в viewport (onEnterBack)
+                // reverse - когда триггер снова выходит из viewport (onLeave)
+                onEnter: () => {
+                    gsap.to(element, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: "power3.out",
+                    });
+                },
+                onLeaveBack: () => {
+                    gsap.to(element, {
+                        opacity: 0,
+                        y: 30,
+                        duration: 0.5,
+                        ease: "power3.in",
+                    });
+                },
+            });
+
+            textAnimationsRef.current.push(animation);
+        });
+    }, []);
+
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
 
@@ -158,7 +231,7 @@ export const MainBanner = () => {
             const isMobile = window.innerWidth <= 1024;
             
             const scrollDistance = 5000;
-            const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR; // На 20% короче = на 20% быстрее
+            const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR;
             
             if (isMobile) {
                 return mobileScrollDistance + windowHeight;
@@ -234,8 +307,14 @@ export const MainBanner = () => {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(lastImage, 0, 0, canvas.width, canvas.height);
                     }
+                },
+                onRefresh: () => {
+                    setupTextAnimations();
                 }
             });
+
+            // Настраиваем анимации текстовых элементов
+            setupTextAnimations();
 
             ScrollTrigger.refresh();
         };
@@ -245,16 +324,30 @@ export const MainBanner = () => {
             initScrollAnimation();
         });
 
+        // Обработчик ресайза
+        const handleResize = () => {
+            initScrollAnimation();
+        };
+
+        window.addEventListener('resize', handleResize);
+
         return () => {
             if (scrollTriggerRef.current) {
                 scrollTriggerRef.current.kill();
                 scrollTriggerRef.current = null;
             }
+            
+            // Очищаем текстовые анимации
+            textAnimationsRef.current.forEach(animation => animation.kill());
+            textAnimationsRef.current = [];
+            
+            window.removeEventListener('resize', handleResize);
         };
     }, [
         windowHeight, 
         findNearestLoadedFrame,
-        preloadCriticalAndStartBackground
+        preloadCriticalAndStartBackground,
+        setupTextAnimations
     ]);
 
     return (
@@ -269,19 +362,46 @@ export const MainBanner = () => {
                 </div>
 
                 <div className="main-banner-content" ref={contentRef}>
-                    <Fade triggerOnce>
-                        <h1 className={`${FONT_MONT_BOOK.className} main-banner-title`}>
-                            {'Масштаб\nлюдей, идей\nи тёплых\nсвязей'}
+                    <div className='main-banner-title-wrapper'>
+                        <h1 
+                            ref={title1Ref}
+                            className={`${FONT_MONT_BOOK.className} main-banner-title main-banner-title-1`}
+                        >
+                            {'Масштаб'}
                         </h1>
+                        <h1 
+                            ref={title2Ref}
+                            className={`${FONT_MONT_BOOK.className} main-banner-title main-banner-title-2`}
+                        >
+                            {'людей, идей'}
+                        </h1>
+                        <h1 
+                            ref={title3Ref}
+                            className={`${FONT_MONT_BOOK.className} main-banner-title main-banner-title-3`}
+                        >
+                            {'и тёплых'}
+                        </h1>
+                        <h1 
+                            ref={title4Ref}
+                            className={`${FONT_MONT_BOOK.className} main-banner-title main-banner-title-4`}
+                        >
+                            {'связей'}
+                        </h1>
+                    </div>
 
-                        <p className={`${FONT_MONT_BOOK.className} main-banner-description`}>
-                            {`Сообщество C-level в${NBSP}IT,\nгде рождаются партнёрства,\nдружба и${NBSP}смыслы, которых\nне найти онлайн`}
-                        </p>
+                    <p 
+                        ref={title5Ref}
+                        className={`${FONT_MONT_BOOK.className} main-banner-description main-banner-title-5`}
+                    >
+                        {`Сообщество C-level в${NBSP}IT,\nгде рождаются партнёрства,\nдружба и${NBSP}смыслы, которых\nне найти онлайн`}
+                    </p>
 
-                        <div>
-                            <MainBannerButton />
-                        </div>
-                    </Fade>
+                    <div 
+                        ref={title6Ref}
+                        className='main-banner-title-6'
+                    >
+                        <MainBannerButton />
+                    </div>
                 </div>
             </div>
         </div>

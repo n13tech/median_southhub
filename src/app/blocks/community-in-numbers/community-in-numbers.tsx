@@ -38,10 +38,17 @@ const Card = ({ src, alt, description, title }: Props) => {
 export const CommunityInNumbers = () => {
     return (
         <div className='community-in-numbers-wrapper' id='community-in-numbers'>
-            <AnimateTitle
-                className={`${FONT_MONT_BOOK.className} community-in-numbers-title`}
-                text={`Сообщество в${NBSP}цифрах`}
-            />
+            <div>
+                <AnimateTitle
+                    className={`${FONT_MONT_BOOK.className} community-in-numbers-title`}
+                    text={`Сообщество`}
+                />
+                <AnimateTitle
+                    className={`${FONT_MONT_BOOK.className} community-in-numbers-title`}
+                    text={`в цифрах`}
+                    delay={0.6}
+                />
+            </div>
 
             <Fade delay={250} triggerOnce>
                 <div className='community-in-numbers-cards-wrapper'>

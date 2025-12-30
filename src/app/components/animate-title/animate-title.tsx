@@ -12,7 +12,7 @@ type Props = {
 
 let isScrollTriggerRegistered = false;
 
-const DURATION = 1.2;
+const DURATION = 1;
 const Y = 100;
 const START = 'top 85%';
 const END = 'top 50%';
@@ -21,7 +21,7 @@ const ONCE = true;
 export const AnimateTitle = ({
   text,
   className,
-  delay = 0.5,
+  delay = 0.3,
 }: Props) => {
   const textRef = useRef<HTMLHeadingElement>(null);
   const animationId = useRef<number | null>(null);

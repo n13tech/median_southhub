@@ -9,6 +9,7 @@ import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
 import { ImageWithFallback } from '@/app/components/image-with-fallback';
 import { AnimateTitle } from '@/app/components/animate-title';
+import { Fade } from 'react-awesome-reveal';
 
 export const GrowthPointsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -277,9 +278,11 @@ export const GrowthPointsScrollableBlock = () => {
             text={`Точки роста`}
         />
 
-        <p className={`${FONT_MONT_BOOK.className} growth-points-block-description`}>
-          {'Форматы взаимодействия сообщества'}
-        </p>
+        <Fade delay={250} triggerOnce>
+          <p className={`${FONT_MONT_BOOK.className} growth-points-block-description`}>
+            {'Форматы взаимодействия сообщества'}
+          </p>
+        </Fade>
       </div>
 
       <div className="growth-points-scrollable-block-wrapper" ref={containerRef}>

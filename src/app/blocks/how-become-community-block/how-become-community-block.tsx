@@ -10,10 +10,17 @@ export const HowBecomeCommunityBlock = () => {
     return (
         <div className='how-become-community-block-wrapper' id='how-become-community-block'>
             <div className='how-become-community-block-first'>
-                <AnimateTitle
-                    className={`${FONT_MONT_BOOK.className} how-become-community-block-title`}
-                    text={`Как стать частью\nсообщества?`}
-                />
+                <div>
+                    <AnimateTitle
+                        className={`${FONT_MONT_BOOK.className} how-become-community-block-title`}
+                        text={`Как стать частью`}
+                    />
+                    <AnimateTitle
+                        className={`${FONT_MONT_BOOK.className} how-become-community-block-title`}
+                        text={`сообщества?`}
+                        delay={0.6}
+                    />
+                </div>
 
                 <Fade delay={250} triggerOnce>
                     <p className={`${FONT_MONT_BOOK.className} how-become-community-block-description`}>
@@ -26,7 +33,7 @@ export const HowBecomeCommunityBlock = () => {
                 <AnimateTitle
                     className={`${FONT_MONT_BOOK.className} how-become-community-block-title`}
                     text={`Всё просто:`}
-                    delay={1}
+                    delay={0.9}
                 />
 
                 <Fade delay={250} triggerOnce>
