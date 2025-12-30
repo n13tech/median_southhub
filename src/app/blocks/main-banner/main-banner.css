@@ -102,7 +102,7 @@
 .main-banner-title {
     font-weight: 500;
     font-size: 96px;
-    line-height: 123px;
+    line-height: 140%;
     text-transform: uppercase;
     color: #111111;
     white-space: pre-wrap;
@@ -110,12 +110,10 @@
 
     @media screen and (max-width: 1280px) {
         font-size: 78px;
-        line-height: 125%;
     }
 
     @media screen and (max-width: 1024px) {
         font-size: 48px;
-        line-height: 110%;
     }
 
     @media screen and (max-width: 768px) {
