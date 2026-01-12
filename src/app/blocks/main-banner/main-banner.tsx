@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { Fade } from 'react-awesome-reveal';
 import { FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
 import { NBSP } from '@/app/constants';
@@ -172,18 +171,17 @@ export const MainBanner = () => {
         ];
 
         // Сначала скрываем все элементы
-        elements.forEach(({ element }, index) => {
+        elements.forEach(({ element }) => {
             if (element) {
                 gsap.set(element, {
                     opacity: 0,
-                    scaleX: index !== 5 ? 1 : 0,
-                    y: index !== 5 ? 30 : 0,
+                    y: 30,
                 });
             }
         });
 
         // Создаем анимации для каждого элемента
-        elements.forEach(({ element, percent }, index) => {
+        elements.forEach(({ element, percent }) => {
             if (!element) return;
 
             const animation = ScrollTrigger.create({
@@ -199,16 +197,14 @@ export const MainBanner = () => {
                     gsap.to(element, {
                         opacity: 1,
                         y: 0,
-                        scaleX: 1,
-                        duration: index !== 5 ? 1 : 0.5,
+                        duration: 1,
                         ease: "power3.out",
                     });
                 },
                 onLeaveBack: () => {
                     gsap.to(element, {
                         opacity: 0,
-                        y: index !== 5 ? 30 : 0,
-                        scaleX: index !== 5 ? 1 : 0,
+                        y: 30,
                         duration: 0.5,
                         ease: "power3.in",
                     });
