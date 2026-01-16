@@ -18,9 +18,9 @@ type ArchItem = {
   onClick: () => void;
 }
 
-export const GROWTH_POINT_ITEMS: ArchItem[] = [
+export const OUR_PROJECTS_ITEMS: ArchItem[] = [
     {
-        id: 'growth-points-snow-base',
+        id: 'our-projects-snow-base',
         title: 'Snow BASE Camp',
         description: `19–22 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`,
         linkColor: '#D5FF37',
@@ -31,7 +31,7 @@ export const GROWTH_POINT_ITEMS: ArchItem[] = [
         onClick: () => window.open(SNOWBASE_LINK, '_blank'),
     },
     {
-        id: 'growth-points-south-hub',
+        id: 'our-projects-south-hub',
         title: 'South HUB Camp',
         description: `10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в${NBSP}ІТ`,
         linkColor: '#D5FF37',
@@ -42,7 +42,7 @@ export const GROWTH_POINT_ITEMS: ArchItem[] = [
         onClick: () => window.open(SOUTHHUB_LINK, '_blank'),
     },
     {
-        id: 'growth-points-club-meet',
+        id: 'our-projects-club-meet',
         title: 'Клубные встречи',
         description: `Камерные события, где вы сами задаёте формат: пробежки, воркшопы, дискуссии. Здесь начинаются новые идеи и${NBSP}партнёрства`,
         linkColor: '#D5FF37',
@@ -53,7 +53,7 @@ export const GROWTH_POINT_ITEMS: ArchItem[] = [
         onClick: () => window.open(LK_SOUTHHUB_LINK, '_blank'),
     },
     {
-        id: 'growth-points-youtube-chanell',
+        id: 'our-projects-youtube-chanell',
         title: 'YouTube-канал',
         description: `Все записи встреч и${NBSP}вдохновляющие речи лидеров индустрии`,
         linkColor: '#D5FF37',
@@ -64,7 +64,7 @@ export const GROWTH_POINT_ITEMS: ArchItem[] = [
         onClick: () => window.open(SOUTHHUB_YOUTUBE, '_blank'),
     },
     {
-        id: 'growth-points-telegramm-chanell',
+        id: 'our-projects-telegramm-chanell',
         title: 'Telegram-канал',
         description: `Медиа, чтобы держать руку на пульсе cообщества, быть в${NBSP}курсе новых событий и${NBSP}находить поводы для живого диалога`,
         linkColor: '#D5FF37',
@@ -75,7 +75,7 @@ export const GROWTH_POINT_ITEMS: ArchItem[] = [
         onClick: () => window.open(TELEGRAM_CHANELL_LINK, '_blank'),
     },
     {
-        id: 'growth-points-online-broadcast',
+        id: 'our-projects-online-broadcast',
         title: 'Онлайн-эфиры',
         description: `Каждый раз новый формат: мок-интервью, дискуссии на злободневные темы и${NBSP}живые обсуждения с${NBSP}лидерами рынка`,
         linkColor: '#D5FF37',
