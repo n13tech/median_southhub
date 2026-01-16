@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { AccordionsBlock } from "./blocks/accordions-block";
-import { GrowthPointsScrollableBlock } from "./blocks/growth-points-scrollable-block";
+import { OurProjectsScrollableBlock } from "./blocks/our-projects-scrollable-block";
 import { Footer } from "./blocks/footer";
 import { Header } from "./blocks/header"
 import { InfinityBanner } from "./blocks/infinity-banner";
@@ -51,12 +51,12 @@ export default function HomeContent({ data }: Props) {
 
                 <main >
                     <MainBanner />
-                    <SimpleBlock />
+                    <OurProjectsScrollableBlock />
                     <AccordionsBlock />
 
                     <InfinityBanner />
 
-                    <GrowthPointsScrollableBlock />
+                    <SimpleBlock />
                     <CommunityInNumbers />
 
                     <InfinityBanner />

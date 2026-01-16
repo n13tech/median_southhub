@@ -3,15 +3,15 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import './growth-points-scrollable-block.css';
-import { GROWTH_POINT_ITEMS } from './constants';
+import './our-projects-scrollable-block.css';
+import { OUR_PROJECTS_ITEMS } from './constants';
 import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
 import { ImageWithFallback } from '@/app/components/image-with-fallback';
 import { AnimateTitle } from '@/app/components/animate-title';
 import { Fade } from 'react-awesome-reveal';
 
-export const GrowthPointsScrollableBlock = () => {
+export const OurProjectsScrollableBlock = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rightColumnRef = useRef<HTMLDivElement>(null);
   const leftColumnRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export const GrowthPointsScrollableBlock = () => {
     requestAnimationFrame(raf);
 
     // Set z-index for images
-    const imgWrappers = document.querySelectorAll('.growth-points-item-right-img-wrapper');
+    const imgWrappers = document.querySelectorAll('.our-projects-item-right-img-wrapper');
     imgWrappers.forEach((wrapper, index) => {
       if (wrapper) {
         wrapper.setAttribute('data-index', (index + 1).toString());
@@ -48,8 +48,8 @@ export const GrowthPointsScrollableBlock = () => {
     });
 
     // GSAP Animation
-    const imgs = gsap.utils.toArray('.growth-points-item-right-img') as HTMLImageElement[];
-    const infoSections = gsap.utils.toArray('.growth-points-item-left-info') as HTMLElement[];
+    const imgs = gsap.utils.toArray('.our-projects-item-right-img') as HTMLImageElement[];
+    const infoSections = gsap.utils.toArray('.our-projects-item-left-info') as HTMLElement[];
 
     // Очищаем только наши предыдущие ScrollTrigger
     scrollTriggersRef.current.forEach(trigger => trigger.kill());
@@ -89,10 +89,10 @@ export const GrowthPointsScrollableBlock = () => {
 
       const mainTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: ".growth-points-scrollable-block",
+          trigger: ".our-projects-scrollable-block",
           start: "top top",
           end: "bottom bottom",
-          pin: ".growth-points-item-right",
+          pin: ".our-projects-item-right",
           scrub: true,
           invalidateOnRefresh: true
         }
@@ -176,11 +176,11 @@ export const GrowthPointsScrollableBlock = () => {
       // Создаем одну общую timeline для всей анимации
       const mobileTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: ".growth-points-scrollable-block",
+          trigger: ".our-projects-scrollable-block",
           start: "top top",
           end: "bottom bottom",
           scrub: 0.3,
-          pin: ".growth-points-item-right",
+          pin: ".our-projects-item-right",
           pinSpacing: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -272,33 +272,33 @@ export const GrowthPointsScrollableBlock = () => {
 
   return (
     <>
-      <div className='growth-points-block-wrapper' id='growth-points-block'>
+      <div className='our-projects-block-wrapper' id='our-projects-block'>
         <AnimateTitle
-            className={`${FONT_MONT_BOOK.className} growth-points-block-title`}
-            text={`Точки роста`}
+            className={`${FONT_MONT_BOOK.className} our-projects-block-title`}
+            text={`Наши проекты`}
         />
 
         <Fade delay={250} triggerOnce>
-          <p className={`${FONT_MONT_BOOK.className} growth-points-block-description`}>
+          <p className={`${FONT_MONT_BOOK.className} our-projects-block-description`}>
             {'Форматы взаимодействия сообщества'}
           </p>
         </Fade>
       </div>
 
-      <div className="growth-points-scrollable-block-wrapper" ref={containerRef}>
-        <div className="growth-points-scrollable-block">
+      <div className="our-projects-scrollable-block-wrapper" ref={containerRef}>
+        <div className="our-projects-scrollable-block">
           {/* Левая колонка - текст */}
-          <div className="growth-points-item-left" ref={leftColumnRef}>
-            {GROWTH_POINT_ITEMS.map((item) => (
-              <div key={item.id} className="growth-points-item-left-info" id={item.id}>
-                <h2 className={`${FONT_MONT_BOOK.className} growth-points-item-left-info-title`}>
+          <div className="our-projects-item-left" ref={leftColumnRef}>
+            {OUR_PROJECTS_ITEMS.map((item) => (
+              <div key={item.id} className="our-projects-item-left-info" id={item.id}>
+                <h2 className={`${FONT_MONT_BOOK.className} our-projects-item-left-info-title`}>
                   {item.title}
                 </h2>
-                <p className={`${FONT_MONT_BOOK.className} growth-points-item-left-info-description`}>
+                <p className={`${FONT_MONT_BOOK.className} our-projects-item-left-info-description`}>
                   {item.description}
                 </p>
                 <Button
-                  className={`growth-points-item-left-info-button`}
+                  className={`our-projects-item-left-info-button`}
                   onClick={item.onClick}
                   type='text'
                 >
@@ -312,12 +312,12 @@ export const GrowthPointsScrollableBlock = () => {
           </div>
 
           {/* Правая колонка - картинки */}
-          <div className="growth-points-item-right" ref={rightColumnRef}>
-            {GROWTH_POINT_ITEMS.slice().map((item, index) => (
+          <div className="our-projects-item-right" ref={rightColumnRef}>
+            {OUR_PROJECTS_ITEMS.slice().map((item, index) => (
               <div
                 key={`img-${item.id}`}
-                className="growth-points-item-right-img-wrapper"
-                data-index={GROWTH_POINT_ITEMS.length - index}
+                className="our-projects-item-right-img-wrapper"
+                data-index={OUR_PROJECTS_ITEMS.length - index}
               >
                 <ImageWithFallback
                   src={item.imageSrc}
@@ -325,7 +325,7 @@ export const GrowthPointsScrollableBlock = () => {
                   alt={item.imageAlt}
                   width={isMobile ? 612 : 900}
                   height={isMobile ? 275 : 536}
-                  className="growth-points-item-right-img"
+                  className="our-projects-item-right-img"
                 />
               </div>
             ))}

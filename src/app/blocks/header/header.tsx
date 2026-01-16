@@ -34,7 +34,7 @@ export const Header = () => {
                 </div>
 
                 <div>
-                    <HeaderItem title='о сообществе' intoScroll='growth-points-block' />
+                    <HeaderItem title='наши проекты' intoScroll='our-projects-block' />
                 </div>
 
                 <div>
