@@ -52,11 +52,11 @@ export default function HomeContent({ data }: Props) {
                 <main >
                     <MainBanner />
                     <OurProjectsScrollableBlock />
+                    <SimpleBlock />
                     <AccordionsBlock />
 
                     <InfinityBanner />
 
-                    <SimpleBlock />
                     <CommunityInNumbers />
 
                     <InfinityBanner />
