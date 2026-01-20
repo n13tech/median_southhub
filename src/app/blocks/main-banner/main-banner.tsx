@@ -18,6 +18,7 @@ export const MainBanner = () => {
     const contentRef = useRef<HTMLDivElement>(null);
     const pinRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const scrollBoxRef = useRef<HTMLDivElement>(null);
     const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(totalCountImg).fill(null));
     
     // Refs для текстовых элементов
@@ -349,6 +350,16 @@ export const MainBanner = () => {
         setupTextAnimations
     ]);
 
+    const handleScrollIntoView = () => {
+        const element = document.getElementById('our-projects-block');
+        const yOffset = window.innerWidth > 1024 ? -20 : 0;
+
+        if (element) {
+            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    }
+
     return (
         <div className='main-banner-wrapper' id='main-banner' ref={sectionRef}>
             <div className="main-banner-pin-wrapper" ref={pinRef}>
@@ -400,6 +411,17 @@ export const MainBanner = () => {
                         className='main-banner-title-6'
                     >
                         <MainBannerButton />
+                    </div>
+                </div>
+                
+                <div ref={scrollBoxRef} className='scroll-icon-wrapper' onClick={handleScrollIntoView}>
+                    <div className='scroll-icon'>
+                        <div className='scroll-icon-dot' />
+                    </div>
+                    <div>
+                        <svg className='scroll-icon-bottom' width="24" height="11" viewBox="0 0 24 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" clipRule="evenodd" d="M0.706739 2.36393L6.68768 8.34488C9.40098 11.0582 13.8761 10.9823 16.6829 8.17547L22.8701 1.98828L21.5885 0.70665L15.4013 6.89383C13.3266 8.96849 10.019 9.02455 8.01351 7.01905L2.03256 1.03811L0.706739 2.36393Z" fill="#111111" stroke="#111111"/>
+                        </svg>
                     </div>
                 </div>
             </div>
