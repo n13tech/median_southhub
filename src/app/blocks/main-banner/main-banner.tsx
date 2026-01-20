@@ -419,8 +419,8 @@ export const MainBanner = () => {
                         <div className='scroll-icon-dot' />
                     </div>
                     <div>
-                        <svg className='scroll-icon-bottom' width="24" height="11" viewBox="0 0 24 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M0.706739 2.36393L6.68768 8.34488C9.40098 11.0582 13.8761 10.9823 16.6829 8.17547L22.8701 1.98828L21.5885 0.70665L15.4013 6.89383C13.3266 8.96849 10.019 9.02455 8.01351 7.01905L2.03256 1.03811L0.706739 2.36393Z" fill="#111111" stroke="#111111"/>
+                        <svg className='scroll-icon-bottom' width="16" height="8" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.472337 1.57884L4.46415 5.57065C6.27506 7.38156 9.26183 7.33094 11.1352 5.45758L15.2646 1.32812L14.4093 0.472737L10.2798 4.6022C8.89513 5.98686 6.68754 6.02428 5.34903 4.68577L1.35722 0.693958L0.472337 1.57884Z" fill="#BFBFBF" stroke="#BFBFBF" stroke-width="0.667421"/>
                         </svg>
                     </div>
                 </div>
