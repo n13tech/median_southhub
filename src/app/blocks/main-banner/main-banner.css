@@ -208,20 +208,42 @@
     align-items: center;
     cursor: pointer;
 
-    &:hover {
-        .scroll-icon {
-            border-color: #E55929 !important;
-        }
+    @media screen and (min-width: 769px) {
+        &:hover {
+            .scroll-icon {
+                border-color: #E55929 !important;
+            }
 
-        .scroll-icon-dot {
-            background: #E55929 !important;
-        }
+            .scroll-icon-dot {
+                background: #E55929 !important;
+            }
 
-        path {
-            stroke: #E55929 !important;
-            fill: #E55929 !important;
+            path {
+                stroke: #E55929 !important;
+                fill: #E55929 !important;
+            }
         }
     }
+
+    @media screen and (max-width: 768px) {
+        bottom: 50px;
+
+        &:active {
+            .scroll-icon {
+                border-color: #E55929 !important;
+            }
+
+            .scroll-icon-dot {
+                background: #E55929 !important;
+            }
+
+            path {
+                stroke: #E55929 !important;
+                fill: #E55929 !important;
+            }
+        }
+    }
+
 
     path {
         transition: opacity 0.2s ease-out;
