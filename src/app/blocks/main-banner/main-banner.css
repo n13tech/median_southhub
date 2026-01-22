@@ -226,7 +226,7 @@
     }
 
     @media screen and (max-width: 768px) {
-        bottom: 50px;
+        bottom: 75px;
 
         &:active {
             .scroll-icon {
