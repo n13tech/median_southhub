@@ -420,7 +420,11 @@ export const MainBanner = () => {
                     </div>
                     <div>
                         <svg className='scroll-icon-bottom' width="16" height="8" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.472337 1.57884L4.46415 5.57065C6.27506 7.38156 9.26183 7.33094 11.1352 5.45758L15.2646 1.32812L14.4093 0.472737L10.2798 4.6022C8.89513 5.98686 6.68754 6.02428 5.34903 4.68577L1.35722 0.693958L0.472337 1.57884Z" fill="#BFBFBF" stroke="#BFBFBF" stroke-width="0.667421"/>
+                            <path
+                                d="M0.472337 1.57884L4.46415 5.57065C6.27506 7.38156 9.26183 7.33094 11.1352 5.45758L15.2646 1.32812L14.4093 0.472737L10.2798 4.6022C8.89513 5.98686 6.68754 6.02428 5.34903 4.68577L1.35722 0.693958L0.472337 1.57884Z"
+                                fill="#BFBFBF"
+                                stroke="#BFBFBF"
+                            />
                         </svg>
                     </div>
                 </div>
