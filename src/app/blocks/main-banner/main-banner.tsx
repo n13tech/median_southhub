@@ -401,6 +401,11 @@ export const MainBanner = () => {
                         muted
                         loop
                         autoPlay
+                        // Добавляем fetchpriority для приоритетной загрузки
+                        // (поддерживается в современных браузерах)
+                        fetchPriority="high"
+                        // Добавляем атрибут для предзагрузки
+                        loading="eager"
                     />
                 </div>
 
