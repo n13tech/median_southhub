@@ -15,6 +15,7 @@ export const ImageWithFallback = ({ altSrc, className, ...options }: Props) => {
       alt={options.alt}
       width={options.width}
       height={options.height}
+      unoptimized={options.unoptimized}
       onError={() => {
         setImgSrc(altSrc);
       }}
