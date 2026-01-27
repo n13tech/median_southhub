@@ -24,6 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
+      <head>
+        <link rel="preload" as="video" href="/Pigeon.mp4" type="video/mp4" fetchPriority="high" />
+      </head>
+
       <body className={`antialiased`}>
         <YandexMetrika />
 
