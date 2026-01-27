@@ -26,7 +26,6 @@ export const MainBanner = () => {
     const [videoReady, setVideoReady] = useState(false);
     const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
     const textAnimationsRef = useRef<ScrollTrigger[]>([]);
-    const playAttemptRef = useRef<number>(0);
 
     useEffect(() => {
         setWindowHeight(window.innerHeight);
@@ -35,141 +34,22 @@ export const MainBanner = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Функция для определения Safari
-    const isSafari = useCallback(() => {
-        const ua = navigator.userAgent.toLowerCase();
-        const isSafari = ua.includes('safari') && !ua.includes('chrome');
-        const isIOS = /iphone|ipad|ipod/.test(ua);
-        const isMac = /macintosh/.test(ua);
-        
-        return {
-            isSafari: isSafari || isIOS,
-            isIOS,
-            isMac,
-            isDesktopSafari: isSafari && isMac && !isIOS
-        };
-    }, []);
-
-    // Приоритетная загрузка видео для Safari
-    const loadVideoWithPriority = useCallback(async () => {
-        const video = videoRef.current;
-        if (!video) return false;
-
-        const browserInfo = isSafari();
-        console.log('Browser info:', browserInfo);
-
-        try {
-            // Для Safari: используем более агрессивную стратегию загрузки
-            if (browserInfo.isSafari) {
-                // Устанавливаем приоритетные атрибуты для Safari
-                video.autoplay = true;
-                video.muted = true;
-                video.loop = true;
-                video.playsInline = true;
-                video.preload = 'auto';
-                video.load(); // Принудительная загрузка
-                
-                // Для iOS Safari добавляем специальные атрибуты
-                if (browserInfo.isIOS) {
-                    video.setAttribute('webkit-playsinline', 'true');
-                    video.setAttribute('playsinline', 'true');
-                    
-                    // Делаем несколько попыток воспроизведения
-                    const playWithRetry = async (attempt: number = 0): Promise<boolean> => {
-                        if (attempt >= 3) return false;
-                        
-                        try {
-                            await video.play();
-                            return true;
-                        } catch (error) {
-                            console.log(`Play attempt ${attempt + 1} failed, retrying...`);
-                            
-                            // Ждем немного перед следующей попыткой
-                            await new Promise(resolve => setTimeout(resolve, 300));
-                            
-                            // Если это первая попытка и она провалилась,
-                            // ждем немного дольше для загрузки видео
-                            if (attempt === 0) {
-                                await new Promise(resolve => setTimeout(resolve, 500));
-                            }
-                            
-                            return playWithRetry(attempt + 1);
-                        }
-                    };
-
-                    const played = await playWithRetry();
-                    if (played) {
-                        setVideoReady(true);
-                        return true;
-                    }
-                } else {
-                    // Для desktop Safari
-                    await video.play();
-                    setVideoReady(true);
-                    return true;
-                }
-            } else {
-                // Для других браузеров стандартный подход
-                video.autoplay = true;
-                video.muted = true;
-                video.loop = true;
-                video.playsInline = true;
-                video.preload = 'auto';
-                
-                const playPromise = video.play();
-                if (playPromise !== undefined) {
-                    await playPromise;
-                    setVideoReady(true);
-                    return true;
-                }
-            }
-        } catch (error) {
-            console.log('Video autoplay failed:', error);
-            
-            // Если автозапуск не сработал, пробуем альтернативный метод
-            try {
-                // Перезагружаем видео
-                video.load();
-                
-                // Ждем пока видео будет готово
-                await new Promise<void>((resolve) => {
-                    if (video.readyState >= 4) {
-                        resolve();
-                    } else {
-                        video.addEventListener('canplaythrough', () => resolve(), { once: true });
-                    }
-                });
-
-                // Пробуем снова с задержкой
-                await new Promise(resolve => setTimeout(resolve, 100));
-                await video.play();
-                setVideoReady(true);
-                return true;
-            } catch (retryError) {
-                console.log('Retry also failed:', retryError);
-                return false;
-            }
-        }
-        
-        return false;
-    }, [isSafari]);
-
     // Инициализация видео
     const initializeVideo = useCallback(() => {
         const video = videoRef.current;
         if (!video) return;
 
-        // Устанавливаем базовые атрибуты
+        // Устанавливаем атрибуты для Safari
         video.autoplay = true;
         video.muted = true;
         video.loop = true;
         video.playsInline = true;
-        video.preload = 'auto';
         video.setAttribute('webkit-playsinline', 'true');
         video.setAttribute('playsinline', 'true');
         video.setAttribute('muted', 'true');
+        video.setAttribute('autoplay', 'true');
 
-        // Обработчик для ручного зацикливания (на случай если loop не работает)
+        // Для iOS: добавляем обработчик для ручного зацикливания
         const handleVideoEnd = () => {
             video.currentTime = 0;
             video.play().catch(e => console.log('Video replay error:', e));
@@ -177,74 +57,78 @@ export const MainBanner = () => {
 
         video.addEventListener('ended', handleVideoEnd);
 
-        // Настраиваем размеры видео
-        const setupVideoSize = () => {
+        // Попытка запустить видео
+        const playVideo = () => {
+            if (video.readyState >= 2) { // HAVE_CURRENT_DATA или лучше
+                video.play()
+                    .then(() => {
+                        console.log('Video started playing');
+                        setVideoReady(true);
+                    })
+                    .catch(error => {
+                        console.log('Autoplay failed, trying with user gesture:', error);
+                        // Для Safari: добавляем обработчик клика для запуска видео
+                        const handleFirstClick = () => {
+                            video.play()
+                                .then(() => {
+                                    console.log('Video started after user interaction');
+                                    setVideoReady(true);
+                                })
+                                .catch(e => console.log('Failed to play after interaction:', e));
+                            document.removeEventListener('click', handleFirstClick);
+                            document.removeEventListener('touchstart', handleFirstClick);
+                        };
+                        
+                        document.addEventListener('click', handleFirstClick);
+                        document.addEventListener('touchstart', handleFirstClick);
+                    });
+            }
+        };
+
+        // Ждем, когда видео будет готово
+        if (video.readyState >= 2) {
+            playVideo();
+        } else {
+            video.addEventListener('loadedmetadata', playVideo);
+            video.addEventListener('canplay', playVideo);
+        }
+
+        // Настройка видео при загрузке
+        const setupVideo = () => {
             const containerHeight = windowHeight;
             const containerWidth = window.innerWidth;
             
+            // Рассчитываем масштабирование видео
             const videoAspectRatio = 16 / 9;
             const containerAspectRatio = containerWidth / containerHeight;
             
             let videoWidth, videoHeight;
             
             if (containerAspectRatio > videoAspectRatio) {
+                // Контейнер шире, чем видео - видео заполняет по высоте
                 videoHeight = containerHeight;
                 videoWidth = containerHeight * videoAspectRatio;
             } else {
+                // Контейнер уже, чем видео - видео заполняет по ширине
                 videoWidth = containerWidth;
                 videoHeight = containerWidth / videoAspectRatio;
             }
             
+            // Центрируем видео
             video.style.width = `${videoWidth}px`;
             video.style.height = `${videoHeight}px`;
             video.style.left = `${(containerWidth - videoWidth) / 2}px`;
             video.style.top = `${(containerHeight - videoHeight) / 2}px`;
         };
 
-        setupVideoSize();
-
-        // Обработчик успешной загрузки
-        const handleLoadedData = () => {
-            console.log('Video loaded, attempting to play...');
-            loadVideoWithPriority().then(success => {
-                if (success) {
-                    console.log('Video playback started successfully');
-                } else {
-                    console.log('Video could not start automatically');
-                    
-                    // Показываем кнопку для ручного запуска если нужно
-                    const browserInfo = isSafari();
-                    if (browserInfo.isIOS) {
-                        // Для iOS добавляем обработчик для ручного запуска
-                        const handleUserInteraction = () => {
-                            video.play().then(() => {
-                                setVideoReady(true);
-                                document.removeEventListener('click', handleUserInteraction);
-                                document.removeEventListener('touchstart', handleUserInteraction);
-                            }).catch(e => console.log('Manual play failed:', e));
-                        };
-                        
-                        document.addEventListener('click', handleUserInteraction);
-                        document.addEventListener('touchstart', handleUserInteraction);
-                    }
-                }
-            });
-        };
-
-        // Обработчик ошибки загрузки
-        const handleError = (e: ErrorEvent) => {
-            console.error('Video loading error:', e);
-        };
-
-        video.addEventListener('loadeddata', handleLoadedData);
-        video.addEventListener('error', handleError);
+        setupVideo();
 
         return () => {
             video.removeEventListener('ended', handleVideoEnd);
-            video.removeEventListener('loadeddata', handleLoadedData);
-            video.removeEventListener('error', handleError);
+            video.removeEventListener('loadedmetadata', playVideo);
+            video.removeEventListener('canplay', playVideo);
         };
-    }, [windowHeight, loadVideoWithPriority, isSafari]);
+    }, [windowHeight]);
 
     // Функция для настройки анимации появления текстовых элементов
     const setupTextAnimations = useCallback(() => {
@@ -347,7 +231,7 @@ export const MainBanner = () => {
         };
 
         // Инициализируем видео
-        const cleanupVideo = initializeVideo();
+        initializeVideo();
         
         // Инициализируем анимацию скролла
         initScrollAnimation();
@@ -368,9 +252,6 @@ export const MainBanner = () => {
             // Очищаем текстовые анимации
             textAnimationsRef.current.forEach(animation => animation.kill());
             textAnimationsRef.current = [];
-            
-            // Очищаем обработчики видео
-            if (cleanupVideo) cleanupVideo();
             
             window.removeEventListener('resize', handleResize);
         };
@@ -394,18 +275,13 @@ export const MainBanner = () => {
                         ref={videoRef}
                         className='home-video'
                         id='home-video'
-                        src="/Pigeon.mp4"
+                        src="./Pigeon.mp4"
                         preload="auto"
                         webkit-playsinline="true"
                         playsInline
                         muted
                         loop
                         autoPlay
-                        // Добавляем fetchpriority для приоритетной загрузки
-                        // (поддерживается в современных браузерах)
-                        fetchPriority="high"
-                        // Добавляем атрибут для предзагрузки
-                        loading="eager"
                     />
                 </div>
 

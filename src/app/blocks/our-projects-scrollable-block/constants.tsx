@@ -13,7 +13,6 @@ type ArchItem = {
   linkColor: string;
   imageSrc: string | StaticImageData;
   altSrc: string | StaticImageData;
-  unoptimized?: boolean;
   imageAlt: string;
   buttonTitle: string;
   onClick: () => void;
@@ -30,7 +29,6 @@ export const OUR_PROJECTS_ITEMS: ArchItem[] = [
         imageAlt: 'SnowBase camp',
         buttonTitle: 'Участвовать',
         onClick: () => window.open(SNOWBASE_LINK, '_blank'),
-        unoptimized: false,
     },
     {
         id: 'our-projects-south-hub',
@@ -42,7 +40,6 @@ export const OUR_PROJECTS_ITEMS: ArchItem[] = [
         imageAlt: 'South HUB Camp',
         buttonTitle: 'Участвовать',
         onClick: () => window.open(SOUTHHUB_LINK, '_blank'),
-        unoptimized: false,
     },
     {
         id: 'our-projects-club-meet',
