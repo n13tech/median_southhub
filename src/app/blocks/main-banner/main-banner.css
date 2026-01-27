@@ -8,12 +8,6 @@
     overflow: hidden;
     padding: 0 100px;
 
-    /* Оптимизация для Safari */
-    -webkit-transform: translate3d(0,0,0);
-    transform: translate3d(0,0,0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-
     @media screen and (max-width: 1280px) {
         padding: 0 40px;
     }
@@ -51,27 +45,13 @@
     position: absolute;
     object-fit: cover;
     pointer-events: none;
-
-    /* Критические оптимизации для Safari */
-    -webkit-transform: translate3d(0,0,0);
-    transform: translate3d(0,0,0);
+    /* Добавьте для лучшей поддержки Safari */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     -webkit-perspective: 1000;
     perspective: 1000;
-    will-change: transform;
-    /* Улучшение качества рендеринга в Safari */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Добавьте медиа-запросы для Safari на iOS */
-@supports (-webkit-touch-callout: none) {
-    .video-wrapper video {
-        /* Дополнительные стили для iOS Safari */
-        -webkit-mask-image: -webkit-radial-gradient(white, black);
-        mask-image: radial-gradient(white, black);
-    }
 }
 
 .main-banner-content {

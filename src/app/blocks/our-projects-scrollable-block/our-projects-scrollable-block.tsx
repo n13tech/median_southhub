@@ -323,7 +323,6 @@ export const OurProjectsScrollableBlock = () => {
                   src={item.imageSrc}
                   altSrc={item.altSrc}
                   alt={item.imageAlt}
-                  unoptimized={item.unoptimized}
                   width={isMobile ? 612 : 900}
                   height={isMobile ? 275 : 536}
                   className="our-projects-item-right-img"
