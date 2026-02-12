@@ -48,7 +48,6 @@ export const MainBanner = () => {
         video.setAttribute('playsinline', 'true');
         video.setAttribute('muted', 'true');
         video.setAttribute('autoplay', 'true');
-        video.setAttribute('preload', 'auto');
 
         // Для iOS: добавляем обработчик для ручного зацикливания
         const handleVideoEnd = () => {
@@ -60,8 +59,7 @@ export const MainBanner = () => {
 
         // Попытка запустить видео
         const playVideo = () => {
-            // Для iOS Safari - используем requestAnimationFrame
-            const tryPlay = () => {
+            if (video.readyState >= 2) { // HAVE_CURRENT_DATA или лучше
                 video.play()
                     .then(() => {
                         console.log('Video started playing');
@@ -69,44 +67,30 @@ export const MainBanner = () => {
                     })
                     .catch(error => {
                         console.log('Autoplay failed, trying with user gesture:', error);
-                        
-                        // Для iOS Safari: добавляем обработчик для всего документа
-                        const handleFirstInteraction = () => {
+                        // Для Safari: добавляем обработчик клика для запуска видео
+                        const handleFirstClick = () => {
                             video.play()
                                 .then(() => {
                                     console.log('Video started after user interaction');
                                     setVideoReady(true);
                                 })
                                 .catch(e => console.log('Failed to play after interaction:', e));
-                            
-                            // Удаляем обработчики после первого взаимодействия
-                            document.removeEventListener('click', handleFirstInteraction);
-                            document.removeEventListener('touchstart', handleFirstInteraction);
-                            document.removeEventListener('scroll', handleFirstInteraction);
+                            document.removeEventListener('click', handleFirstClick);
+                            document.removeEventListener('touchstart', handleFirstClick);
                         };
                         
-                        document.addEventListener('click', handleFirstInteraction, { once: true });
-                        document.addEventListener('touchstart', handleFirstInteraction, { once: true });
-                        document.addEventListener('scroll', handleFirstInteraction, { once: true });
+                        document.addEventListener('click', handleFirstClick);
+                        document.addEventListener('touchstart', handleFirstClick);
                     });
-            };
-
-            requestAnimationFrame(tryPlay);
+            }
         };
 
-        // Обработчик для загрузки видео
-        const handleLoaded = () => {
-            // Ждем немного перед попыткой воспроизведения
-            setTimeout(playVideo, 100);
-        };
-
-        // Если видео уже загружено
-        if (video.readyState >= 3) { // HAVE_FUTURE_DATA
-            handleLoaded();
+        // Ждем, когда видео будет готово
+        if (video.readyState >= 2) {
+            playVideo();
         } else {
-            // Ждем, когда видео будет готово
-            video.addEventListener('loadeddata', handleLoaded, { once: true });
-            video.addEventListener('canplay', handleLoaded, { once: true });
+            video.addEventListener('loadedmetadata', playVideo);
+            video.addEventListener('canplay', playVideo);
         }
 
         // Настройка видео при загрузке
@@ -141,6 +125,8 @@ export const MainBanner = () => {
 
         return () => {
             video.removeEventListener('ended', handleVideoEnd);
+            video.removeEventListener('loadedmetadata', playVideo);
+            video.removeEventListener('canplay', playVideo);
         };
     }, [windowHeight]);
 
@@ -289,17 +275,14 @@ export const MainBanner = () => {
                         ref={videoRef}
                         className='home-video'
                         id='home-video'
+                        src="./Pigeon.mp4"
                         preload="auto"
+                        webkit-playsinline="true"
                         playsInline
                         muted
                         loop
                         autoPlay
-                        webkit-playsinline="true"
-                        style={{ display: 'block' }}
-                    >
-                        <source src="./Pigeon.mp4" type="video/mp4" />
-                        Ваш браузер не поддерживает видео.
-                    </video>
+                    />
                 </div>
 
                 <div className="main-banner-content" ref={contentRef}>
