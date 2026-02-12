@@ -23,7 +23,6 @@ export const MainBanner = () => {
     const title6Ref = useRef<HTMLDivElement>(null);
     
     const [windowHeight, setWindowHeight] = useState(0);
-    const [videoReady, setVideoReady] = useState(false);
     const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
     const textAnimationsRef = useRef<ScrollTrigger[]>([]);
 
@@ -33,102 +32,6 @@ export const MainBanner = () => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-
-    // Инициализация видео
-    const initializeVideo = useCallback(() => {
-        const video = videoRef.current;
-        if (!video) return;
-
-        // Устанавливаем атрибуты для Safari
-        video.autoplay = true;
-        video.muted = true;
-        video.loop = true;
-        video.playsInline = true;
-        video.setAttribute('webkit-playsinline', 'true');
-        video.setAttribute('playsinline', 'true');
-        video.setAttribute('muted', 'true');
-        video.setAttribute('autoplay', 'true');
-
-        // Для iOS: добавляем обработчик для ручного зацикливания
-        const handleVideoEnd = () => {
-            video.currentTime = 0;
-            video.play().catch(e => console.log('Video replay error:', e));
-        };
-
-        video.addEventListener('ended', handleVideoEnd);
-
-        // Попытка запустить видео
-        const playVideo = () => {
-            if (video.readyState >= 2) { // HAVE_CURRENT_DATA или лучше
-                video.play()
-                    .then(() => {
-                        console.log('Video started playing');
-                        setVideoReady(true);
-                    })
-                    .catch(error => {
-                        console.log('Autoplay failed, trying with user gesture:', error);
-                        // Для Safari: добавляем обработчик клика для запуска видео
-                        const handleFirstClick = () => {
-                            video.play()
-                                .then(() => {
-                                    console.log('Video started after user interaction');
-                                    setVideoReady(true);
-                                })
-                                .catch(e => console.log('Failed to play after interaction:', e));
-                            document.removeEventListener('click', handleFirstClick);
-                            document.removeEventListener('touchstart', handleFirstClick);
-                        };
-                        
-                        document.addEventListener('click', handleFirstClick);
-                        document.addEventListener('touchstart', handleFirstClick);
-                    });
-            }
-        };
-
-        // Ждем, когда видео будет готово
-        if (video.readyState >= 2) {
-            playVideo();
-        } else {
-            video.addEventListener('loadedmetadata', playVideo);
-            video.addEventListener('canplay', playVideo);
-        }
-
-        // Настройка видео при загрузке
-        const setupVideo = () => {
-            const containerHeight = windowHeight;
-            const containerWidth = window.innerWidth;
-            
-            // Рассчитываем масштабирование видео
-            const videoAspectRatio = 16 / 9;
-            const containerAspectRatio = containerWidth / containerHeight;
-            
-            let videoWidth, videoHeight;
-            
-            if (containerAspectRatio > videoAspectRatio) {
-                // Контейнер шире, чем видео - видео заполняет по высоте
-                videoHeight = containerHeight;
-                videoWidth = containerHeight * videoAspectRatio;
-            } else {
-                // Контейнер уже, чем видео - видео заполняет по ширине
-                videoWidth = containerWidth;
-                videoHeight = containerWidth / videoAspectRatio;
-            }
-            
-            // Центрируем видео
-            video.style.width = `${videoWidth}px`;
-            video.style.height = `${videoHeight}px`;
-            video.style.left = `${(containerWidth - videoWidth) / 2}px`;
-            video.style.top = `${(containerHeight - videoHeight) / 2}px`;
-        };
-
-        setupVideo();
-
-        return () => {
-            video.removeEventListener('ended', handleVideoEnd);
-            video.removeEventListener('loadedmetadata', playVideo);
-            video.removeEventListener('canplay', playVideo);
-        };
-    }, [windowHeight]);
 
     // Функция для настройки анимации появления текстовых элементов
     const setupTextAnimations = useCallback(() => {
@@ -195,8 +98,9 @@ export const MainBanner = () => {
         const section = sectionRef.current;
         const content = contentRef.current;
         const pin = pinRef.current;
+        const video = videoRef.current;
         
-        if (!section || !content || !pin || !windowHeight) return;
+        if (!section || !content || !pin || !video || !windowHeight) return;
 
         const calculateSectionHeight = () => {
             const scrollDistance = 5000;
@@ -205,6 +109,58 @@ export const MainBanner = () => {
 
         const sectionHeight = calculateSectionHeight();
         section.style.minHeight = `${sectionHeight}px`;
+
+        // Настройка видео
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        
+        // Настраиваем видео, чтобы оно было на всю высоту экрана
+        const setupVideo = () => {
+            const containerHeight = windowHeight;
+            const containerWidth = window.innerWidth;
+            
+            // Рассчитываем масштабирование видео
+            const videoAspectRatio = 16 / 9; // Стандартное соотношение для видео
+            const containerAspectRatio = containerWidth / containerHeight;
+            
+            let videoWidth, videoHeight;
+            
+            if (containerAspectRatio > videoAspectRatio) {
+                // Контейнер шире, чем видео - видео заполняет по высоте
+                videoHeight = containerHeight;
+                videoWidth = containerHeight * videoAspectRatio;
+            } else {
+                // Контейнер уже, чем видео - видео заполняет по ширине
+                videoWidth = containerWidth;
+                videoHeight = containerWidth / videoAspectRatio;
+            }
+            
+            // Центрируем видео
+            const videoElement = video as HTMLVideoElement;
+            videoElement.style.width = `${videoWidth}px`;
+            videoElement.style.height = `${videoHeight}px`;
+            videoElement.style.left = `${(containerWidth - videoWidth) / 2}px`;
+            videoElement.style.top = `${(containerHeight - videoHeight) / 2}px`;
+        };
+
+        // Инициализируем видео
+        setupVideo();
+        
+        // Попытка воспроизвести видео
+        const playVideo = () => {
+            video.play().catch(error => {
+                console.log('Autoplay failed:', error);
+                // Показываем кнопку воспроизведения или используем другой подход
+            });
+        };
+
+        // Ждем, когда видео будет готово
+        video.addEventListener('loadedmetadata', () => {
+            setupVideo();
+            playVideo();
+        });
 
         const initScrollAnimation = () => {
             if (scrollTriggerRef.current) {
@@ -220,6 +176,7 @@ export const MainBanner = () => {
                 pin: pin,
                 pinSpacing: false,
                 onRefresh: () => {
+                    setupVideo();
                     setupTextAnimations();
                 }
             });
@@ -230,14 +187,11 @@ export const MainBanner = () => {
             ScrollTrigger.refresh();
         };
 
-        // Инициализируем видео
-        initializeVideo();
-        
-        // Инициализируем анимацию скролла
         initScrollAnimation();
 
         // Обработчик ресайза
         const handleResize = () => {
+            setupVideo();
             initScrollAnimation();
         };
 
@@ -255,7 +209,7 @@ export const MainBanner = () => {
             
             window.removeEventListener('resize', handleResize);
         };
-    }, [windowHeight, setupTextAnimations, initializeVideo]);
+    }, [windowHeight, setupTextAnimations]);
 
     const handleScrollIntoView = () => {
         const element = document.getElementById('our-projects-block');
@@ -277,11 +231,6 @@ export const MainBanner = () => {
                         id='home-video'
                         src="./Pigeon.mp4"
                         preload="auto"
-                        webkit-playsinline="true"
-                        playsInline
-                        muted
-                        loop
-                        autoPlay
                     />
                 </div>
 
