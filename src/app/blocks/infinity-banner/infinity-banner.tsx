@@ -7,6 +7,7 @@ import LogoWhite from '../../../../public/logo-white.svg';
 import './infinity-banner.css';
 import { FONT_MONT_BOOK } from '@/app/fonts';
 import { TELEGRAM_CHANELL_LINK } from '@/app/constants';
+import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
 const Item = () => {
     return (
@@ -44,8 +45,10 @@ const Item = () => {
 }
 
 export const InfinityBanner = () => {
+    const getLinkWIthUtm = useGetLinkWithUtm();
+
     return (
-        <a className='infinity-banner-wrapper' id='infinity-banner' href={TELEGRAM_CHANELL_LINK} target='_blank'>
+        <a className='infinity-banner-wrapper' id='infinity-banner' href={getLinkWIthUtm(TELEGRAM_CHANELL_LINK)} target='_blank'>
             <div className="infinity-banner-items infinity-banner-marquee">
                 <Item />
                 <Item />

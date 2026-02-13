@@ -4,9 +4,12 @@ import { TELEGRAM_CONTACT_US_LINK } from '@/app/constants';
 import { FONT_MONT_BOOK } from '../../fonts';
 
 import { Button } from 'antd';
+import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
 export const AboutUsBlockButton = () => {
-    const handleClick = () => window.open(TELEGRAM_CONTACT_US_LINK, '_blank');
+    const getLinkWIthUtm = useGetLinkWithUtm();
+
+    const handleClick = () => window.open(getLinkWIthUtm(TELEGRAM_CONTACT_US_LINK), '_blank');
 
     return (
         <Button

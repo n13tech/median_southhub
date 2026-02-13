@@ -18,7 +18,7 @@ type ArchItem = {
   onClick: () => void;
 }
 
-export const OUR_PROJECTS_ITEMS: ArchItem[] = [
+export const getOurProjectItems = (getLinkWIthUtm: (i: string) => string): ArchItem[] => [
     {
         id: 'our-projects-snow-base',
         title: 'Snow BASE Camp',
@@ -28,7 +28,7 @@ export const OUR_PROJECTS_ITEMS: ArchItem[] = [
         altSrc: '/SB-4.webp',
         imageAlt: 'SnowBase camp',
         buttonTitle: 'Участвовать',
-        onClick: () => window.open(SNOWBASE_LINK, '_blank'),
+        onClick: () => window.open(getLinkWIthUtm(SNOWBASE_LINK), '_blank'),
     },
     {
         id: 'our-projects-south-hub',
@@ -39,7 +39,7 @@ export const OUR_PROJECTS_ITEMS: ArchItem[] = [
         altSrc: '/SH2-2.webp',
         imageAlt: 'South HUB Camp',
         buttonTitle: 'Участвовать',
-        onClick: () => window.open(SOUTHHUB_LINK, '_blank'),
+        onClick: () => window.open(getLinkWIthUtm(SOUTHHUB_LINK), '_blank'),
     },
     {
         id: 'our-projects-club-meet',
@@ -50,7 +50,7 @@ export const OUR_PROJECTS_ITEMS: ArchItem[] = [
         altSrc: ClubMeet,
         imageAlt: 'club meet',
         buttonTitle: 'Участвовать',
-        onClick: () => window.open(LK_SOUTHHUB_LINK, '_blank'),
+        onClick: () => window.open(getLinkWIthUtm(LK_SOUTHHUB_LINK), '_blank'),
     },
     {
         id: 'our-projects-youtube-chanell',
@@ -61,7 +61,7 @@ export const OUR_PROJECTS_ITEMS: ArchItem[] = [
         altSrc: YoutubeChanell,
         imageAlt: 'youtube chanell',
         buttonTitle: 'СМОТРЕТЬ',
-        onClick: () => window.open(SOUTHHUB_YOUTUBE, '_blank'),
+        onClick: () => window.open(getLinkWIthUtm(SOUTHHUB_YOUTUBE), '_blank'),
     },
     {
         id: 'our-projects-telegramm-chanell',
@@ -72,7 +72,7 @@ export const OUR_PROJECTS_ITEMS: ArchItem[] = [
         altSrc: TelegramChanell,
         imageAlt: 'telegramm chanell',
         buttonTitle: 'Подписаться',
-        onClick: () => window.open(TELEGRAM_CHANELL_LINK, '_blank'),
+        onClick: () => window.open(getLinkWIthUtm(TELEGRAM_CHANELL_LINK), '_blank'),
     },
     {
         id: 'our-projects-online-broadcast',
@@ -83,6 +83,6 @@ export const OUR_PROJECTS_ITEMS: ArchItem[] = [
         altSrc: OnlineBroadcast,
         imageAlt: 'online broadcast',
         buttonTitle: 'смотреть',
-        onClick: () => window.open(YOUTUBE_PLAYLIST_LINK, '_blank'),
+        onClick: () => window.open(getLinkWIthUtm(YOUTUBE_PLAYLIST_LINK), '_blank'),
     },
 ];

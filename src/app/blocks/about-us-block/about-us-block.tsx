@@ -8,8 +8,11 @@ import AboutUsImg from '../../../../public/about-us-img.webp';
 import MedianLogo from '../../../../public/median-logo.png';
 import { AboutUsBlockButton } from './about-us-block-button';
 import { MEDIAN_LINK, NBSP } from '@/app/constants';
+import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
 export const AboutUsBlock = () => {
+    const getLinkWithUtm = useGetLinkWithUtm();
+
     return (
         <div className='about-us-block-wrapper' id='about-us-block'>
             <Fade delay={250} triggerOnce>
@@ -43,7 +46,7 @@ export const AboutUsBlock = () => {
                         </p>
 
                         <div>
-                            <a href={MEDIAN_LINK} target='_blank' className={`${FONT_MONT_BOOK.className} about-us-block-info-text-median`}>
+                            <a href={getLinkWithUtm(MEDIAN_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} about-us-block-info-text-median`}>
                                 median.agency
                             </a>
                             <p className={`${FONT_MONT_BOOK.className} about-us-block-info-text`}>

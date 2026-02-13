@@ -9,8 +9,11 @@ import YoutubeIcon from '../../../../public/youtube-icon.png';
 import './footer.css';
 import Image from 'next/image';
 import { SOUTHHUB_CONFIDENTIAL_LINK, SOUTHHUB_COOKIES_LINK, SOUTHHUB_LINKEDIN, SOUTHHUB_PD_LINK, SOUTHHUB_TELEGRAM, SOUTHHUB_YOUTUBE, TELEGRAM_CHANELL_LINK } from '@/app/constants';
+import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
 export const Footer = () => {
+    const getLinkWithUtm = useGetLinkWithUtm();
+
     return (
         <div className='footer' id='footer'>
             <div className='footer-wrapper'>
@@ -47,7 +50,7 @@ export const Footer = () => {
                     <div className='footer-contacts footer-contacts-first'>
                         <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>Контакты:</p>
                         <a href='mailto:mail@southhub.ru' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>mail@southhub.ru</a>
-                        <a href={SOUTHHUB_TELEGRAM} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Telegram</a>
+                        <a href={getLinkWithUtm(SOUTHHUB_TELEGRAM)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Telegram</a>
                         <a href='tel:+7 862 29 59 977' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>+7 862 29 59 977</a>
                     </div>
 
@@ -55,29 +58,29 @@ export const Footer = () => {
                         <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>ООО «Высокие люди»</p>
                         <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>ИНН 2320134913</p>
                         {/* <p className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Публичная оферта</p> */}
-                        <a href={SOUTHHUB_CONFIDENTIAL_LINK} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Политика конфиденциальности</a>
-                        <a href={SOUTHHUB_COOKIES_LINK} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Политика обработки файлов cookie</a>
-                        <a href={SOUTHHUB_PD_LINK} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Политика обработки персональных данных</a>
+                        <a href={getLinkWithUtm(SOUTHHUB_CONFIDENTIAL_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Политика конфиденциальности</a>
+                        <a href={getLinkWithUtm(SOUTHHUB_COOKIES_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Политика обработки файлов cookie</a>
+                        <a href={getLinkWithUtm(SOUTHHUB_PD_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Политика обработки персональных данных</a>
                         {/* <p className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Пользовательское соглашение</p> */}
                         <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>© 2025 South HUB. Все права защищены</p>
                     </div>
 
                     <div className='footer-icons'>
-                        <a href={SOUTHHUB_YOUTUBE} target='_blank'>
+                        <a href={getLinkWithUtm(SOUTHHUB_YOUTUBE)} target='_blank'>
                             <Image
                                 src={YoutubeIcon}
                                 alt="youtube"
                                 height={52}
                             />
                         </a>
-                        <a href={SOUTHHUB_LINKEDIN} target='_blank'>
+                        <a href={getLinkWithUtm(SOUTHHUB_LINKEDIN)} target='_blank'>
                             <Image
                                 src={InstIcon}
                                 alt="linkedin"
                                 height={52}
                             />
                         </a>
-                        <a href={TELEGRAM_CHANELL_LINK} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
+                        <a href={getLinkWithUtm(TELEGRAM_CHANELL_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
                             <Image
                                 src={TelegrammIcon}
                                 alt="telegramm"
