@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { getSeoData } from "./lib/seo";
 import HomeContent from "./home-content";
+import { Suspense } from "react";
 
 
 export async function generateMetadata({ params }: { params: Promise<{ slug?: string }> }): Promise<Metadata> {
@@ -67,5 +68,9 @@ export default async function Home({ params }: { params: Promise<{ slug?: string
     const { slug } = await params;
     const data = await getSeoData(slug);
 
-    return <HomeContent data={data} />;
+    return (
+        <Suspense>
+            <HomeContent data={data} />
+        </Suspense>
+    );
 }
