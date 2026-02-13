@@ -4,14 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import './our-projects-scrollable-block.css';
-import { OUR_PROJECTS_ITEMS } from './constants';
+import { getOurProjectItems } from './constants';
 import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
 import { ImageWithFallback } from '@/app/components/image-with-fallback';
 import { AnimateTitle } from '@/app/components/animate-title';
 import { Fade } from 'react-awesome-reveal';
+import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
 export const OurProjectsScrollableBlock = () => {
+  const getLinkWIthUtm = useGetLinkWithUtm();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const rightColumnRef = useRef<HTMLDivElement>(null);
   const leftColumnRef = useRef<HTMLDivElement>(null);
@@ -270,6 +273,8 @@ export const OurProjectsScrollableBlock = () => {
     };
   }, [isMobile]);
 
+  const ITEMS = getOurProjectItems(getLinkWIthUtm);
+
   return (
     <>
       <div className='our-projects-block-wrapper' id='our-projects-block'>
@@ -289,7 +294,7 @@ export const OurProjectsScrollableBlock = () => {
         <div className="our-projects-scrollable-block">
           {/* Левая колонка - текст */}
           <div className="our-projects-item-left" ref={leftColumnRef}>
-            {OUR_PROJECTS_ITEMS.map((item) => (
+            {ITEMS.map((item) => (
               <div key={item.id} className="our-projects-item-left-info" id={item.id}>
                 <h2 className={`${FONT_MONT_BOOK.className} our-projects-item-left-info-title`}>
                   {item.title}
@@ -313,11 +318,11 @@ export const OurProjectsScrollableBlock = () => {
 
           {/* Правая колонка - картинки */}
           <div className="our-projects-item-right" ref={rightColumnRef}>
-            {OUR_PROJECTS_ITEMS.slice().map((item, index) => (
+            {ITEMS.slice().map((item, index) => (
               <div
                 key={`img-${item.id}`}
                 className="our-projects-item-right-img-wrapper"
-                data-index={OUR_PROJECTS_ITEMS.length - index}
+                data-index={ITEMS.length - index}
               >
                 <ImageWithFallback
                   src={item.imageSrc}

@@ -8,11 +8,18 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './main-banner.css';
 
+const totalCountImg = 120;
+
+// > Дольше, < Быстрее
+const ANIMATION_SPEED_FACTOR = 0.8;
+
 export const MainBanner = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const pinRef = useRef<HTMLDivElement>(null);
-    const videoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const scrollBoxRef = useRef<HTMLDivElement>(null);
+    const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(totalCountImg).fill(null));
     
     // Refs для текстовых элементов
     const title1Ref = useRef<HTMLHeadingElement>(null);
@@ -23,9 +30,14 @@ export const MainBanner = () => {
     const title6Ref = useRef<HTMLDivElement>(null);
     
     const [windowHeight, setWindowHeight] = useState(0);
-    const [videoReady, setVideoReady] = useState(false);
+    const loadedFramesRef = useRef<Set<number>>(new Set());
+    const loadingQueueRef = useRef<number[]>([]);
+    const isCurrentlyLoadingRef = useRef(false);
     const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
     const textAnimationsRef = useRef<ScrollTrigger[]>([]);
+
+    // Используем ref для функции, чтобы избежать проблем с порядком объявления
+    const processLoadingQueueRef = useRef<() => Promise<void>>();
 
     useEffect(() => {
         setWindowHeight(window.innerHeight);
@@ -34,115 +46,112 @@ export const MainBanner = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Инициализация видео
-    const initializeVideo = useCallback(() => {
-        const video = videoRef.current;
-        if (!video) return;
+    // Функция для загрузки пачки кадров
+    const loadFrameBatch = useCallback(async (frameIndices: number[]): Promise<void> => {
+        const promises = frameIndices.map(frameIndex => {
+            return new Promise<void>((resolve, reject) => {
+                if (imagesRef.current[frameIndex]?.complete || loadedFramesRef.current.has(frameIndex)) {
+                    resolve();
+                    return;
+                }
 
-        // Устанавливаем атрибуты для Safari
-        video.autoplay = true;
-        video.muted = true;
-        video.loop = true;
-        video.playsInline = true;
-        video.setAttribute('webkit-playsinline', 'true');
-        video.setAttribute('playsinline', 'true');
-        video.setAttribute('muted', 'true');
-        video.setAttribute('autoplay', 'true');
-        video.setAttribute('preload', 'auto');
+                const img = new Image();
+                img.src = `/main/AnimLettera_MOV_Prores4444_${frameIndex.toString().padStart(5, '0')}.webp`;
+                
+                img.onload = () => {
+                    imagesRef.current[frameIndex] = img;
+                    loadedFramesRef.current.add(frameIndex);
+                    resolve();
+                };
+                
+                img.onerror = () => {
+                    resolve();
+                };
+            });
+        });
 
-        // Для iOS: добавляем обработчик для ручного зацикливания
-        const handleVideoEnd = () => {
-            video.currentTime = 0;
-            video.play().catch(e => console.log('Video replay error:', e));
-        };
+        await Promise.all(promises);
+    }, []);
 
-        video.addEventListener('ended', handleVideoEnd);
-
-        // Попытка запустить видео
-        const playVideo = () => {
-            // Для iOS Safari - используем requestAnimationFrame
-            const tryPlay = () => {
-                video.play()
-                    .then(() => {
-                        console.log('Video started playing');
-                        setVideoReady(true);
-                    })
-                    .catch(error => {
-                        console.log('Autoplay failed, trying with user gesture:', error);
-                        
-                        // Для iOS Safari: добавляем обработчик для всего документа
-                        const handleFirstInteraction = () => {
-                            video.play()
-                                .then(() => {
-                                    console.log('Video started after user interaction');
-                                    setVideoReady(true);
-                                })
-                                .catch(e => console.log('Failed to play after interaction:', e));
-                            
-                            // Удаляем обработчики после первого взаимодействия
-                            document.removeEventListener('click', handleFirstInteraction);
-                            document.removeEventListener('touchstart', handleFirstInteraction);
-                            document.removeEventListener('scroll', handleFirstInteraction);
-                        };
-                        
-                        document.addEventListener('click', handleFirstInteraction, { once: true });
-                        document.addEventListener('touchstart', handleFirstInteraction, { once: true });
-                        document.addEventListener('scroll', handleFirstInteraction, { once: true });
-                    });
-            };
-
-            requestAnimationFrame(tryPlay);
-        };
-
-        // Обработчик для загрузки видео
-        const handleLoaded = () => {
-            // Ждем немного перед попыткой воспроизведения
-            setTimeout(playVideo, 100);
-        };
-
-        // Если видео уже загружено
-        if (video.readyState >= 3) { // HAVE_FUTURE_DATA
-            handleLoaded();
-        } else {
-            // Ждем, когда видео будет готово
-            video.addEventListener('loadeddata', handleLoaded, { once: true });
-            video.addEventListener('canplay', handleLoaded, { once: true });
-        }
-
-        // Настройка видео при загрузке
-        const setupVideo = () => {
-            const containerHeight = windowHeight;
-            const containerWidth = window.innerWidth;
-            
-            // Рассчитываем масштабирование видео
-            const videoAspectRatio = 16 / 9;
-            const containerAspectRatio = containerWidth / containerHeight;
-            
-            let videoWidth, videoHeight;
-            
-            if (containerAspectRatio > videoAspectRatio) {
-                // Контейнер шире, чем видео - видео заполняет по высоте
-                videoHeight = containerHeight;
-                videoWidth = containerHeight * videoAspectRatio;
-            } else {
-                // Контейнер уже, чем видео - видео заполняет по ширине
-                videoWidth = containerWidth;
-                videoHeight = containerWidth / videoAspectRatio;
+    // Инициализируем processLoadingQueueRef после объявления loadFrameBatch
+    useEffect(() => {
+        const processLoadingQueue = async () => {
+            if (isCurrentlyLoadingRef.current || loadingQueueRef.current.length === 0) {
+                return;
             }
+
+            isCurrentlyLoadingRef.current = true;
+
+            // Берем следующую пачку из 10 кадров из очереди
+            const batch = loadingQueueRef.current.splice(0, 10);
             
-            // Центрируем видео
-            video.style.width = `${videoWidth}px`;
-            video.style.height = `${videoHeight}px`;
-            video.style.left = `${(containerWidth - videoWidth) / 2}px`;
-            video.style.top = `${(containerHeight - videoHeight) / 2}px`;
+            if (batch.length > 0) {
+                await loadFrameBatch(batch);
+            }
+
+            isCurrentlyLoadingRef.current = false;
+
+            // Проверяем есть ли еще кадры в очереди и запускаем следующую пачку
+            if (loadingQueueRef.current.length > 0) {
+                setTimeout(() => {
+                    processLoadingQueueRef.current?.();
+                }, 30);
+            }
         };
 
-        setupVideo();
+        processLoadingQueueRef.current = processLoadingQueue;
+    }, [loadFrameBatch]);
 
-        return () => {
-            video.removeEventListener('ended', handleVideoEnd);
-        };
-    }, [windowHeight]);
+    // Добавление кадров в очередь загрузки
+    const queueFramesForLoading = useCallback((frameIndices: number[]) => {
+        const newFrames = frameIndices.filter(frame => 
+            !loadedFramesRef.current.has(frame) && 
+            !loadingQueueRef.current.includes(frame)
+        );
+        
+        if (newFrames.length === 0) return;
+        
+        loadingQueueRef.current.push(...newFrames);
+        
+        // Запускаем обработку очереди если она не активна
+        if (!isCurrentlyLoadingRef.current) {
+            processLoadingQueueRef.current?.();
+        }
+    }, []);
+
+    // Фоновая загрузка всех оставшихся кадров
+    const loadAllRemainingFrames = useCallback(() => {
+        const allFrames = Array.from({ length: totalCountImg }, (_, i) => i);
+        const remainingFrames = allFrames.filter(frame => 
+            !loadedFramesRef.current.has(frame)
+        );
+        
+        if (remainingFrames.length > 0) {
+            queueFramesForLoading(remainingFrames);
+        }
+    }, [queueFramesForLoading]);
+
+    // Находим ближайший загруженный кадр
+    const findNearestLoadedFrame = useCallback((targetFrame: number): number => {
+        for (let offset = 0; offset < totalCountImg; offset++) {
+            const before = targetFrame - offset;
+            const after = targetFrame + offset;
+            
+            if (before >= 0 && loadedFramesRef.current.has(before)) return before;
+            if (after < totalCountImg && loadedFramesRef.current.has(after)) return after;
+        }
+        return -1;
+    }, []);
+
+    // Предзагрузка первой пачки критических кадров и запуск фоновой загрузки
+    const preloadCriticalAndStartBackground = useCallback(async () => {
+        // Первая пачка: самые важные кадры для мгновенного отображения
+        const criticalFrames = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 99, 119];
+        await loadFrameBatch(criticalFrames);
+        
+        // Немедленно запускаем фоновую загрузку всех оставшихся кадров
+        loadAllRemainingFrames();
+    }, [loadFrameBatch, loadAllRemainingFrames]);
 
     // Функция для настройки анимации появления текстовых элементов
     const setupTextAnimations = useCallback(() => {
@@ -181,6 +190,10 @@ export const MainBanner = () => {
                 start: `top+=${percent}% top`,
                 end: `top+=${percent + 5}% top`,
                 toggleActions: "play reverse play reverse",
+                // play - когда триггер входит в viewport (onEnter)
+                // reverse - когда триггер выходит из viewport (onLeaveBack)
+                // play - когда триггер снова входит в viewport (onEnterBack)
+                // reverse - когда триггер снова выходит из viewport (onLeave)
                 onEnter: () => {
                     gsap.to(element, {
                         opacity: 1,
@@ -209,11 +222,21 @@ export const MainBanner = () => {
         const section = sectionRef.current;
         const content = contentRef.current;
         const pin = pinRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext('2d');
         
-        if (!section || !content || !pin || !windowHeight) return;
+        if (!section || !content || !pin || !canvas || !ctx || !windowHeight) return;
 
         const calculateSectionHeight = () => {
+            const isMobile = window.innerWidth <= 1024;
+            
             const scrollDistance = 5000;
+            const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR;
+            
+            if (isMobile) {
+                return mobileScrollDistance + windowHeight;
+            }
+            
             return scrollDistance + windowHeight;
         };
 
@@ -226,13 +249,65 @@ export const MainBanner = () => {
                 scrollTriggerRef.current = null;
             }
 
+            const isTablet = window.innerWidth <= 1280 && window.innerWidth > 1024;
+            const isMobile = window.innerWidth <= 1024;
+
+            if (!isTablet && !isMobile) {
+                canvas.width = 849;
+                canvas.height = 849;
+            } else if (isTablet) {
+                canvas.width = 739;
+                canvas.height = 739;
+            } else if (isMobile) {
+                canvas.width = 572;
+                canvas.height = 572;
+            }
+
+            // Определяем расстояние для анимации
+            const scrollDistance = 5000;
+            const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR;
+            
             scrollTriggerRef.current = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
-                end: `+=5000`,
+                end: `+=${isMobile ? mobileScrollDistance : scrollDistance}`,
                 scrub: true,
                 pin: pin,
                 pinSpacing: false,
+                onUpdate: (self) => {
+                    const totalFrames = totalCountImg;
+                    const frameIndex = Math.min(
+                        Math.floor(self.progress * totalFrames),
+                        totalFrames - 1
+                    );
+                    
+                    const currentImage = imagesRef.current[frameIndex];
+                    if (currentImage && currentImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
+                    } else {
+                        // Показываем ближайший загруженный кадр
+                        const nearestLoaded = findNearestLoadedFrame(frameIndex);
+                        if (nearestLoaded !== -1 && imagesRef.current[nearestLoaded]) {
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.drawImage(imagesRef.current[nearestLoaded]!, 0, 0, canvas.width, canvas.height);
+                        }
+                    }
+                },
+                onEnter: () => {
+                    const firstImage = imagesRef.current[0];
+                    if (firstImage && firstImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(firstImage, 0, 0, canvas.width, canvas.height);
+                    }
+                },
+                onLeave: () => {
+                    const lastImage = imagesRef.current[totalCountImg - 1];
+                    if (lastImage && lastImage.complete) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(lastImage, 0, 0, canvas.width, canvas.height);
+                    }
+                },
                 onRefresh: () => {
                     setupTextAnimations();
                 }
@@ -244,11 +319,10 @@ export const MainBanner = () => {
             ScrollTrigger.refresh();
         };
 
-        // Инициализируем видео
-        initializeVideo();
-        
-        // Инициализируем анимацию скролла
-        initScrollAnimation();
+        // Запускаем предзагрузку и фоновую загрузку
+        preloadCriticalAndStartBackground().then(() => {
+            initScrollAnimation();
+        });
 
         // Обработчик ресайза
         const handleResize = () => {
@@ -269,7 +343,12 @@ export const MainBanner = () => {
             
             window.removeEventListener('resize', handleResize);
         };
-    }, [windowHeight, setupTextAnimations, initializeVideo]);
+    }, [
+        windowHeight, 
+        findNearestLoadedFrame,
+        preloadCriticalAndStartBackground,
+        setupTextAnimations
+    ]);
 
     const handleScrollIntoView = () => {
         const element = document.getElementById('our-projects-block');
@@ -285,21 +364,11 @@ export const MainBanner = () => {
         <div className='main-banner-wrapper' id='main-banner' ref={sectionRef}>
             <div className="main-banner-pin-wrapper" ref={pinRef}>
                 <div className="video-wrapper">
-                    <video
-                        ref={videoRef}
+                    <canvas
+                        ref={canvasRef}
                         className='home-video'
                         id='home-video'
-                        preload="auto"
-                        playsInline
-                        muted
-                        loop
-                        autoPlay
-                        webkit-playsinline="true"
-                        style={{ display: 'block' }}
-                    >
-                        <source src="./Pigeon.mp4" type="video/mp4" />
-                        Ваш браузер не поддерживает видео.
-                    </video>
+                    />
                 </div>
 
                 <div className="main-banner-content" ref={contentRef}>
@@ -345,7 +414,7 @@ export const MainBanner = () => {
                     </div>
                 </div>
                 
-                <div className='scroll-icon-wrapper' onClick={handleScrollIntoView}>
+                <div ref={scrollBoxRef} className='scroll-icon-wrapper' onClick={handleScrollIntoView}>
                     <div className='scroll-icon'>
                         <div className='scroll-icon-dot' />
                     </div>

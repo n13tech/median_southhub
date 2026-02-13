@@ -8,6 +8,9 @@
     overflow: hidden;
     padding: 0 100px;
 
+    /* Высота будет устанавливаться динамически через JS */
+    /* min-height удаляем из CSS */
+
     @media screen and (max-width: 1280px) {
         padding: 0 40px;
     }
@@ -33,25 +36,42 @@
     margin: 0 auto;
     z-index: 1;
     pointer-events: none;
-    overflow: hidden;
 
     @media screen and (min-width: 1921px) {
         left: 50%;
         transform: translateX(-50%);
     }
+
+    @media screen and (max-width: 600px) {
+        left: 100px;
+        width: calc(100vw + 100px);
+    }
+
+    @media screen and (max-width: 400px) {
+        left: 100px;
+        width: calc(100vw + 180px);
+    }
 }
 
-.video-wrapper video {
+.video-wrapper canvas {
     position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -100px;
     object-fit: cover;
+    height: 849px;
+    width: auto;
     pointer-events: none;
-    /* Добавьте для лучшей поддержки Safari */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    perspective: 1000;
+
+    @media screen and (max-width: 1280px) {
+        height: 739px;
+        right: -40px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        height: 572px;
+        right: -16px;
+    }
 }
 
 .main-banner-content {
