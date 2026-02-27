@@ -1,5 +1,5 @@
 import './netwarming-block.css';
-import { FONT_IBM_PLEX_SERIF } from '@/app/fonts';
+import { FONT_IBM_PLEX_SERIF_BOLD_ITALIC } from '@/app/fonts';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface MousePosition {
@@ -10,7 +10,7 @@ interface MousePosition {
 export const NetwarmingBlock = () => {
     const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
 
-    const getFont = useCallback((fontSize: number) => `${fontSize}px ${FONT_IBM_PLEX_SERIF.style.fontFamily}`, []);
+    const getFont = useCallback((fontSize: number) => `${fontSize}px ${FONT_IBM_PLEX_SERIF_BOLD_ITALIC.style.fontFamily}`, []);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
