@@ -37,7 +37,7 @@ export const Preloader = () => {
             timeout = setTimeout(() => {
                 setVisible(false);
                 document.body.style.overflow = '';
-            }, 500);
+            }, 1000);
         };
 
         if (document.readyState === 'complete') {

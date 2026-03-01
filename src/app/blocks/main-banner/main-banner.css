@@ -6,18 +6,7 @@
     height: 100vh;
     margin: 0 auto;
     overflow: hidden;
-    padding: 0 100px;
-
-    /* Высота будет устанавливаться динамически через JS */
-    /* min-height удаляем из CSS */
-
-    @media screen and (max-width: 1280px) {
-        padding: 0 40px;
-    }
-
-    @media screen and (max-width: 1024px) {
-        padding: 0 16px;
-    }
+    padding: 0;
 }
 
 .main-banner-pin-wrapper {
@@ -41,244 +30,100 @@
         left: 50%;
         transform: translateX(-50%);
     }
-
-    @media screen and (max-width: 600px) {
-        left: 100px;
-        width: calc(100vw + 100px);
-    }
-
-    @media screen and (max-width: 400px) {
-        left: 100px;
-        width: calc(100vw + 180px);
-    }
 }
 
-.video-wrapper canvas {
+.video-wrapper video {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: -100px;
     object-fit: cover;
-    height: 849px;
-    width: auto;
+    height: 100vh;
+    width: 100vw;
+    max-width: 1920px;
     pointer-events: none;
-
-    @media screen and (max-width: 1280px) {
-        height: 739px;
-        right: -40px;
-    }
-
-    @media screen and (max-width: 1024px) {
-        height: 572px;
-        right: -16px;
-    }
 }
 
 .main-banner-content {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 10;
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
 }
 
-.main-banner-title-wrapper {
-    margin-bottom: 56px;
-    margin-top: 0;
-
-    @media screen and (max-width: 1280px) {
-        margin-bottom: 40px;
-    }
-
-    @media screen and (max-width: 1024px) {
-        margin-bottom: 20px;
-    }
+.main-banner-text {
+    opacity: 0;
+    color: white;
 }
 
-.main-banner-title {
+.main-banner-text-1 {
+    position: absolute;
+    top: calc(50% - 100px);
+    width: 100%;
+    text-align: center;
     font-weight: 500;
     font-size: 96px;
-    line-height: 140%;
-    text-transform: uppercase;
-    color: #111111;
-    white-space: pre-wrap;
-    opacity: 0;
-
-    @media screen and (max-width: 1280px) {
-        font-size: 78px;
-    }
-
-    @media screen and (max-width: 1024px) {
-        font-size: 48px;
-    }
-
-    @media screen and (max-width: 768px) {
-        font-size: 36px;
-    }
+    line-height: 96px;
 }
 
-.main-banner-description {
-    width: 410px;
-    margin: -125px 520px;
-    height: 0;
+.main-banner-text-2 {
+    position: absolute;
+    top: calc(50% + 15px);
+    right: 60px;
+    width: 460px;
     font-weight: 500;
     font-size: 24px;
     line-height: 125%;
-    color: #111111;
-    white-space: pre-wrap;
-    margin-bottom: 56px;
-    opacity: 0;
+}
+
+.main-banner-text-3 {
+    position: absolute;
+    top: calc(50% - 100px);
+    width: 100%;
+    height: 140px;
+    text-align: center;
+}
+
+.main-banner-text-3 > span {
+    margin-right: 160px;
+    font-weight: 500;
+    font-size: 24px;
+}
+
+.main-banner-text-3-netwarming {
+    font-style: italic;
+    font-weight: 500;
+    font-size: 96px;
+    line-height: 96px;
+}
+
+.main-banner-text-4 {
+    position: absolute;
+    top: calc(50% + 50px);
+    left: 50%;
+    width: 530px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 125%;
+}
+
+/* Кнопка (внизу слева) */
+.main-banner-button-wrapper {
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    pointer-events: auto;
 
     @media screen and (max-width: 1280px) {
-        margin: -125px 0 40px 460px;
-        width: 350px;
-        height: auto;
-    }
-
-    @media screen and (max-width: 1024px) {
-        position: static;
-        width: 300px;
-        font-size: 18px;
-        white-space: normal;
-        margin: 0 0 32px 0;
-        height: auto;
+        bottom: 50px;
     }
 
     @media screen and (max-width: 768px) {
-        width: 250px;
-        font-size: 16px;
+        bottom: 40px;
     }
-}
-
-.main-banner-title-6 {
-    opacity: 0;
 }
 
 .main-banner-button {
-    display: flex;
-    align-items: center;
-    height: 63px;
-    padding: 0 36px;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 24px;
-    text-transform: uppercase;
-    color: #fff;
-    background-color: #18436D;
-    margin-top: 70px;
 
-    &:hover {
-        background-color: #E55929 !important;
-    }
-
-    @media screen and (max-width: 1280px) {
-        height: 55px;
-        font-size: 20px;
-        line-height: 20px;
-        padding: 0 28px;
-        margin-top: 0;
-    }
-
-    @media screen and (max-width: 1024px) {
-        font-size: 18px;
-        padding: 0 24px;
-        height: 50px;
-    }
-
-    @media screen and (max-width: 768px) {
-        width: auto;
-    }
-}
-
-.scroll-icon-wrapper {
-    position: absolute;
-    width: 18px;
-    height: 43px;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    @media screen and (min-width: 769px) {
-        &:hover {
-            .scroll-icon {
-                border-color: #E55929 !important;
-            }
-
-            .scroll-icon-dot {
-                background: #E55929 !important;
-            }
-
-            path {
-                stroke: #E55929 !important;
-                fill: #E55929 !important;
-            }
-        }
-    }
-
-    @media screen and (max-width: 768px) {
-        bottom: 75px;
-
-        &:active {
-            .scroll-icon {
-                border-color: #E55929 !important;
-            }
-
-            .scroll-icon-dot {
-                background: #E55929 !important;
-            }
-
-            path {
-                stroke: #E55929 !important;
-                fill: #E55929 !important;
-            }
-        }
-    }
-
-
-    path {
-        transition: opacity 0.2s ease-out;
-    }
-}
-
-.scroll-icon {
-    position: relative;
-    width: 100%;
-    height: 26px;
-    border: 2px solid rgba(191, 191, 191, 1);
-    border-radius: 14px;
-    margin-bottom: 5px;
-    transition: opacity 0.2s ease-out;
-}
-
-.scroll-icon-dot {
-    position: relative;
-    top: 3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5px;
-    height: 5px;
-    background: rgba(191, 191, 191, 1);
-    border-radius: 100%;
-    animation: bounce 3s infinite ease-in-out;
-}
-
-@keyframes bounce {
-    0%, 100% {
-        top: 3px;
-        opacity: 1;
-    }
-    50% {
-        top: 8px;
-        opacity: 0.5;
-    }
 }

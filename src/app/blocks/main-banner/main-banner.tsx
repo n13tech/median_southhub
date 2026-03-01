@@ -1,178 +1,92 @@
 /* eslint-disable react-hooks/set-state-in-effect */
+
+// MainBanner.tsx
 import { FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
-import { NBSP } from '@/app/constants';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './main-banner.css';
 
-const totalCountImg = 120;
-
-// > Дольше, < Быстрее
-const ANIMATION_SPEED_FACTOR = 0.8;
+const ANIMATION_SPEED_FACTOR = 1.1;
 
 export const MainBanner = () => {
-    const sectionRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
-    const pinRef = useRef<HTMLDivElement>(null);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const scrollBoxRef = useRef<HTMLDivElement>(null);
-    const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(totalCountImg).fill(null));
-    
-    // Refs для текстовых элементов
-    const title1Ref = useRef<HTMLHeadingElement>(null);
-    const title2Ref = useRef<HTMLHeadingElement>(null);
-    const title3Ref = useRef<HTMLHeadingElement>(null);
-    const title4Ref = useRef<HTMLHeadingElement>(null);
-    const title5Ref = useRef<HTMLParagraphElement>(null);
-    const title6Ref = useRef<HTMLDivElement>(null);
-    
     const [windowHeight, setWindowHeight] = useState(0);
-    const loadedFramesRef = useRef<Set<number>>(new Set());
-    const loadingQueueRef = useRef<number[]>([]);
-    const isCurrentlyLoadingRef = useRef(false);
+
+    const contentRef = useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLDivElement>(null);
+    const pinRef = useRef<HTMLDivElement>(null);
+    const videoWrapperRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    const mainBannerText1 = useRef<HTMLDivElement>(null);
+    const mainBannerText2 = useRef<HTMLDivElement>(null);
+    const mainBannerText3 = useRef<HTMLDivElement>(null);
+    const mainBannerText4 = useRef<HTMLDivElement>(null);
+
+    const buttonRef = useRef<HTMLDivElement>(null);
+
     const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
     const textAnimationsRef = useRef<ScrollTrigger[]>([]);
 
-    // Используем ref для функции, чтобы избежать проблем с порядком объявления
-    const processLoadingQueueRef = useRef<() => Promise<void>>();
-
     useEffect(() => {
         setWindowHeight(window.innerHeight);
+
         const handleResize = () => setWindowHeight(window.innerHeight);
+
         window.addEventListener('resize', handleResize);
+
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Функция для загрузки пачки кадров
-    const loadFrameBatch = useCallback(async (frameIndices: number[]): Promise<void> => {
-        const promises = frameIndices.map(frameIndex => {
-            return new Promise<void>((resolve, reject) => {
-                if (imagesRef.current[frameIndex]?.complete || loadedFramesRef.current.has(frameIndex)) {
-                    resolve();
-                    return;
-                }
-
-                const img = new Image();
-                img.src = `/main/AnimLettera_MOV_Prores4444_${frameIndex.toString().padStart(5, '0')}.webp`;
-                
-                img.onload = () => {
-                    imagesRef.current[frameIndex] = img;
-                    loadedFramesRef.current.add(frameIndex);
-                    resolve();
-                };
-                
-                img.onerror = () => {
-                    resolve();
-                };
-            });
-        });
-
-        await Promise.all(promises);
-    }, []);
-
-    // Инициализируем processLoadingQueueRef после объявления loadFrameBatch
+    // Анимация появления первого текста при загрузке
     useEffect(() => {
-        const processLoadingQueue = async () => {
-            if (isCurrentlyLoadingRef.current || loadingQueueRef.current.length === 0) {
-                return;
-            }
+        if (mainBannerText1.current) {
+            // Устанавливаем начальное состояние
+            gsap.set(mainBannerText1.current, {
+                opacity: 0,
+                y: 30,
+            });
 
-            isCurrentlyLoadingRef.current = true;
-
-            // Берем следующую пачку из 10 кадров из очереди
-            const batch = loadingQueueRef.current.splice(0, 10);
-            
-            if (batch.length > 0) {
-                await loadFrameBatch(batch);
-            }
-
-            isCurrentlyLoadingRef.current = false;
-
-            // Проверяем есть ли еще кадры в очереди и запускаем следующую пачку
-            if (loadingQueueRef.current.length > 0) {
-                setTimeout(() => {
-                    processLoadingQueueRef.current?.();
-                }, 30);
-            }
-        };
-
-        processLoadingQueueRef.current = processLoadingQueue;
-    }, [loadFrameBatch]);
-
-    // Добавление кадров в очередь загрузки
-    const queueFramesForLoading = useCallback((frameIndices: number[]) => {
-        const newFrames = frameIndices.filter(frame => 
-            !loadedFramesRef.current.has(frame) && 
-            !loadingQueueRef.current.includes(frame)
-        );
-        
-        if (newFrames.length === 0) return;
-        
-        loadingQueueRef.current.push(...newFrames);
-        
-        // Запускаем обработку очереди если она не активна
-        if (!isCurrentlyLoadingRef.current) {
-            processLoadingQueueRef.current?.();
+            // Анимируем появление через 0.5 секунды
+            gsap.to(mainBannerText1.current, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                delay: 0.5,
+                ease: "power3.out",
+            });
         }
     }, []);
 
-    // Фоновая загрузка всех оставшихся кадров
-    const loadAllRemainingFrames = useCallback(() => {
-        const allFrames = Array.from({ length: totalCountImg }, (_, i) => i);
-        const remainingFrames = allFrames.filter(frame => 
-            !loadedFramesRef.current.has(frame)
-        );
-        
-        if (remainingFrames.length > 0) {
-            queueFramesForLoading(remainingFrames);
-        }
-    }, [queueFramesForLoading]);
-
-    // Находим ближайший загруженный кадр
-    const findNearestLoadedFrame = useCallback((targetFrame: number): number => {
-        for (let offset = 0; offset < totalCountImg; offset++) {
-            const before = targetFrame - offset;
-            const after = targetFrame + offset;
-            
-            if (before >= 0 && loadedFramesRef.current.has(before)) return before;
-            if (after < totalCountImg && loadedFramesRef.current.has(after)) return after;
-        }
-        return -1;
-    }, []);
-
-    // Предзагрузка первой пачки критических кадров и запуск фоновой загрузки
-    const preloadCriticalAndStartBackground = useCallback(async () => {
-        // Первая пачка: самые важные кадры для мгновенного отображения
-        const criticalFrames = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 99, 119];
-        await loadFrameBatch(criticalFrames);
-        
-        // Немедленно запускаем фоновую загрузку всех оставшихся кадров
-        loadAllRemainingFrames();
-    }, [loadFrameBatch, loadAllRemainingFrames]);
-
-    // Функция для настройки анимации появления текстовых элементов
     const setupTextAnimations = useCallback(() => {
-        // Очищаем предыдущие анимации
         textAnimationsRef.current.forEach(animation => animation.kill());
         textAnimationsRef.current = [];
 
         const section = sectionRef.current;
-        if (!section) return;
+
+        if (!section) {
+            return;
+        }
 
         const elements = [
-            { element: title1Ref.current, percent: 10 },
-            { element: title2Ref.current, percent: 20 },
-            { element: title3Ref.current, percent: 35 },
-            { element: title4Ref.current, percent: 50 },
-            { element: title5Ref.current, percent: 65 },
-            { element: title6Ref.current, percent: 75 },
+            { element: mainBannerText1.current },
+            { element: mainBannerText2.current },
+            { element: mainBannerText3.current },
+            { element: mainBannerText4.current },
         ];
 
-        // Сначала скрываем все элементы
-        elements.forEach(({ element }) => {
+        // Изначально устанавливаем opacity для текстов
+        if (mainBannerText1.current) {
+            gsap.set(mainBannerText1.current, {
+                opacity: 1,
+                y: 0,
+            });
+        }
+
+        // Остальные тексты скрываем
+        elements.slice(1).forEach(({ element }) => {
             if (element) {
                 gsap.set(element, {
                     opacity: 0,
@@ -181,8 +95,93 @@ export const MainBanner = () => {
             }
         });
 
-        // Создаем анимации для каждого элемента
-        elements.forEach(({ element, percent }) => {
+        // Анимация для mainBannerText1 - исчезает на 35%
+        if (mainBannerText1.current) {
+            const animation1 = ScrollTrigger.create({
+                trigger: section,
+                start: 'top top',
+                end: 'top+=35% top',
+                toggleActions: "play reverse play reverse",
+                onEnter: () => {
+                    gsap.to(mainBannerText1.current, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power3.out",
+                    });
+                },
+                onLeave: () => {
+                    gsap.to(mainBannerText1.current, {
+                        opacity: 0,
+                        y: -30,
+                        duration: 0.5,
+                        ease: "power3.in",
+                    });
+                },
+                onEnterBack: () => {
+                    gsap.to(mainBannerText1.current, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power3.out",
+                    });
+                },
+            });
+
+            textAnimationsRef.current.push(animation1);
+        }
+
+        // Анимация для mainBannerText2 - появляется на 20% и исчезает на 35%
+        if (mainBannerText2.current) {
+            const animation2 = ScrollTrigger.create({
+                trigger: section,
+                start: 'top+=20% top',
+                end: 'top+=35% top',
+                toggleActions: "play reverse play reverse",
+                onEnter: () => {
+                    gsap.to(mainBannerText2.current, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power3.out",
+                    });
+                },
+                onLeave: () => {
+                    gsap.to(mainBannerText2.current, {
+                        opacity: 0,
+                        y: -30,
+                        duration: 0.5,
+                        ease: "power3.in",
+                    });
+                },
+                onEnterBack: () => {
+                    gsap.to(mainBannerText2.current, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power3.out",
+                    });
+                },
+                onLeaveBack: () => {
+                    gsap.to(mainBannerText2.current, {
+                        opacity: 0,
+                        y: -30,
+                        duration: 0.5,
+                        ease: "power3.in",
+                    });
+                },
+            });
+
+            textAnimationsRef.current.push(animation2);
+        }
+
+        // Анимации для остальных элементов
+        const otherElements = [
+            { element: mainBannerText3.current, percent: 45 },
+            { element: mainBannerText4.current, percent: 65 },
+        ];
+
+        otherElements.forEach(({ element, percent }) => {
             if (!element) return;
 
             const animation = ScrollTrigger.create({
@@ -190,10 +189,6 @@ export const MainBanner = () => {
                 start: `top+=${percent}% top`,
                 end: `top+=${percent + 5}% top`,
                 toggleActions: "play reverse play reverse",
-                // play - когда триггер входит в viewport (onEnter)
-                // reverse - когда триггер выходит из viewport (onLeaveBack)
-                // play - когда триггер снова входит в viewport (onEnterBack)
-                // reverse - когда триггер снова выходит из viewport (onLeave)
                 onEnter: () => {
                     gsap.to(element, {
                         opacity: 1,
@@ -222,10 +217,9 @@ export const MainBanner = () => {
         const section = sectionRef.current;
         const content = contentRef.current;
         const pin = pinRef.current;
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext('2d');
+        const videoWrapper = videoWrapperRef.current;
         
-        if (!section || !content || !pin || !canvas || !ctx || !windowHeight) return;
+        if (!section || !content || !pin || !videoWrapper || !windowHeight) return;
 
         const calculateSectionHeight = () => {
             const isMobile = window.innerWidth <= 1024;
@@ -249,24 +243,13 @@ export const MainBanner = () => {
                 scrollTriggerRef.current = null;
             }
 
-            const isTablet = window.innerWidth <= 1280 && window.innerWidth > 1024;
             const isMobile = window.innerWidth <= 1024;
-
-            if (!isTablet && !isMobile) {
-                canvas.width = 849;
-                canvas.height = 849;
-            } else if (isTablet) {
-                canvas.width = 739;
-                canvas.height = 739;
-            } else if (isMobile) {
-                canvas.width = 572;
-                canvas.height = 572;
-            }
 
             // Определяем расстояние для анимации
             const scrollDistance = 5000;
             const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR;
-            
+
+            // Основной пин для видео и контента
             scrollTriggerRef.current = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
@@ -274,44 +257,21 @@ export const MainBanner = () => {
                 scrub: true,
                 pin: pin,
                 pinSpacing: false,
-                onUpdate: (self) => {
-                    const totalFrames = totalCountImg;
-                    const frameIndex = Math.min(
-                        Math.floor(self.progress * totalFrames),
-                        totalFrames - 1
-                    );
-                    
-                    const currentImage = imagesRef.current[frameIndex];
-                    if (currentImage && currentImage.complete) {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
-                    } else {
-                        // Показываем ближайший загруженный кадр
-                        const nearestLoaded = findNearestLoadedFrame(frameIndex);
-                        if (nearestLoaded !== -1 && imagesRef.current[nearestLoaded]) {
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
-                            ctx.drawImage(imagesRef.current[nearestLoaded]!, 0, 0, canvas.width, canvas.height);
-                        }
-                    }
-                },
-                onEnter: () => {
-                    const firstImage = imagesRef.current[0];
-                    if (firstImage && firstImage.complete) {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(firstImage, 0, 0, canvas.width, canvas.height);
-                    }
-                },
-                onLeave: () => {
-                    const lastImage = imagesRef.current[totalCountImg - 1];
-                    if (lastImage && lastImage.complete) {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(lastImage, 0, 0, canvas.width, canvas.height);
-                    }
-                },
                 onRefresh: () => {
                     setupTextAnimations();
                 }
             });
+
+            if (videoWrapper) {
+                gsap.to(videoWrapper, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top top',
+                        end: `+=${isMobile ? mobileScrollDistance : scrollDistance}`,
+                        scrub: true,
+                    },
+                });
+            }
 
             // Настраиваем анимации текстовых элементов
             setupTextAnimations();
@@ -319,16 +279,12 @@ export const MainBanner = () => {
             ScrollTrigger.refresh();
         };
 
-        // Запускаем предзагрузку и фоновую загрузку
-        preloadCriticalAndStartBackground().then(() => {
-            initScrollAnimation();
-        });
-
         // Обработчик ресайза
         const handleResize = () => {
             initScrollAnimation();
         };
 
+        initScrollAnimation();
         window.addEventListener('resize', handleResize);
 
         return () => {
@@ -342,90 +298,74 @@ export const MainBanner = () => {
             textAnimationsRef.current = [];
             
             window.removeEventListener('resize', handleResize);
+            
+            // Убиваем все ScrollTrigger экземпляры
+            ScrollTrigger.getAll().forEach(st => st.kill());
         };
-    }, [
-        windowHeight, 
-        findNearestLoadedFrame,
-        preloadCriticalAndStartBackground,
-        setupTextAnimations
-    ]);
-
-    const handleScrollIntoView = () => {
-        const element = document.getElementById('our-projects-block');
-        const yOffset = window.innerWidth > 1024 ? -20 : 0;
-
-        if (element) {
-            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-    }
+    }, [windowHeight, setupTextAnimations]);
 
     return (
-        <div className='main-banner-wrapper' id='main-banner' ref={sectionRef}>
+        <div className="main-banner-wrapper" id="main-banner" ref={sectionRef}>
             <div className="main-banner-pin-wrapper" ref={pinRef}>
-                <div className="video-wrapper">
-                    <canvas
-                        ref={canvasRef}
-                        className='home-video'
-                        id='home-video'
-                    />
+                {/* Видео - теперь с отдельным ref для анимации */}
+                <div className="video-wrapper" ref={videoWrapperRef}>
+                    <video
+                        ref={videoRef}
+                        className="home-video"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                    >
+                        <source src="./v2/U_V17_notxt.mp4" type="video/mp4" />
+                    </video>
                 </div>
 
+                {/* Текстовые блоки */}
                 <div className="main-banner-content" ref={contentRef}>
-                    <div className='main-banner-title-wrapper'>
-                        <h1 
-                            ref={title1Ref}
-                            className={`${FONT_MONT_BOOK.className} main-banner-title main-banner-title-1`}
-                        >
-                            {'Масштаб'}
-                        </h1>
-                        <h1 
-                            ref={title2Ref}
-                            className={`${FONT_MONT_BOOK.className} main-banner-title main-banner-title-2`}
-                        >
-                            {'людей, идей'}
-                        </h1>
-                        <h1 
-                            ref={title3Ref}
-                            className={`${FONT_MONT_BOOK.className} main-banner-title main-banner-title-3`}
-                        >
-                            {'и тёплых'}
-                        </h1>
-                        <h1 
-                            ref={title4Ref}
-                            className={`${FONT_MONT_BOOK.className} main-banner-title main-banner-title-4`}
-                        >
-                            {'связей'}
-                        </h1>
+                    <div
+                        ref={mainBannerText1}
+                        className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-1`}
+                    >
+                        сообщество C-level в IT
                     </div>
 
-                    <p 
-                        ref={title5Ref}
-                        className={`${FONT_MONT_BOOK.className} main-banner-description main-banner-title-5`}
+                    <div
+                        ref={mainBannerText2}
+                        className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-2`}
                     >
-                        {`Сообщество C-level в${NBSP}IT,\nгде рождаются партнёрства,\nдружба и${NBSP}смыслы, которых\nне найти онлайн`}
-                    </p>
+                        здесь лидеры находят партнёрства,<br />
+                        ресурсы и смыслы, которых<br />
+                        не встретить онлайн.
+                    </div>
 
-                    <div 
-                        ref={title6Ref}
-                        className='main-banner-title-6'
+                    <div
+                        ref={mainBannerText3}
+                        className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-3`}
                     >
+                        <span>мы переизобрели нетворкинг и получили</span>
+
+                        <div className={`${FONT_MONT_BOOK.className} main-banner-text-3-netwarming`}>
+                            netwarming &mdash;
+                        </div>
+                    </div>
+
+                    <div
+                        ref={mainBannerText4}
+                        className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-4`}
+                    >
+                        это искусство встречаться по-настоящему:
+                        с теплом, доверием и искренностью.
+                        это свежий воздух вместо офисных переговорок,
+                        живой смех вместо холодных встреч,
+                        свобода вместо тесных рамок.
+                        и юг как состояние души.
+                    </div>
+
+                    {/* Кнопка всегда видна */}
+                    <div ref={buttonRef} className="main-banner-button-wrapper">
                         <MainBannerButton />
-                    </div>
-                </div>
-                
-                <div ref={scrollBoxRef} className='scroll-icon-wrapper' onClick={handleScrollIntoView}>
-                    <div className='scroll-icon'>
-                        <div className='scroll-icon-dot' />
-                    </div>
-                    <div>
-                        <svg className='scroll-icon-bottom' width="16" height="8" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M0.472337 1.57884L4.46415 5.57065C6.27506 7.38156 9.26183 7.33094 11.1352 5.45758L15.2646 1.32812L14.4093 0.472737L10.2798 4.6022C8.89513 5.98686 6.68754 6.02428 5.34903 4.68577L1.35722 0.693958L0.472337 1.57884Z"
-                                fill="#BFBFBF"
-                                stroke="#BFBFBF"
-                            />
-                        </svg>
                     </div>
                 </div>
             </div>
