@@ -1,6 +1,4 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-
-// MainBanner.tsx
 import { FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
 import { useEffect, useRef, useState, useCallback } from 'react';
@@ -13,6 +11,7 @@ const ANIMATION_SPEED_FACTOR = 1.1;
 
 export const MainBanner = () => {
     const [windowHeight, setWindowHeight] = useState(0);
+    const [windowWidth, setWindowWidth] = useState(0);
 
     const contentRef = useRef<HTMLDivElement>(null);
     const sectionRef = useRef<HTMLDivElement>(null);
@@ -29,11 +28,16 @@ export const MainBanner = () => {
 
     const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
     const textAnimationsRef = useRef<ScrollTrigger[]>([]);
+    const videoScaleAnimationRef = useRef<ScrollTrigger | null>(null);
 
     useEffect(() => {
         setWindowHeight(window.innerHeight);
+        setWindowWidth(window.innerWidth);
 
-        const handleResize = () => setWindowHeight(window.innerHeight);
+        const handleResize = () => {
+            setWindowHeight(window.innerHeight);
+            setWindowWidth(window.innerWidth);
+        };
 
         window.addEventListener('resize', handleResize);
 
@@ -43,13 +47,11 @@ export const MainBanner = () => {
     // Анимация появления первого текста при загрузке
     useEffect(() => {
         if (mainBannerText1.current) {
-            // Устанавливаем начальное состояние
             gsap.set(mainBannerText1.current, {
                 opacity: 0,
                 y: 30,
             });
 
-            // Анимируем появление через 0.5 секунды
             gsap.to(mainBannerText1.current, {
                 opacity: 1,
                 y: 0,
@@ -77,7 +79,6 @@ export const MainBanner = () => {
             { element: mainBannerText4.current },
         ];
 
-        // Изначально устанавливаем opacity для текстов
         if (mainBannerText1.current) {
             gsap.set(mainBannerText1.current, {
                 opacity: 1,
@@ -85,7 +86,6 @@ export const MainBanner = () => {
             });
         }
 
-        // Остальные тексты скрываем
         elements.slice(1).forEach(({ element }) => {
             if (element) {
                 gsap.set(element, {
@@ -95,7 +95,6 @@ export const MainBanner = () => {
             }
         });
 
-        // Анимация для mainBannerText1 - исчезает на 35%
         if (mainBannerText1.current) {
             const animation1 = ScrollTrigger.create({
                 trigger: section,
@@ -131,7 +130,6 @@ export const MainBanner = () => {
             textAnimationsRef.current.push(animation1);
         }
 
-        // Анимация для mainBannerText2 - появляется на 20% и исчезает на 35%
         if (mainBannerText2.current) {
             const animation2 = ScrollTrigger.create({
                 trigger: section,
@@ -175,7 +173,6 @@ export const MainBanner = () => {
             textAnimationsRef.current.push(animation2);
         }
 
-        // Анимации для остальных элементов
         const otherElements = [
             { element: mainBannerText3.current, percent: 45 },
             { element: mainBannerText4.current, percent: 65 },
@@ -209,6 +206,59 @@ export const MainBanner = () => {
 
             textAnimationsRef.current.push(animation);
         });
+    }, []);
+
+    const setupVideoScaleAnimation = useCallback(() => {
+        if (videoScaleAnimationRef.current) {
+            videoScaleAnimationRef.current.kill();
+            videoScaleAnimationRef.current = null;
+        }
+
+        const section = sectionRef.current;
+        const videoWrapper = videoWrapperRef.current;
+
+        if (!section || !videoWrapper) return;
+
+        gsap.set(videoWrapper, {
+            scale: 1,
+            x: 0,
+            y: 0,
+        });
+
+        let isScaled = false;
+
+        const st = ScrollTrigger.create({
+            trigger: section,
+            start: 'top top',
+            end: 'bottom bottom',
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+                const progress = self.progress;
+
+                if (progress >= 0.45) {
+                    if (!isScaled) {
+                        isScaled = true;
+                        gsap.to(videoWrapper, {
+                            scale: 1.5,
+                            duration: 0.8,
+                            ease: "power2.out",
+                        });
+                    }
+                } 
+                else if (progress < 0.45) {
+                    if (isScaled) {
+                        isScaled = false;
+                        gsap.to(videoWrapper, {
+                            scale: 1,
+                            duration: 0.8,
+                            ease: "power2.out",
+                        });
+                    }
+                }
+            }
+        });
+
+        videoScaleAnimationRef.current = st;
     }, []);
 
     useEffect(() => {
@@ -245,11 +295,9 @@ export const MainBanner = () => {
 
             const isMobile = window.innerWidth <= 1024;
 
-            // Определяем расстояние для анимации
             const scrollDistance = 5000;
             const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR;
 
-            // Основной пин для видео и контента
             scrollTriggerRef.current = ScrollTrigger.create({
                 trigger: section,
                 start: 'top top',
@@ -259,27 +307,16 @@ export const MainBanner = () => {
                 pinSpacing: false,
                 onRefresh: () => {
                     setupTextAnimations();
+                    setupVideoScaleAnimation();
                 }
             });
 
-            if (videoWrapper) {
-                gsap.to(videoWrapper, {
-                    scrollTrigger: {
-                        trigger: section,
-                        start: 'top top',
-                        end: `+=${isMobile ? mobileScrollDistance : scrollDistance}`,
-                        scrub: true,
-                    },
-                });
-            }
-
-            // Настраиваем анимации текстовых элементов
             setupTextAnimations();
+            setupVideoScaleAnimation();
 
             ScrollTrigger.refresh();
         };
 
-        // Обработчик ресайза
         const handleResize = () => {
             initScrollAnimation();
         };
@@ -293,21 +330,23 @@ export const MainBanner = () => {
                 scrollTriggerRef.current = null;
             }
             
-            // Очищаем текстовые анимации
+            if (videoScaleAnimationRef.current) {
+                videoScaleAnimationRef.current.kill();
+                videoScaleAnimationRef.current = null;
+            }
+            
             textAnimationsRef.current.forEach(animation => animation.kill());
             textAnimationsRef.current = [];
             
             window.removeEventListener('resize', handleResize);
             
-            // Убиваем все ScrollTrigger экземпляры
             ScrollTrigger.getAll().forEach(st => st.kill());
         };
-    }, [windowHeight, setupTextAnimations]);
+    }, [windowHeight, windowWidth, setupTextAnimations, setupVideoScaleAnimation]);
 
     return (
         <div className="main-banner-wrapper" id="main-banner" ref={sectionRef}>
             <div className="main-banner-pin-wrapper" ref={pinRef}>
-                {/* Видео - теперь с отдельным ref для анимации */}
                 <div className="video-wrapper" ref={videoWrapperRef}>
                     <video
                         ref={videoRef}
@@ -322,7 +361,6 @@ export const MainBanner = () => {
                     </video>
                 </div>
 
-                {/* Текстовые блоки */}
                 <div className="main-banner-content" ref={contentRef}>
                     <div
                         ref={mainBannerText1}
@@ -363,7 +401,6 @@ export const MainBanner = () => {
                         и юг как состояние души.
                     </div>
 
-                    {/* Кнопка всегда видна */}
                     <div ref={buttonRef} className="main-banner-button-wrapper">
                         <MainBannerButton />
                     </div>
