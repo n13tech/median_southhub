@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './main-banner.css';
+import { Fade } from 'react-awesome-reveal';
 
 const ANIMATION_SPEED_FACTOR = 1.1;
 
@@ -362,12 +363,14 @@ export const MainBanner = () => {
                 </div>
 
                 <div className="main-banner-content" ref={contentRef}>
-                    <div
-                        ref={mainBannerText1}
-                        className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-1`}
-                    >
-                        сообщество C-level в IT
-                    </div>
+                    <Fade delay={250} triggerOnce>
+                        <div
+                            ref={mainBannerText1}
+                            className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-1`}
+                        >
+                            сообщество C-level в IT
+                        </div>
+                    </Fade>
 
                     <div
                         ref={mainBannerText2}
