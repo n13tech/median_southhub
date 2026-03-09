@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -5,57 +6,18 @@ import './preloader.css';
 import { FONT_IBM_PLEX_SERIF_LIGHT } from '@/app/fonts';
 import Image from 'next/image';
 import PreloaderImg from '../../../../public/v2/preloader.svg'
+import { useVideoLoadingProgress } from '@/app/hooks/use-video-loading-process';
 
 export const Preloader = () => {
-    const [progress, setProgress] = useState(0);
     const [isVisible, setVisible] = useState(true);
 
+    const videoLoadingProgress = useVideoLoadingProgress('main-video-banner');
+
     useEffect(() => {
-        document.body.style.overflow = 'hidden';
-
-        let interval: NodeJS.Timeout;
-        let timeout: NodeJS.Timeout;
-
-        const startIncrement = () => {
-            interval = setInterval(() => {
-                setProgress((prev) => {
-                    if (prev >= 90) {
-                        return prev;
-                    }
-
-                    const increment = Math.floor(Math.random() * 5) + 1;
-
-                    return Math.min(prev + increment, 90);
-                });
-            }, 333);
-        };
-
-        const onWindowLoad = () => {
-            setProgress(100);
-            clearInterval(interval);
-
-            timeout = setTimeout(() => {
-                setVisible(false);
-                document.body.style.overflow = '';
-            }, 1000);
-        };
-
-        if (document.readyState === 'complete') {
-            onWindowLoad();
-        } else {
-            startIncrement();
-            window.addEventListener('load', onWindowLoad);
+        if (videoLoadingProgress === 100) {
+            setVisible(false);
         }
-
-        return () => {
-            clearInterval(interval);
-            clearTimeout(timeout);
-
-            window.removeEventListener('load', onWindowLoad);
-
-            document.body.style.overflow = '';
-        };
-    }, []);
+    }, [videoLoadingProgress]);
 
     if (!isVisible) {
         return null;
@@ -70,7 +32,7 @@ export const Preloader = () => {
                     width={280}
                     height={80}
                 />
-                <div className={`preloader__progress ${FONT_IBM_PLEX_SERIF_LIGHT.className}`}>{progress}%</div>
+                <div className={`preloader__progress ${FONT_IBM_PLEX_SERIF_LIGHT.className}`}>{videoLoadingProgress}%</div>
             </div>
         </div>
     );

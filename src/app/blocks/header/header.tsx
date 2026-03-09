@@ -1,12 +1,11 @@
 'use client';
 import Image from 'next/image';
 
-import Logo from '../../../../public/logo.svg';
+import Logo from '../../../../public/v2/header-logo-white.svg';
 import { HeaderItem } from './header-item';
 
 import './header.css';
 import { HeaderBurger } from './header-burger';
-import { HeaderLogin } from './header-login';
 
 export const Header = () => {
     const handleScrollIntoView = () => {
@@ -33,16 +32,9 @@ export const Header = () => {
                     <HeaderBurger />
                 </div>
 
-                <div>
-                    <HeaderItem title='наши проекты' intoScroll='our-projects-block' />
-                </div>
-
-                <div>
-                    <HeaderItem title='для кого' intoScroll='for-who-scrollable-block' />
-                </div>
-
-                <div className='header_desktop_login'>
-                    <HeaderLogin />
+                <div className='header-items'>
+                    <HeaderItem title='проекты' intoScroll='our-projects-block' />
+                    <HeaderItem title='войти' intoScroll='' />
                 </div>
             </div>
         </div>

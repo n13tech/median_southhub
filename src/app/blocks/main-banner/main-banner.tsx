@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { FONT_MONT_BOOK } from '../../fonts';
+import { FONT_IBM_PLEX_SERIF_ITALIC, FONT_MONT_BOOK } from '../../fonts';
 import { MainBannerButton } from './main-banner-button';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
@@ -357,6 +357,7 @@ export const MainBanner = () => {
                         loop
                         playsInline
                         preload="auto"
+                        id='main-video-banner'
                     >
                         <source src="./v2/U_V17_notxt.mp4" type="video/mp4" />
                     </video>
@@ -387,7 +388,7 @@ export const MainBanner = () => {
                     >
                         <span>мы переизобрели нетворкинг и получили</span>
 
-                        <div className={`${FONT_MONT_BOOK.className} main-banner-text-3-netwarming`}>
+                        <div className={`${FONT_IBM_PLEX_SERIF_ITALIC.className} main-banner-text-3-netwarming`}>
                             netwarming &mdash;
                         </div>
                     </div>
