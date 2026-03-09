@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import TelegaIcon from '../../../../public/telegramm-icon-white.svg';
-import LogoWhite from '../../../../public/logo-white.svg';
+import TelegaIcon from '../../../../public/v2/infinity-banner-tg.svg';
+import LogoWhite from '../../../../public/v2/header-logo-white.svg';
 
 import './infinity-banner.css';
 import { FONT_MONT_BOOK } from '@/app/fonts';
@@ -15,30 +15,40 @@ const Item = () => {
             <Image
                 src={TelegaIcon}
                 alt="telegramm-icon"
-                height={52}
-                width={52}
+                height={36}
+                width={36}
+                className='infinity-banner-tg'
             />
+
             <Image
                 src={LogoWhite}
                 alt="southuub"
-                height={52}
+                width={220}
+                height={24}
+                className='infinity-banner-logo'
             />
+
             <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>
                 Все инсайты и новости ближе, чем вы думаете
             </p>
+
             <Image
                 src={TelegaIcon}
                 alt="telegramm-icon"
-                height={52}
-                width={52}
+                height={36}
+                width={36}
+                className='infinity-banner-tg'
             />
             <Image
                 src={LogoWhite}
                 alt="southuub"
-                height={52}
+                width={220}
+                height={24}
+                className='infinity-banner-logo'
             />
+
             <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>
-                Подпишитесь, чтобы оставаться на связи
+                подпишитесь, чтобы оставаться на связи
             </p>
         </div>
     )
