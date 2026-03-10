@@ -369,7 +369,7 @@ export const MainBanner = () => {
                             ref={mainBannerText1}
                             className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-1`}
                         >
-                            сообщество C-level в IT
+                            {'сообщество\nC-level в IT'}
                         </div>
                     </Fade>
 

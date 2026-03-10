@@ -12,6 +12,11 @@
         display: none;
     }
 
+    @media screen and (max-width: 1024px) {
+        height: 60px;
+        padding: 0 32px;
+    }
+
     /* @media screen and (max-width: 1280px) {
         height: 72px;
         padding: 0 40px;
@@ -84,7 +89,7 @@
     color: #fff;
     text-transform: lowercase;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 767px) {
         display: none;
     }
 }

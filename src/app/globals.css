@@ -21,7 +21,7 @@ html {
 }
 
 body {
-  background-color: #eaeaea;
+  background-color: rgba(234, 234, 234, 1);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -112,6 +112,10 @@ body {
   background: unset;
   box-shadow: none;
   text-transform: lowercase;
+
+    @media screen and (max-width: 1024px) {
+      font-size: 14px;
+    }
 }
 
 .base-button:hover {
