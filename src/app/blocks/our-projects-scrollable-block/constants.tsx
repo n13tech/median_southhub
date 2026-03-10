@@ -22,7 +22,7 @@ export const getOurProjectItems = (getLinkWIthUtm: (i: string) => string): ArchI
     {
         id: 'our-projects-snow-base',
         title: 'Snow BASE Camp',
-        description: `19–22 марта 2026 года. Красная Поляна\nЗимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`,
+        description: `19–22 марта 2026 года. Красная Поляна зимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`,
         linkColor: '#D5FF37',
         imageSrc: '/SB-4.gif',
         altSrc: '/SB-4.webp',
@@ -33,7 +33,7 @@ export const getOurProjectItems = (getLinkWIthUtm: (i: string) => string): ArchI
     {
         id: 'our-projects-south-hub',
         title: 'South HUB Camp',
-        description: `10–14 июня 2026 года. Сочи\nЕжегодный кэмп-конференция для C-level в${NBSP}ІТ`,
+        description: `10–14 июня 2026 года. Сочи ежегодный кэмп-конференция для C-level в${NBSP}ІТ`,
         linkColor: '#D5FF37',
         imageSrc: '/SH2-2.gif',
         altSrc: '/SH2-2.webp',

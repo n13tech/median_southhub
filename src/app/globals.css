@@ -112,6 +112,7 @@ body {
   background: unset;
   box-shadow: none;
   text-transform: lowercase;
+  color: #fff;
 
     @media screen and (max-width: 1024px) {
       font-size: 14px;
@@ -122,6 +123,7 @@ body {
   width: 260px;
   background: unset !important;
   box-shadow: none;
+  color: #fff;
 }
 
 .base-button::before {

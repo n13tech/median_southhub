@@ -7,7 +7,6 @@ import { Footer } from "./blocks/footer";
 import { Header } from "./blocks/header"
 import { InfinityBanner } from "./blocks/infinity-banner";
 import { MainBanner } from "./blocks/main-banner";
-import { InsideBlock } from "./blocks/inside-block";
 import { CommunityInNumbers } from "./blocks/community-in-numbers";
 import { AboutUsBlock } from "./blocks/about-us-block";
 import { useEffect, useState } from "react";
@@ -51,11 +50,11 @@ export default function HomeContent({ data }: Props) {
 
                 <main >
                     <MainBanner />
-                    <OurProjectsScrollableBlock />
-                    <InsideBlock />
+
                     <AccordionsBlock />
 
                     <InfinityBanner />
+                    <OurProjectsScrollableBlock />
 
                     <CommunityInNumbers />
 
