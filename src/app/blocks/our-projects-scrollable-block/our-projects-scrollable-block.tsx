@@ -10,7 +10,7 @@ import { Button } from 'antd';
 import { ImageWithFallback } from '@/app/components/image-with-fallback';
 import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
-export const  OurProjectsScrollableBlock = () => {
+export const OurProjectsScrollableBlock = () => {
   const getLinkWIthUtm = useGetLinkWithUtm();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -75,6 +75,17 @@ export const  OurProjectsScrollableBlock = () => {
       });
     }
 
+    // Функция для управления видимостью header
+    const updateHeaderVisibility = (isPinned: boolean) => {
+      const header = document.getElementById('header');
+      if (!header) return;
+      
+      // Header видим только когда блок НЕ в pinned состоянии
+      header.style.opacity = isPinned ? '0' : '1';
+      header.style.transition = 'opacity 0.3s ease';
+      header.style.pointerEvents = isPinned ? 'none' : 'auto';
+    };
+
     // Десктоп анимация (1025px+)
     if (!isMobile) {
       // Убедимся, что правый столбец имеет правильные стили для десктопа
@@ -95,7 +106,11 @@ export const  OurProjectsScrollableBlock = () => {
           end: "bottom bottom",
           pin: ".our-projects-item-right",
           scrub: true,
-          invalidateOnRefresh: true
+          invalidateOnRefresh: true,
+          onToggle: (self) => {
+            // self.isActive - true когда блок закреплен, false когда нет
+            updateHeaderVisibility(self.isActive);
+          }
         }
       });
 
@@ -185,6 +200,10 @@ export const  OurProjectsScrollableBlock = () => {
           pinSpacing: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onToggle: (self) => {
+            // self.isActive - true когда блок закреплен, false когда нет
+            updateHeaderVisibility(self.isActive);
+          },
           onUpdate: (self) => {
             // Синхронизация с текстовыми блоками
             const progress = self.progress;
@@ -194,6 +213,8 @@ export const  OurProjectsScrollableBlock = () => {
             infoSections.forEach((section, index) => {
               if (index === activeIndex) {
                 gsap.set(section, { opacity: 1, scale: 1 });
+              } else {
+                gsap.set(section, { opacity: 0, scale: 0.95 });
               }
             });
           }
@@ -229,15 +250,14 @@ export const  OurProjectsScrollableBlock = () => {
         const currentImg = imgs[i];
         const nextImg = imgs[i + 1];
         const startPosition = i * sectionDuration;
-        const endPosition = (i + 1) * sectionDuration;
         
         // Анимация скрытия текущей картинки
         mobileTimeline.to(currentImg, {
           clipPath: "inset(0% 0% 100% 0%)",
           objectPosition: "center 70%",
-          duration: sectionDuration * 0.8, // 80% секции на переход
+          duration: sectionDuration * 0.8,
           ease: "none"
-        }, startPosition + sectionDuration * 0.1); // Начинаем через 10% секции
+        }, startPosition + sectionDuration * 0.1);
         
         // Анимация появления следующей картинки
         mobileTimeline.fromTo(nextImg,
@@ -258,6 +278,22 @@ export const  OurProjectsScrollableBlock = () => {
       mobileAnimationRef.current = mobileTimeline;
     }
 
+    // Устанавливаем начальное состояние header
+    updateHeaderVisibility(false);
+
+    // Создаем дополнительный ScrollTrigger для отслеживания входа/выхода из блока
+    const boundaryTrigger = ScrollTrigger.create({
+      trigger: ".our-projects-scrollable-block",
+      start: "top top",
+      end: "bottom bottom",
+      onEnter: () => updateHeaderVisibility(true),
+      onLeave: () => updateHeaderVisibility(false),
+      onEnterBack: () => updateHeaderVisibility(true),
+      onLeaveBack: () => updateHeaderVisibility(false)
+    });
+
+    scrollTriggersRef.current.push(boundaryTrigger);
+
     return () => {
       // Убиваем только наши триггеры
       scrollTriggersRef.current.forEach(trigger => trigger.kill());
@@ -268,6 +304,13 @@ export const  OurProjectsScrollableBlock = () => {
         mobileAnimationRef.current = null;
       }
       window.removeEventListener('resize', checkMobile);
+      
+      // Восстанавливаем header при размонтировании
+      const header = document.getElementById('header');
+      if (header) {
+        header.style.opacity = '1';
+        header.style.pointerEvents = 'auto';
+      }
     };
   }, [isMobile]);
 

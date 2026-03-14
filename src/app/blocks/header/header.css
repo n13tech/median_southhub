@@ -67,6 +67,7 @@
 }
 
 .header {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     position: fixed;
     width: 100vw;
     z-index: 99;

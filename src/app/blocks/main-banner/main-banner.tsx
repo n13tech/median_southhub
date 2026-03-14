@@ -340,8 +340,6 @@ export const MainBanner = () => {
             textAnimationsRef.current = [];
             
             window.removeEventListener('resize', handleResize);
-            
-            ScrollTrigger.getAll().forEach(st => st.kill());
         };
     }, [windowHeight, windowWidth, setupTextAnimations, setupVideoScaleAnimation]);
 
