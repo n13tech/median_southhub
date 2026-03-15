@@ -19,7 +19,7 @@ import { NetwarmingBlock } from "./blocks/netwarming-block";
 import { PhilosophyBlock } from "./blocks/philosophy-block/philosophy-block";
 import { HotToSouthubBlock } from "./blocks/hot-to-southub-block/hot-to-southub-block";
 import { CarouselBlock } from "./blocks/carousel-block";
-import { ForWhoScrollableBlock } from "./blocks/for-who-scrollable-block";
+import { SocietyPhotosBlock } from "./blocks/society-photos-block";
 import JsonLdScript from "./components/JsonLdScript";
 
 type Props = {
@@ -58,9 +58,10 @@ export default function HomeContent({ data }: Props) {
 
                     <CommunityInNumbers />
 
+                    <SocietyPhotosBlock />
+
                     <InfinityBanner />
 
-                    <ForWhoScrollableBlock />
                     <HotToSouthubBlock />
                     <CarouselBlock />
                     <PhilosophyBlock />
