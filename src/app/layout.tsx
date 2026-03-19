@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { YandexMetrika } from "./ya-metric";
 import { Metadata } from "next";
 import { SHSITES_URL } from "./constants";
+import { Preloader } from "./components/preloader";
 
 export const metadata: Metadata = {
   metadataBase: SHSITES_URL,
@@ -26,7 +27,7 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`antialiased`}>
         <YandexMetrika />
-
+        <Preloader />
         {children}
       </body>
     </html>

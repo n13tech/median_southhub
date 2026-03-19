@@ -7,7 +7,6 @@ import { Footer } from "./blocks/footer";
 import { Header } from "./blocks/header"
 import { InfinityBanner } from "./blocks/infinity-banner";
 import { MainBanner } from "./blocks/main-banner";
-import { InsideBlock } from "./blocks/inside-block";
 import { CommunityInNumbers } from "./blocks/community-in-numbers";
 import { AboutUsBlock } from "./blocks/about-us-block";
 import { useEffect, useState } from "react";
@@ -20,7 +19,7 @@ import { NetwarmingBlock } from "./blocks/netwarming-block";
 import { PhilosophyBlock } from "./blocks/philosophy-block/philosophy-block";
 import { HotToSouthubBlock } from "./blocks/hot-to-southub-block/hot-to-southub-block";
 import { CarouselBlock } from "./blocks/carousel-block";
-import { ForWhoScrollableBlock } from "./blocks/for-who-scrollable-block";
+import { SocietyPhotosBlock } from "./blocks/society-photos-block";
 import JsonLdScript from "./components/JsonLdScript";
 
 type Props = {
@@ -51,17 +50,18 @@ export default function HomeContent({ data }: Props) {
 
                 <main >
                     <MainBanner />
-                    <OurProjectsScrollableBlock />
-                    <InsideBlock />
+
                     <AccordionsBlock />
 
                     <InfinityBanner />
+                    <OurProjectsScrollableBlock />
 
                     <CommunityInNumbers />
 
+                    <SocietyPhotosBlock />
+
                     <InfinityBanner />
 
-                    <ForWhoScrollableBlock />
                     <HotToSouthubBlock />
                     <CarouselBlock />
                     <PhilosophyBlock />

@@ -21,7 +21,7 @@ html {
 }
 
 body {
-  background-color: #eaeaea;
+  background-color: rgba(234, 234, 234, 1);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -102,4 +102,44 @@ body {
           line-height: 16px;
         }
     }
+}
+
+.base-button {
+  position: relative;
+  width: 235px;
+  height: 28px;
+  font-size: 16px;
+  background: unset;
+  box-shadow: none;
+  text-transform: lowercase;
+  color: #fff;
+
+    @media screen and (max-width: 1024px) {
+      font-size: 14px;
+    }
+}
+
+.base-button:hover {
+  width: 260px;
+  background: unset !important;
+  box-shadow: none;
+  color: #fff;
+}
+
+.base-button::before {
+  position: absolute;
+  content: '';
+  left: 0;
+  width: 12px;
+  height: 28px;
+  background-image: url('../../public/v2/button-border-left.svg');
+}
+
+.base-button::after {
+  position: absolute;
+  content: '';
+  right: 0;
+  width: 12px;
+  height: 28px;
+  background-image: url('../../public/v2/button-border-right.svg');
 }

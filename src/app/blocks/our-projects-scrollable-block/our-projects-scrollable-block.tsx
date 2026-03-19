@@ -8,8 +8,6 @@ import { getOurProjectItems } from './constants';
 import { FONT_MONT_BOOK } from '@/app/fonts';
 import { Button } from 'antd';
 import { ImageWithFallback } from '@/app/components/image-with-fallback';
-import { AnimateTitle } from '@/app/components/animate-title';
-import { Fade } from 'react-awesome-reveal';
 import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
 export const OurProjectsScrollableBlock = () => {
@@ -77,6 +75,17 @@ export const OurProjectsScrollableBlock = () => {
       });
     }
 
+    // Функция для управления видимостью header
+    const updateHeaderVisibility = (isPinned: boolean) => {
+      const header = document.getElementById('header');
+      if (!header) return;
+      
+      // Header видим только когда блок НЕ в pinned состоянии
+      header.style.opacity = isPinned ? '0' : '1';
+      header.style.transition = 'opacity 0.3s ease';
+      header.style.pointerEvents = isPinned ? 'none' : 'auto';
+    };
+
     // Десктоп анимация (1025px+)
     if (!isMobile) {
       // Убедимся, что правый столбец имеет правильные стили для десктопа
@@ -97,7 +106,11 @@ export const OurProjectsScrollableBlock = () => {
           end: "bottom bottom",
           pin: ".our-projects-item-right",
           scrub: true,
-          invalidateOnRefresh: true
+          invalidateOnRefresh: true,
+          onToggle: (self) => {
+            // self.isActive - true когда блок закреплен, false когда нет
+            updateHeaderVisibility(self.isActive);
+          }
         }
       });
 
@@ -187,6 +200,10 @@ export const OurProjectsScrollableBlock = () => {
           pinSpacing: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onToggle: (self) => {
+            // self.isActive - true когда блок закреплен, false когда нет
+            updateHeaderVisibility(self.isActive);
+          },
           onUpdate: (self) => {
             // Синхронизация с текстовыми блоками
             const progress = self.progress;
@@ -196,6 +213,8 @@ export const OurProjectsScrollableBlock = () => {
             infoSections.forEach((section, index) => {
               if (index === activeIndex) {
                 gsap.set(section, { opacity: 1, scale: 1 });
+              } else {
+                gsap.set(section, { opacity: 0, scale: 0.95 });
               }
             });
           }
@@ -231,15 +250,14 @@ export const OurProjectsScrollableBlock = () => {
         const currentImg = imgs[i];
         const nextImg = imgs[i + 1];
         const startPosition = i * sectionDuration;
-        const endPosition = (i + 1) * sectionDuration;
         
         // Анимация скрытия текущей картинки
         mobileTimeline.to(currentImg, {
           clipPath: "inset(0% 0% 100% 0%)",
           objectPosition: "center 70%",
-          duration: sectionDuration * 0.8, // 80% секции на переход
+          duration: sectionDuration * 0.8,
           ease: "none"
-        }, startPosition + sectionDuration * 0.1); // Начинаем через 10% секции
+        }, startPosition + sectionDuration * 0.1);
         
         // Анимация появления следующей картинки
         mobileTimeline.fromTo(nextImg,
@@ -260,6 +278,22 @@ export const OurProjectsScrollableBlock = () => {
       mobileAnimationRef.current = mobileTimeline;
     }
 
+    // Устанавливаем начальное состояние header
+    updateHeaderVisibility(false);
+
+    // Создаем дополнительный ScrollTrigger для отслеживания входа/выхода из блока
+    const boundaryTrigger = ScrollTrigger.create({
+      trigger: ".our-projects-scrollable-block",
+      start: "top top",
+      end: "bottom bottom",
+      onEnter: () => updateHeaderVisibility(true),
+      onLeave: () => updateHeaderVisibility(false),
+      onEnterBack: () => updateHeaderVisibility(true),
+      onLeaveBack: () => updateHeaderVisibility(false)
+    });
+
+    scrollTriggersRef.current.push(boundaryTrigger);
+
     return () => {
       // Убиваем только наши триггеры
       scrollTriggersRef.current.forEach(trigger => trigger.kill());
@@ -270,6 +304,13 @@ export const OurProjectsScrollableBlock = () => {
         mobileAnimationRef.current = null;
       }
       window.removeEventListener('resize', checkMobile);
+      
+      // Восстанавливаем header при размонтировании
+      const header = document.getElementById('header');
+      if (header) {
+        header.style.opacity = '1';
+        header.style.pointerEvents = 'auto';
+      }
     };
   }, [isMobile]);
 
@@ -277,20 +318,7 @@ export const OurProjectsScrollableBlock = () => {
 
   return (
     <>
-      <div className='our-projects-block-wrapper' id='our-projects-block'>
-        <AnimateTitle
-            className={`${FONT_MONT_BOOK.className} our-projects-block-title`}
-            text={`Наши проекты`}
-        />
-
-        <Fade delay={250} triggerOnce>
-          <p className={`${FONT_MONT_BOOK.className} our-projects-block-description`}>
-            {'Форматы взаимодействия сообщества'}
-          </p>
-        </Fade>
-      </div>
-
-      <div className="our-projects-scrollable-block-wrapper" ref={containerRef}>
+      <div className="our-projects-scrollable-block-wrapper" ref={containerRef} id='our-projects-block'>
         <div className="our-projects-scrollable-block">
           {/* Левая колонка - текст */}
           <div className="our-projects-item-left" ref={leftColumnRef}>
@@ -303,14 +331,11 @@ export const OurProjectsScrollableBlock = () => {
                   {item.description}
                 </p>
                 <Button
-                  className={`our-projects-item-left-info-button`}
+                  className={`our-projects-item-left-info-button base-button`}
                   onClick={item.onClick}
-                  type='text'
+                  type='primary'
                 >
                   <span className={`${FONT_MONT_BOOK.className}`}>{item.buttonTitle}</span>
-                  <svg width="20" height="17" viewBox="0 0 20 17" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1.16671e-06 7.49902L9.72279e-07 8.99902L15.4648 8.99902L15.4648 7.49902L1.16671e-06 7.49902ZM17.918 12.3154C20.1633 10.07 20.1631 6.42911 17.918 4.18359L13.7344 -7.78427e-07L12.6738 1.06055L16.8574 5.24414C18.5168 6.90387 18.517 9.59526 16.8574 11.2549L12.6738 15.4385L13.7344 16.5L17.918 12.3154Z" fill="#18436D" />
-                  </svg>
                 </Button>
               </div>
             ))}
@@ -318,6 +343,8 @@ export const OurProjectsScrollableBlock = () => {
 
           {/* Правая колонка - картинки */}
           <div className="our-projects-item-right" ref={rightColumnRef}>
+            <h2 className={`${FONT_MONT_BOOK.className} our-projects-item-right-title`}>где встречаемся</h2>
+
             {ITEMS.slice().map((item, index) => (
               <div
                 key={`img-${item.id}`}
