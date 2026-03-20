@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './main-banner.css';
 import { Fade } from 'react-awesome-reveal';
+import { NBSP } from '@/app/constants';
 
 const ANIMATION_SPEED_FACTOR = 1.1;
 
@@ -375,19 +376,17 @@ export const MainBanner = () => {
                         ref={mainBannerText2}
                         className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-2`}
                     >
-                        здесь лидеры находят партнёрства,<br />
-                        ресурсы и смыслы, которых<br />
-                        не встретить онлайн.
+                        {`здесь лидеры находят партнёрства,\nресурсы и${NBSP}смыслы, которых\nне встретить онлайн.`}
                     </div>
 
                     <div
                         ref={mainBannerText3}
                         className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-3`}
                     >
-                        <span>мы переизобрели нетворкинг и получили</span>
+                        <span>{`мы переизобрели\nнетворкинг и получили`}</span>
 
                         <div className={`${FONT_IBM_PLEX_SERIF_ITALIC.className} main-banner-text-3-netwarming`}>
-                            netwarming &mdash;
+                            netwarming <span>&mdash;</span>
                         </div>
                     </div>
 
