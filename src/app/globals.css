@@ -119,11 +119,19 @@ body {
     }
 }
 
+.base-button_black {
+  color: rgb(17,17,17) !important;
+}
+
 .base-button:hover {
   width: 260px;
   background: unset !important;
   box-shadow: none;
   color: #fff;
+}
+
+.base-button_black:hover {
+  color: rgb(17,17,17) !important;
 }
 
 .base-button::before {
@@ -135,6 +143,10 @@ body {
   background-image: url('../../public/v2/button-border-left.svg');
 }
 
+.base-button_black::before {
+    background-image: url('../../public/v2/button-border-left-black.svg') !important;
+}
+
 .base-button::after {
   position: absolute;
   content: '';
@@ -142,4 +154,8 @@ body {
   width: 12px;
   height: 28px;
   background-image: url('../../public/v2/button-border-right.svg');
+}
+
+.base-button_black::after {
+    background-image: url('../../public/v2/button-border-right-black.svg') !important;
 }

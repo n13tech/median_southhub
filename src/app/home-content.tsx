@@ -62,7 +62,7 @@ export default function HomeContent({ data }: Props) {
                     <AboutUsBlock />
                 </main>
 
-                <Footer />
+                <Footer />   {/** Новый */}
 
                 {isOpenCookieModal && (
                     <div className="cookie-banner">
