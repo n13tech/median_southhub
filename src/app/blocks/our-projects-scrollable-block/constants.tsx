@@ -1,9 +1,9 @@
 import { LK_SOUTHHUB_LINK, NBSP, SNOWBASE_LINK, SOUTHHUB_LINK, SOUTHHUB_YOUTUBE, TELEGRAM_CHANELL_LINK, YOUTUBE_PLAYLIST_LINK } from '@/app/constants';
 
-import ClubMeet from '../../../../public/встречи.webp'
-import YoutubeChanell from '../../../../public/ютуб.webp'
-import TelegramChanell from '../../../../public/тг.webp'
-import OnlineBroadcast from '../../../../public/эфир.webp'
+import ClubMeet from '../../../../public/v2/projects/встречи.webp'
+import YoutubeChanell from '../../../../public/v2/projects/ютуб.webp'
+import TelegramChanell from '../../../../public/v2/projects/тг.webp'
+import OnlineBroadcast from '../../../../public/v2/projects/эфир.webp'
 import { StaticImageData } from 'next/image';
 
 type ArchItem = {
@@ -24,8 +24,8 @@ export const getOurProjectItems = (getLinkWIthUtm: (i: string) => string): ArchI
         title: 'Snow BASE Camp',
         description: `19–22 марта 2026 года. Красная Поляна зимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`,
         linkColor: '#D5FF37',
-        imageSrc: '/SB-4.gif',
-        altSrc: '/SB-4.webp',
+        imageSrc: '/v2/projects/SB-4.gif',
+        altSrc: '/v2/projects/SB-4.webp',
         imageAlt: 'SnowBase camp',
         buttonTitle: 'Участвовать',
         onClick: () => window.open(getLinkWIthUtm(SNOWBASE_LINK), '_blank'),
@@ -35,8 +35,8 @@ export const getOurProjectItems = (getLinkWIthUtm: (i: string) => string): ArchI
         title: 'South HUB Camp',
         description: `10–14 июня 2026 года. Сочи ежегодный кэмп-конференция для C-level в${NBSP}ІТ`,
         linkColor: '#D5FF37',
-        imageSrc: '/SH2-2.gif',
-        altSrc: '/SH2-2.webp',
+        imageSrc: '/v2/projects/SH2-2.gif',
+        altSrc: '/v2/projects/SH2-2.webp',
         imageAlt: 'South HUB Camp',
         buttonTitle: 'Участвовать',
         onClick: () => window.open(getLinkWIthUtm(SOUTHHUB_LINK), '_blank'),
