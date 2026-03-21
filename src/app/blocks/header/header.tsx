@@ -2,6 +2,7 @@
 import Image from 'next/image';
 
 import Logo from '../../../../public/v2/header-logo-white.svg';
+import LogoBlack from '../../../../public/v2/footer/footer-logo-black.svg';
 import { HeaderItem } from './header-item';
 
 import './header.css';
@@ -27,6 +28,16 @@ export const Header = () => {
                         height={21}
                         onClick={handleScrollIntoView}
                         style={{ cursor: 'pointer' }}
+                        className='header-logo-white'
+                    />
+                    <Image
+                        src={LogoBlack}
+                        alt="SOUTHUUUB"
+                        width={180}
+                        height={21}
+                        onClick={handleScrollIntoView}
+                        style={{ cursor: 'pointer' }}
+                        className='header-logo-black'
                     />
 
                     <HeaderBurger />

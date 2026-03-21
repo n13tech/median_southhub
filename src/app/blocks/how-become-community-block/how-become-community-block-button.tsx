@@ -12,9 +12,9 @@ export const AccesibleButton = () => {
 
     return (
         <>
-            <Button type='primary' className={`how-become-community-block-button`} onClick={handleClick}>
+            <Button type='primary' className={`how-become-community-block-button base-button base-button_black`} onClick={handleClick}>
                 <span className={`${FONT_MONT_BOOK.className}`}>
-                    Стать участником
+                    подать заявку
                 </span>
             </Button>
         </>

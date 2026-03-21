@@ -59,7 +59,7 @@ export default function HomeContent({ data }: Props) {
 
                     <HowBecomeCommunityBlock />
 
-                    <AboutUsBlock />
+                    <AboutUsBlock />  {/** Новый */}
                 </main>
 
                 <Footer />   {/** Новый */}
