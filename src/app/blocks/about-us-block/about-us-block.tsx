@@ -4,7 +4,6 @@ import { FONT_MONT_BOOK } from '../../fonts';
 import './about-us-block.css';
 import Image from 'next/image';
 
-import AboutUsImg from '../../../../public/about-us-img.webp';
 import MedianLogo from '../../../../public/median-logo.png';
 import { AboutUsBlockButton } from './about-us-block-button';
 import { MEDIAN_LINK, NBSP } from '@/app/constants';
@@ -15,15 +14,6 @@ export const AboutUsBlock = () => {
 
     return (
         <div className='about-us-block-wrapper' id='about-us-block'>
-            <Fade delay={250} triggerOnce>
-                <Image
-                    src={AboutUsImg}
-                    alt='about-us'
-                    height={320}
-                    className='about-us-block-main-img'
-                />
-            </Fade>
-
             <div className='about-us-block-info-wrapper'>
                 <Fade delay={250} triggerOnce>
                     <div className='about-us-block-logo-wrapper'>

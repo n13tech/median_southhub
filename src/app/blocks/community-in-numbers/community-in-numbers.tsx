@@ -4,10 +4,6 @@ import { FONT_MONT_BOOK } from '../../fonts';
 import './community-in-numbers.css';
 import Image, { StaticImageData } from 'next/image';
 
-import CommunityOne from '../../../../public/number1.webp';
-import CommunityTwo from '../../../../public/number2.webp';
-import CommunityThree from '../../../../public/number3.webp';
-import CommunityFour from '../../../../public/number4.webp';
 import { NBSP } from '@/app/constants';
 import { AnimateTitle } from '@/app/components/animate-title';
 
@@ -52,34 +48,6 @@ export const CommunityInNumbers = () => {
 
             <Fade delay={250} triggerOnce>
                 <div className='community-in-numbers-cards-wrapper'>
-                    <div>
-                        <Card
-                            src={CommunityOne}
-                            alt='professional'
-                            title='1 477'
-                            description={`профессионалов в${NBSP}IT:\n32% CTO&CIO,\n18% CPO, 8% CDO\nи 15% CEO`}
-                        />
-                        <Card
-                            src={CommunityTwo}
-                            alt='speakers'
-                            title='153'
-                            description='спикера и лидера индустрии выступили на мероприятиях за 4 года'
-                        />
-                    </div>
-                    <div>
-                        <Card
-                            src={CommunityFour}
-                            alt='nps'
-                            title='73%'
-                            description='NPS cообщества'
-                        />
-                        <Card
-                            src={CommunityThree}
-                            alt='members'
-                            title='52%'
-                            description='retention rate сообщества'
-                        />
-                    </div>
                 </div>
             </Fade>
         </div>
