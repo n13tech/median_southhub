@@ -1,10 +1,10 @@
 'use client';
 
 import { FONT_MONT_BOOK } from '../../fonts';
-import LogoWhite from '../../../../public/logo-white.svg';
-import TelegrammIcon from '../../../../public/telegramm-icon-white.svg';
-import InstIcon from '../../../../public/inst-icon.png';
-import YoutubeIcon from '../../../../public/youtube-icon.png';
+import Logo from '../../../../public/v2/footer/footer-logo-black.svg';
+import Telegram from '../../../../public/v2/footer/telegram.svg';
+import Youtube from '../../../../public/v2/footer/youtube.svg';
+import LinkedIn from '../../../../public/v2/footer/linkedin.svg';
 
 import './footer.css';
 import Image from 'next/image';
@@ -17,41 +17,28 @@ export const Footer = () => {
     return (
         <div className='footer' id='footer'>
             <div className='footer-wrapper'>
-                {/* <div className='footer-info-wrapper'>
-                    <p className={`${FONT_MONT_BOOK.className} footer-description`}>
-                        {'Подписывайтесь на нашу рассылку, чтобы первыми узнавать о новых событиях, инсайтах от лидеров индустрии и возможностях для развития'}
-                    </p>
-                    <div className='footer-description-button-wrapper'>
-                        <Button
-                            variant='outlined'
-                            color='default'
-                            className={`${FONT_MONT_BOOK.className} footer-description-button-email`}
-                        >
-                            ваш email
-                        </Button>
-                        <Button
-                            type='primary'
-                            color='default'
-                            className={`${FONT_MONT_BOOK.className} footer-description-button-subscription`}
-                        >
-                            подписаться
-                        </Button>
-                    </div>
-                </div> */}
+                <div className='footer-line' />
 
                 <div className='footer-info'>
-                    <Image
-                        src={LogoWhite}
-                        alt="southuub"
-                        height={28}
-                        className='footer-logo'
-                    />
+                    <div className='footer-logo-wrapper'>
+                        <Image
+                            src={Logo}
+                            alt="southuub"
+                            height={22}
+                            className='footer-logo'
+                        />
+                    </div>
 
                     <div className='footer-contacts footer-contacts-first'>
                         <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>Контакты:</p>
-                        <a href='mailto:mail@southhub.ru' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>mail@southhub.ru</a>
-                        <a href={getLinkWithUtm(SOUTHHUB_TELEGRAM)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>Telegram</a>
-                        <a href='tel:+7 862 29 59 977' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>+7 862 29 59 977</a>
+                        <div className='footer-contacts-items'>
+                            <span className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>Email:</span>
+                            <a href='mailto:mail@southhub.ru' target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>mail@southhub.ru</a>
+                        </div>
+                        <div className='footer-contacts-items'>
+                            <span className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>Telegram:</span>
+                            <a href={getLinkWithUtm(SOUTHHUB_TELEGRAM)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>+7 862 29 59 977</a>
+                        </div>
                     </div>
 
                     <div className='footer-contacts footer-contacts-second'>
@@ -62,34 +49,33 @@ export const Footer = () => {
                         <a href={getLinkWithUtm(SOUTHHUB_COOKIES_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Политика обработки файлов cookie</a>
                         <a href={getLinkWithUtm(SOUTHHUB_PD_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Политика обработки персональных данных</a>
                         {/* <p className={`${FONT_MONT_BOOK.className} footer-contacts-label footer-contacts-label-dashed`}>Пользовательское соглашение</p> */}
-                        <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>© 2025 South HUB. Все права защищены</p>
+                        <p className={`${FONT_MONT_BOOK.className} footer-contacts-label`}>© 2022-2026 South HUB. Все права защищены</p>
                     </div>
 
                     <div className='footer-icons'>
                         <a href={getLinkWithUtm(SOUTHHUB_YOUTUBE)} target='_blank'>
                             <Image
-                                src={YoutubeIcon}
+                                src={Youtube}
                                 alt="youtube"
-                                height={52}
+                                height={24}
                             />
                         </a>
                         <a href={getLinkWithUtm(SOUTHHUB_LINKEDIN)} target='_blank'>
                             <Image
-                                src={InstIcon}
+                                src={LinkedIn}
                                 alt="linkedin"
-                                height={52}
+                                height={24}
                             />
                         </a>
                         <a href={getLinkWithUtm(TELEGRAM_CHANELL_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
                             <Image
-                                src={TelegrammIcon}
+                                src={Telegram}
                                 alt="telegramm"
-                                height={52}
+                                height={24}
                             />
                         </a>
                     </div>
                 </div>
-
             </div>
         </div>
     );
