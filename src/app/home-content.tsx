@@ -13,12 +13,7 @@ import { useEffect, useState } from "react";
 import { Button } from "antd";
 import { NBSP } from "./constants";
 import { FONT_MONT_BOOK } from "./fonts";
-import { AccessibleBlock } from "./blocks/accessible-block";
 import { HowBecomeCommunityBlock } from "./blocks/how-become-community-block";
-import { NetwarmingBlock } from "./blocks/netwarming-block";
-import { PhilosophyBlock } from "./blocks/philosophy-block/philosophy-block";
-import { HotToSouthubBlock } from "./blocks/hot-to-southub-block/hot-to-southub-block";
-import { CarouselBlock } from "./blocks/carousel-block";
 import { SocietyPhotosBlock } from "./blocks/society-photos-block";
 import JsonLdScript from "./components/JsonLdScript";
 
@@ -49,25 +44,21 @@ export default function HomeContent({ data }: Props) {
                 <Header />
 
                 <main >
-                    <MainBanner />
+                    <MainBanner /> {/** Новый */}
 
                     <AccordionsBlock />
 
-                    <InfinityBanner />
-                    <OurProjectsScrollableBlock />
+                    <InfinityBanner />  {/** Новый */}
+                    <OurProjectsScrollableBlock />  {/** Новый */}
 
                     <CommunityInNumbers />
 
-                    <SocietyPhotosBlock />
+                    <SocietyPhotosBlock />  {/** Новый */}
 
-                    <InfinityBanner />
+                    <InfinityBanner />  {/** Новый */}
 
-                    <HotToSouthubBlock />
-                    <CarouselBlock />
-                    <PhilosophyBlock />
-                    <NetwarmingBlock />
                     <HowBecomeCommunityBlock />
-                    <AccessibleBlock />
+
                     <AboutUsBlock />
                 </main>
 
