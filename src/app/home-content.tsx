@@ -16,6 +16,7 @@ import { FONT_MONT_BOOK } from "./fonts";
 import { HowBecomeCommunityBlock } from "./blocks/how-become-community-block";
 import { SocietyPhotosBlock } from "./blocks/society-photos-block";
 import JsonLdScript from "./components/JsonLdScript";
+import { BlockWithUAnimate } from "./blocks/block-with-u-animate";
 
 type Props = {
     data: any;
@@ -58,6 +59,8 @@ export default function HomeContent({ data }: Props) {
                     <InfinityBanner />  {/** Новый */}
 
                     <HowBecomeCommunityBlock />
+
+                    <BlockWithUAnimate />  {/** Новый */}
 
                     <AboutUsBlock />  {/** Новый */}
                 </main>

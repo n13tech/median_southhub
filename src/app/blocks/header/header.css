@@ -77,6 +77,10 @@
     }
 }
 
+.header_hidden {
+    display: none;
+}
+
 .header_black {
     .header_item {
         color: rgb(17,17,17);
