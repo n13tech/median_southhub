@@ -1,4 +1,3 @@
-// block-with-u-animate.tsx
 import { useEffect, useState } from 'react';
 
 import './block-with-u-animate.css';
@@ -22,10 +21,35 @@ const columnGrid = {
     mobile: 6,
 }
 
+const getAllTabletCells = () => {
+    const cells = [];
+    for (let row = 0; row <= 6; row++) {
+        for (let col = 0; col <= 9; col++) {
+            if (row === 0 && col === 0) continue;
+            if (row === 3 && col === 3) continue;
+            cells.push({ row, col });
+        }
+    }
+    return cells;
+};
+
+const getAllMobileCells = () => {
+    const cells = [];
+    for (let row = 0; row <= 6; row++) {
+        for (let col = 0; col <= 5; col++) {
+            if (row === 0 && col === 0) continue;
+            if (row === 3 && col === 1) continue;
+            cells.push({ row, col });
+        }
+    }
+    return cells;
+};
 
 export const BlockWithUAnimate = () => {
     const [device, setDevice] = useState<'desktop' | 'desktop_s' | 'tablet' | 'mobile'>('desktop');
     const [hoveredCell, setHoveredCell] = useState<{ row: number; col: number } | null>(null);
+    const [animatedCell, setAnimatedCell] = useState<{ row: number; col: number } | null>(null);
+    const [isAnimating, setIsAnimating] = useState(false);
 
     useEffect(() => {
         const header = document.querySelector('#header');
@@ -97,11 +121,48 @@ export const BlockWithUAnimate = () => {
         }
 
         window.addEventListener('resize', updateColumn);
+        updateColumn();
 
         return () => {
             window.removeEventListener('resize', updateColumn);
         }
     }, []);
+
+    useEffect(() => {
+        if (device === 'desktop' || device === 'desktop_s') {
+            return;
+        }
+
+        const getRandomCell = () => {
+            const cells = device === 'tablet' ? getAllTabletCells() : getAllMobileCells();
+            const randomIndex = Math.floor(Math.random() * cells.length);
+            return cells[randomIndex];
+        };
+
+        const animateRandomCell = () => {
+            const randomCell = getRandomCell();
+            setAnimatedCell(randomCell);
+            setIsAnimating(true);
+            
+            setTimeout(() => {
+                setIsAnimating(false);
+            }, 500);
+            
+            setTimeout(() => {
+                setAnimatedCell(null);
+            }, 1000);
+        };
+
+        animateRandomCell();
+        
+        const interval = setInterval(() => {
+            animateRandomCell();
+        }, 1500);
+        
+        return () => {
+            clearInterval(interval);
+        };
+    }, [device]);
 
     const isSpecialCell = (row: number, col: number): boolean => {
         if (row === 0 && col === 0) return true;
@@ -121,6 +182,16 @@ export const BlockWithUAnimate = () => {
     };
 
     const shouldScale = (row: number, col: number): boolean => {
+        if (device === 'tablet' || device === 'mobile') {
+            if (!animatedCell || !isAnimating) return false;
+            
+            const isCenter = animatedCell.row === row && animatedCell.col === col;
+            const isNeighbor = (row === animatedCell.row && Math.abs(col - animatedCell.col) === 1) || 
+                              (col === animatedCell.col && Math.abs(row - animatedCell.row) === 1);
+            
+            return isCenter || isNeighbor;
+        }
+
         if (!hoveredCell) return false;
         
         const { row: hoverRow, col: hoverCol } = hoveredCell;
@@ -138,7 +209,45 @@ export const BlockWithUAnimate = () => {
         return isNeighbor;
     };
 
+    const getScalePercent = (row: number, col: number): number => {
+        if (!shouldScale(row, col)) return 0;
+        
+        if (device === 'tablet' || device === 'mobile') {
+            if (animatedCell && animatedCell.row === row && animatedCell.col === col) {
+                return 100;
+            }
+
+            if (animatedCell) {
+                const isNeighbor = (row === animatedCell.row && Math.abs(col - animatedCell.col) === 1) || 
+                                  (col === animatedCell.col && Math.abs(row - animatedCell.row) === 1);
+                if (isNeighbor) {
+                    return 50;
+                }
+            }
+            return 0;
+        }
+
+        if (!hoveredCell) return 0;
+        
+        const isNeighbor = (row === hoveredCell.row && Math.abs(col - hoveredCell.col) === 1) || 
+                          (col === hoveredCell.col && Math.abs(row - hoveredCell.row) === 1);
+        
+        if (isNeighbor) {
+            return 50;
+        }
+        
+        if (hoveredCell.row === row && hoveredCell.col === col) {
+            return 100;
+        }
+        
+        return 0;
+    };
+
     const isHovered = (row: number, col: number): boolean => {
+        if (device === 'tablet' || device === 'mobile') {
+            return false;
+        }
+        
         if (!hoveredCell) {
             return false;
         }
@@ -171,18 +280,21 @@ export const BlockWithUAnimate = () => {
             );
         }
 
-        const isScaling = shouldScale(row, col);
+        const scalePercent = getScalePercent(row, col);
         const isCurrentlyHovered = isHovered(row, col);
         
         let svgWidth = 20;
         let svgHeight = 21;
         
-        if (isCurrentlyHovered) {
+        if (scalePercent === 100) {
             svgWidth = 40;
             svgHeight = 42;
-        } else if (isScaling) {
+        } else if (scalePercent === 50) {
             svgWidth = 30;
             svgHeight = 31.5;
+        } else if (isCurrentlyHovered) {
+            svgWidth = 40;
+            svgHeight = 42;
         }
 
         const isVisibleB = () => {
@@ -298,6 +410,20 @@ export const BlockWithUAnimate = () => {
         }
     };
 
+    const handleMouseEnter = (row: number, col: number, type: string) => {
+        if (device === 'desktop' || device === 'desktop_s') {
+            if (type === 'svg') {
+                setHoveredCell({ row, col });
+            }
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (device === 'desktop' || device === 'desktop_s') {
+            setHoveredCell(null);
+        }
+    };
+
     return (
         <div className="block-with-u-animate" id='block-with-u-animate'>
             {rowGrid[device].map((row) => {
@@ -314,12 +440,8 @@ export const BlockWithUAnimate = () => {
                                 className={`block-with-u-animate-cell ${
                                     cell.type === 'special' ? 'special-cell-wrapper' : ''
                                 }`}
-                                onMouseEnter={() => {
-                                    if (cell.type === 'svg') {
-                                        setHoveredCell({ row, col: cell.col });
-                                    }
-                                }}
-                                onMouseLeave={() => setHoveredCell(null)}
+                                onMouseEnter={() => handleMouseEnter(row, cell.col, cell.type)}
+                                onMouseLeave={handleMouseLeave}
                             >
                                 {renderCellContent(row, cell.col)}
                             </div>
