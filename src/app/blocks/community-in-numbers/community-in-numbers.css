@@ -1,157 +1,302 @@
 .community-in-numbers-wrapper {
+    position: relative;
+    width: 100vw;
     max-width: 1920px;
-    margin: 0 auto;
+    height: 100vh;
+    margin: 0 auto 4px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 72px;
-    width: 100%;
-    padding: 40px 100px 120px;
-
-    @media screen and (max-width: 1280px) {
-        padding: 40px 40px 120px;
-        gap: 56px;
-    }
+    padding: 100px 60px;
+    background-color: rgb(17,17,17);
 
     @media screen and (max-width: 1024px) {
-        padding: 0 16px 120px;
-        gap: 60px;
+        padding: 130px 32px 50px;
+    }
+
+    @media screen and (max-width: 767px) {
+        padding: 50px 15px 60px;
     }
 }
 
 .community-in-numbers-title {
-    flex: 1;
+    position: relative;
+    height: fit-content;
+    left: 50%;
     font-weight: 500;
-    font-size: 96px;
-    line-height: 123px;
-    text-transform: uppercase;
-    color: #111111;
-    white-space: pre-wrap;
-    text-align: center;
+    font-size: 70px;
+    line-height: 100%;
+    color: #fff;
+    margin-bottom: 80px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    user-select: none;
 
-    @media screen and (max-width: 1280px) {
-        font-size: 78px;
-        line-height: 125%;
+    &:hover {
+        opacity: 0.8;
     }
 
     @media screen and (max-width: 1024px) {
-        font-size: 40px;
+        left: 30%;
+        font-size: 50px;
+        margin-bottom: 75px;
+    }
+
+    @media screen and (max-width: 767px) {
+        left: auto;
+        margin: 0 auto 50px;
+        font-size: 39px;
     }
 }
 
-.community-in-numbers-cards-wrapper {
+.community-in-numbers-infographic {
+    position: relative;
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 30px;
-
-    & > div {
-        display: flex;
-        gap: 30px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    > div:nth-child(1)  {
-        > div:nth-child(1) {
-            border-radius: 8px;
-
-            img {
-                border-radius: 8px 8px 100px 8px;
-            }
-        }
-
-        > div:nth-child(2) {
-            border-radius: 100px 8px 8px 8px;
-
-            img {
-                border-radius: 100px 8px 100px 8px;
-            }
-        }
-    }
-
-    > div:nth-child(2) {
-        > div:nth-child(1) {
-            border-radius: 8px 100px 8px 8px;
-
-            img {
-                border-radius: 8px 100px 8px 100px;
-            }
-        }
-
-        > div:nth-child(2) {
-            border-radius: 8px;
-
-            img {
-                border-radius: 8px 8px 8px 100px;
-            }
-        }
-    }
+    width: 100%;
+    height: 100%;
+    gap: 24;
 
     @media screen and (max-width: 1024px) {
-        gap: 60px;
+        gap: 16px;
+    }
+
+    @media screen and (max-width: 767px) {
+        display: none;
     }
 }
 
-.community-in-numbers-card {
+.community-in-numbers-infographic-item {
+    position: relative;
     display: flex;
-    flex-wrap: wrap;
-    max-width: 302px;
-    height: 540px;
-    background-color: rgba(245, 245, 245, 1);
+    width: calc(100% / 4);
+}
 
-    > div {
-        height: calc(540px - 265px);
-    }
+.community-in-numbers-infographic-item-content {
+    position: absolute;
+    will-change: top, bottom;
+}
 
-    img {
-        height: 265px;
-        object-fit: cover;
-    }
+.community-in-numbers-infographic-item:not(:first-child) .community-in-numbers-infographic-item-content {
+    left: 30px;
 
-    @media screen and (max-width: 1024px) {
-        height: 476px;
-        max-width: 302px;
-        width: 100%;
-
-        img {
-            width: 100%;
-        }
+    @media screen and (max-width: 1280px) {
+        left: 10px;
     }
 }
 
-.community-in-numbers-card-title {
-    font-weight: 500;
-    font-size: 96px;
-    line-height: 120px;
-    color: rgba(0, 0, 0, 1);
-    white-space: pre-wrap;
-    padding: 20px 20px 0;
+.animate-content-1 {
+    animation: smoothMoveToTop 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
 
-    @media screen and (max-width: 1280px) {
-        font-size: 78px;
-        line-height: 96px;
+.animate-content-2 {
+    animation: smoothMoveTo25Percent 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-content-3 {
+    animation: smoothMoveTo50Percent 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-content-4 {
+    animation: smoothMoveTo5Percent 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes smoothMoveToTop {
+    0% {
+        bottom: 0;
     }
-
-    @media screen and (max-width: 1024px) {
-        font-size: 64px;
-        line-height: 80px;
+    100% {
+        bottom: calc(100% - 152px);
     }
 }
 
-.community-in-numbers-card-description {
-    font-weight: 500;
-    font-size: 23px;
-    line-height: 125%;
-    color: rgba(42, 42, 42, 1);
-    white-space: pre-wrap;
-    padding: 0 20px 20px;
+@keyframes smoothMoveTo25Percent {
+    0% {
+        bottom: 0;
+    }
+    100% {
+        bottom: calc(75% - 172px);
+    }
+}
+
+@keyframes smoothMoveTo50Percent {
+    0% {
+        bottom: 0;
+    }
+    100% {
+        bottom: calc(50% - 172px);
+    }
+}
+
+@keyframes smoothMoveTo5Percent {
+    0% {
+        bottom: 0;
+    }
+    100% {
+        bottom: 5%;
+    }
+}
+
+.community-in-numbers-infographic-item-animated {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.community-in-numbers-infographic-item-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transition: height 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-item-1 .community-in-numbers-infographic-item-fill {
+    animation: smoothFillToTop 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-item-2 .community-in-numbers-infographic-item-fill {
+    animation: smoothFillTo25Percent 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-item-3 .community-in-numbers-infographic-item-fill {
+    animation: smoothFillTo50Percent 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-item-4 .community-in-numbers-infographic-item-fill {
+    animation: smoothFillTo5Percent 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes smoothFillToTop {
+    0% {
+        height: 0%;
+    }
+    100% {
+        height: 100%;
+    }
+}
+
+@keyframes smoothFillTo25Percent {
+    0% {
+        height: 0%;
+    }
+    100% {
+        height: 75%;
+    }
+}
+
+@keyframes smoothFillTo50Percent {
+    0% {
+        height: 0%;
+    }
+    100% {
+        height: 50%;
+    }
+}
+
+@keyframes smoothFillTo5Percent {
+    0% {
+        height: 0%;
+    }
+    100% {
+        height: 5%;
+    }
+}
+
+.community-in-numbers-infographic-item-line {
+    height: 100%;
+    width: 1px;
+    background-color: #fff;
+    margin-right: 30px;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    
+    @media screen and (max-width: 1280px) {
+        margin-right: 10px;
+    }
+}
+
+.animate-line-2 {
+    animation: smoothLineGrowTo100 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-line-3 {
+    animation: smoothLineGrowTo75 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-line-4 {
+    animation: smoothLineGrowTo25 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes smoothLineGrowTo100 {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes smoothLineGrowTo75 {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(0.75);
+    }
+}
+
+@keyframes smoothLineGrowTo25 {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(0.25);
+    }
+}
+
+.community-in-numbers-infographic-item-count {
+    font-size: 94px;
+    font-weight: 200;
+    line-height: 100%;
+    color: #fff;
+    margin-bottom: 6px;
 
     @media screen and (max-width: 1280px) {
-        font-size: 20px;
+        font-size: 87px;
     }
 
     @media screen and (max-width: 1024px) {
-        font-size: 16px;
+        font-size: 80px;
+    }
+
+    @media screen and (max-width: 767px) {
+        font-size: 75px;
+    }
+}
+
+.community-in-numbers-infographic-item-desc {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 130%;
+    color: #fff;
+    white-space: pre-wrap;
+    width: 200px;
+
+    @media screen and (max-width: 1280px) {
+        width: 175px;
+        font-size: 15px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        width: 150px;
+    }
+
+    @media screen and (max-width: 767px) {
+        width: 165px;
+        font-size: 14px;
     }
 }

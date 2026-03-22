@@ -52,9 +52,9 @@ export default function HomeContent({ data }: Props) {
                     <InfinityBanner />  {/** Новый */}
                     <OurProjectsScrollableBlock />  {/** Новый */}
 
-                    <CommunityInNumbers />
-
                     <SocietyPhotosBlock />  {/** Новый */}
+
+                    <CommunityInNumbers />  {/** Новый */}
 
                     <InfinityBanner />  {/** Новый */}
 
