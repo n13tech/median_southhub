@@ -296,7 +296,57 @@
     }
 
     @media screen and (max-width: 767px) {
-        width: 165px;
         font-size: 14px;
     }
+}
+
+.community-in-numbers-infographic-mobile {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.community-in-numbers-infographic-mobile-line {
+    height: 100%;
+    width: 1px;
+    background-color: #fff;
+    margin: 0 8px;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.community-in-numbers-infographic-mobile-line-animate {
+    animation: smoothMobileLineGrowTo100 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes smoothMobileLineGrowTo100 {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+.community-in-numbers-infographic-mobile-left-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+    width: 152px;
+    padding-top: 50px;
+    gap: 125px;
+    box-sizing: border-box;
+}
+
+.community-in-numbers-infographic-mobile-right-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+    padding-top: 185px;
+    gap: 125px;
+    width: 150px;
+    box-sizing: border-box;
 }
