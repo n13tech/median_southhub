@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect */
- 
- 
+ /* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -34,7 +32,7 @@ export const Preloader = () => {
                         return 1;
                 }
             });
-        }, 1000);
+        }, 500);
         
         return () => clearInterval(interval);
     }, []);

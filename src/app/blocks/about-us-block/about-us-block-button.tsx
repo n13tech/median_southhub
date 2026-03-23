@@ -13,12 +13,11 @@ export const AboutUsBlockButton = () => {
 
     return (
         <Button
-            variant='outlined'
-            color='default'
+            type='primary'
             onClick={handleClick}
-            className={`${FONT_MONT_BOOK.className} about-us-block-info-button`}
+            className={`${FONT_MONT_BOOK.className} about-us-block-info-button base-button base-button_black`}
         >
-            Связаться с нами
+            связаться
         </Button>
     );
 }

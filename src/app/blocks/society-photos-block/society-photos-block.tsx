@@ -169,8 +169,6 @@ const renderGrid = useCallback(() => {
             const tablet = window.matchMedia("(max-width: 1024px)").matches;
             const mobile = window.matchMedia("(max-width: 767px)").matches;
 
-            console.log(mobile ? 'mobile' : tablet ? 'tablet' : 'desktop')
-
             setDevice(mobile ? 'mobile' : tablet ? 'tablet' : 'desktop');
         }
 

@@ -71,6 +71,28 @@
     position: fixed;
     width: 100vw;
     z-index: 99;
+
+    .header-logo-black {
+        display: none;
+    }
+}
+
+.header_hidden {
+    display: none;
+}
+
+.header_black {
+    .header_item {
+        color: rgb(17,17,17);
+    }
+
+    .header-logo-white {
+        display: none;
+    }
+
+    .header-logo-black {
+        display: block;
+    }
 }
 
 .header-items {

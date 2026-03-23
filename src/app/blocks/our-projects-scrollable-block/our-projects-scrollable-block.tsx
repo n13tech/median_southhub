@@ -214,7 +214,7 @@ export const OurProjectsScrollableBlock = () => {
               if (index === activeIndex) {
                 gsap.set(section, { opacity: 1, scale: 1 });
               } else {
-                gsap.set(section, { opacity: 0, scale: 0.95 });
+                gsap.set(section, { opacity: 1, scale: 1 });
               }
             });
           }
