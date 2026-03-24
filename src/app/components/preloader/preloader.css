@@ -54,4 +54,8 @@
     font-size: 24px;
     color: white;
     white-space: nowrap;
+
+    @media screen and (max-width: 767px) {
+        bottom: 75px;
+    }
 }

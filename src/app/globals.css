@@ -48,7 +48,7 @@ body {
     box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 
     @media screen and (max-width: 1024px) {
-      top: calc(100vh - 100px);
+      top: calc(100vh - 125px);
       width: calc(100vw - 20px);
       max-width: 800px;
       gap: 20px;
@@ -56,15 +56,15 @@ body {
     }
 
     @media screen and (max-width: 470px) {
-      top: calc(100vh - 112px);
+      top: calc(100vh - 135px);
     }
 
     @media screen and (max-width: 420px) {
-      top: calc(100vh - 127px);
+      top: calc(100vh - 150px);
     }
 
     @media screen and (max-width: 365px) {
-      top: calc(100vh - 142px);
+      top: calc(100vh - 160px);
     }
 
     .cookie-banner-text {
