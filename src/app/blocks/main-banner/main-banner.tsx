@@ -276,7 +276,7 @@ export const MainBanner = () => {
         const calculateSectionHeight = () => {
             const isMobile = window.innerWidth <= 1024;
             
-            const scrollDistance = 5000;
+            const scrollDistance = isMobile ? 4000 : 5000;
             const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR;
             
             if (isMobile) {
@@ -297,7 +297,7 @@ export const MainBanner = () => {
 
             const isMobile = window.innerWidth <= 1024;
 
-            const scrollDistance = 5000;
+            const scrollDistance = isMobile ? 4000 : 5000;
             const mobileScrollDistance = scrollDistance * ANIMATION_SPEED_FACTOR;
 
             scrollTriggerRef.current = ScrollTrigger.create({
