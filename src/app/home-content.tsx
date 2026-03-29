@@ -17,6 +17,7 @@ import { HowBecomeCommunityBlock } from "./blocks/how-become-community-block";
 import { SocietyPhotosBlock } from "./blocks/society-photos-block";
 import JsonLdScript from "./components/JsonLdScript";
 import { BlockWithUAnimate } from "./blocks/block-with-u-animate";
+import { MoreNew } from "./blocks/more-new";
 
 type Props = {
     data: any;
@@ -45,27 +46,29 @@ export default function HomeContent({ data }: Props) {
                 <Header />
 
                 <main >
-                    <MainBanner /> {/** Новый */}
+                    <MainBanner />
 
                     <AccordionsBlock />
 
-                    <InfinityBanner />  {/** Новый */}
-                    <OurProjectsScrollableBlock />  {/** Новый */}
+                    <InfinityBanner />
+                    <OurProjectsScrollableBlock />
 
-                    <SocietyPhotosBlock />  {/** Новый */}
+                    <MoreNew />
 
-                    <CommunityInNumbers />  {/** Новый */}
+                    <SocietyPhotosBlock />
 
-                    <InfinityBanner />  {/** Новый */}
+                    <CommunityInNumbers />
+
+                    <InfinityBanner />
 
                     <HowBecomeCommunityBlock />
 
-                    <BlockWithUAnimate />  {/** Новый */}
+                    <BlockWithUAnimate />
 
-                    <AboutUsBlock />  {/** Новый */}
+                    <AboutUsBlock />
                 </main>
 
-                <Footer />   {/** Новый */}
+                <Footer />
 
                 {isOpenCookieModal && (
                     <div className="cookie-banner">

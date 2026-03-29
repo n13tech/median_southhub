@@ -31,6 +31,51 @@ export const SocietyPhotosBlock = () => {
     const [device, setDevice] = useState('desktop');
 
     useEffect(() => {
+        const header = document.querySelector('#header');
+        const targetBlock = document.querySelector('#society-photos-block');
+        
+        if (!header || !targetBlock) return;
+
+        let lastScrollY = window.scrollY;
+        let isHeaderBlack = false;
+
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            const blockRect = targetBlock.getBoundingClientRect();
+            const blockTop = blockRect.top - 70;
+            const isScrollingUp = currentScrollY < lastScrollY;
+    
+            if (blockTop <= 0) {
+                if (!isHeaderBlack) {
+                    header.classList.remove('header_black');
+                    isHeaderBlack = true;
+                }
+            } 
+            else if (isScrollingUp && blockTop <= 70) {
+                if (!isHeaderBlack) {
+                    header.classList.remove('header_black');
+                    isHeaderBlack = true;
+                }
+            } else {
+                if (isHeaderBlack) {
+                    header.classList.add('header_black');
+                    isHeaderBlack = false;
+                }
+            }
+        
+            lastScrollY = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    useEffect(() => {
         const interval = setInterval(() => {
             setImgNumber((prev) => prev === 13 ? 0 : prev + 1)
         }, 2000);
