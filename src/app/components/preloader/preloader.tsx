@@ -1,4 +1,3 @@
- /* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -17,7 +16,24 @@ export const Preloader = () => {
 
     const videoLoadingProgress = useVideoLoadingProgress('main-video-banner');
 
-    // Циклическая смена активного изображения
+    useEffect(() => {
+        const html = document.querySelector('html');
+        const body = document.querySelector('body');
+
+        if (isVisible) {
+            if (html) html.style.overflowY = 'hidden';
+            if (body) body.style.overflowY = 'hidden';
+        } else {
+            if (html) html.style.overflowY = '';
+            if (body) body.style.overflowY = '';
+        }
+        
+        return () => {
+            if (html) html.style.overflowY = '';
+            if (body) body.style.overflowY = '';
+        };
+    }, [isVisible]);
+
     useEffect(() => {
         const interval = setInterval(() => {
             setActiveStep((prev) => {
@@ -39,6 +55,7 @@ export const Preloader = () => {
 
     useEffect(() => {
         if (videoLoadingProgress === 100) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsAnimating(true);
 
             const timer = setTimeout(() => {
