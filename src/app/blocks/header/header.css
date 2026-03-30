@@ -17,14 +17,9 @@
         padding: 0 32px;
     }
 
-    /* @media screen and (max-width: 1280px) {
-        height: 72px;
-        padding: 0 40px;
-    }
-
-    @media screen and (max-width: 1024px) {
-        padding: 16px;
-        gap: 0;
+    @media screen and (max-width: 767px) {
+        height: 43px;
+        padding: 0 15px;
 
         .header_desktop_login {
             display: none;
@@ -42,10 +37,10 @@
             justify-content: center;
             align-items: center;
             padding: 0;
-            width: 40px;
-            height: 40px;
+            width: 39px;
+            height: 18px;
         }
-    } */
+    }
 }
 
 .header-login-block {
@@ -93,6 +88,10 @@
     .header-logo-black {
         display: block;
     }
+
+    .header-burger path {
+        stroke: rgb(17,17,17);
+    }
 }
 
 .header-items {
@@ -118,6 +117,8 @@
 }
 
 .header-drawer {
+    background: rgb(17,17,17) !important;
+
     .ant-drawer-title {
         order: 1;
     }
@@ -126,6 +127,7 @@
         justify-content: space-between;
         padding: 16px;
         border-bottom: 0px;
+        background-color: rgb(17,17,17);
 
         button {
             display: flex;
@@ -134,7 +136,6 @@
             padding: 0;
             width: 40px;
             height: 40px;
-            background-color: #E1E1E1;
             border-radius: 12px;
             order: 2;
             margin-inline-end: 0 !important;
@@ -149,8 +150,16 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 48px 16px;
-        gap: 32px;
+        padding: 150px 16px 0;
+        background-color: rgb(17,17,17);
+        border-top: 0px;
+
+        > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 70px;
+        }
 
         .header-login-block {
             display: flex;

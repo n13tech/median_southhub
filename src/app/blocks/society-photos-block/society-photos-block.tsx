@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 
+import { IconS, IconO, IconU, IconT, IconH, IconB } from './cell-desktop';
+
 import SocietyPhoto1 from '../../../../public/v2/society/society-1.jpg';
 import SocietyPhoto2 from '../../../../public/v2/society/society-2.jpg';
 import SocietyPhoto3 from '../../../../public/v2/society/society-3.jpg';
@@ -27,6 +29,51 @@ const ANIMATION_SEQUENCE = [1, 2, 1, 3, 1, 2, 0, 3, 1, 2, 3, 2, 1, 3];
 export const SocietyPhotosBlock = () => {
     const [imgNumber, setImgNumber] = useState(0);
     const [device, setDevice] = useState('desktop');
+
+    useEffect(() => {
+        const header = document.querySelector('#header');
+        const targetBlock = document.querySelector('#society-photos-block');
+        
+        if (!header || !targetBlock) return;
+
+        let lastScrollY = window.scrollY;
+        let isHeaderBlack = false;
+
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            const blockRect = targetBlock.getBoundingClientRect();
+            const blockTop = blockRect.top - 70;
+            const isScrollingUp = currentScrollY < lastScrollY;
+    
+            if (blockTop <= 0) {
+                if (!isHeaderBlack) {
+                    header.classList.remove('header_black');
+                    isHeaderBlack = true;
+                }
+            } 
+            else if (isScrollingUp && blockTop <= 70) {
+                if (!isHeaderBlack) {
+                    header.classList.remove('header_black');
+                    isHeaderBlack = true;
+                }
+            } else {
+                if (isHeaderBlack) {
+                    header.classList.add('header_black');
+                    isHeaderBlack = false;
+                }
+            }
+        
+            lastScrollY = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -122,7 +169,12 @@ const renderGrid = useCallback(() => {
                                             {currentCell.text}
                                         </div>
                                     ) : (
-                                        <Image src={currentCell.src} alt='' className='society-cell-img' />
+                                        currentCell.src === 'WordS' && <IconS className='society-cell-img' /> ||
+                                        currentCell.src === 'WordO' && <IconO className='society-cell-img' /> ||
+                                        currentCell.src === 'WordU' && <IconU className='society-cell-img' /> ||
+                                        currentCell.src === 'WordT' && <IconT className='society-cell-img' /> ||
+                                        currentCell.src === 'WordH' && <IconH className='society-cell-img' /> ||
+                                        currentCell.src === 'WordB' && <IconB className='society-cell-img' />
                                     )}
                                 </div>
                             )}
@@ -134,7 +186,12 @@ const renderGrid = useCallback(() => {
                                             {nextCell.text}
                                         </div>
                                     ) : (
-                                        <Image src={nextCell.src} alt='' className='society-cell-img' />
+                                        nextCell.src === 'WordS' && <IconS className='society-cell-img' /> ||
+                                        nextCell.src === 'WordO' && <IconO className='society-cell-img' /> ||
+                                        nextCell.src === 'WordU' && <IconU className='society-cell-img' /> ||
+                                        nextCell.src === 'WordT' && <IconT className='society-cell-img' /> ||
+                                        nextCell.src === 'WordH' && <IconH className='society-cell-img' /> ||
+                                        nextCell.src === 'WordB' && <IconB className='society-cell-img' />
                                     )}
                                 </div>
                             )}
