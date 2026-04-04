@@ -211,16 +211,85 @@ export const MoreNew = () => {
 
         const style = { transform: '' };
 
-        switch (rotateIcon) {
-            case 'top':          style.transform = `translate(0px, -10px) rotate(35deg)`;    break;
-            case 'bottom':       style.transform = `translate(0px, 10px) rotate(-35deg)`;    break;
-            case 'top-right':    style.transform = `translate(10px, -10px) rotate(45deg)`;   break;
-            case 'bottom-left':  style.transform = `translate(-10px, 10px) rotate(-135deg)`; break;
-            case 'top-left':     style.transform = `translate(-10px, -10px) rotate(-45deg)`; break;
-            case 'bottom-right': style.transform = `translate(10px, 10px) rotate(135deg)`;   break;
-            case 'right':        style.transform = `translate(10px, 0px) rotate(90deg)`;     break;
-            case 'left':         style.transform = `translate(-10px, 0px) rotate(-90deg)`;   break;
-            default: break;
+        if (device === 'mobile') {
+            if (row === 0 && col === 0) {
+                style.transform = `translate(0px, -10px) rotate(15deg)`;
+            } else if (row === 0 && col === 1) {
+                style.transform = `translate(0px, -10px) rotate(0)`;
+            } else if (row === 0 && col === 2) {
+                style.transform = `translate(0px, -10px) rotate(-15deg)`;
+            }
+
+            else if (row === 1 && col === 0) {
+                style.transform = `translate(0, 5px) rotate(0)`;
+            } else if (row === 1 && col === 2) {
+                style.transform = `translate(0px, 5px) rotate(15deg)`;
+            } else if (row === 1 && col === 3) {
+                style.transform = `translate(0px, -10px) rotate(0)`;
+            } else if (row === 1 && col === 4) {
+                style.transform = `translate(0px, -10px) rotate(-15deg)`;
+            }
+
+            else if (row === 2 && col === 0) {
+                style.transform = `translate(0, 10px) rotate(-15deg)`;
+            } else if (row === 2 && col === 1) {
+                style.transform = `translate(0px, 10px) rotate(0)`;
+            } else if (row === 2 && col === 2) {
+                style.transform = `translate(0px, 10px) rotate(-15deg)`;
+            } else if (row === 2 && col === 4) {
+                style.transform = `translate(0px, 10px) rotate(15deg)`;
+            }
+
+            else if (row === 4 && col === 1) {
+                style.transform = `translate(0, -10px) rotate(15deg)`;
+            } else if (row === 4 && col === 2) {
+                style.transform = `translate(0px, -10px) rotate(0)`;
+            } else if (row === 4 && col === 3) {
+                style.transform = `translate(0px, -10px) rotate(-15deg)`;
+            }
+
+            else if (row === 5 && col === 1) {
+                style.transform = `translate(-5px, 0) rotate(-15deg)`;
+            } else if (row === 5 && col === 3) {
+                style.transform = `translate(5px, 0) rotate(15deg)`;
+            }
+
+            else if (row === 6 && col === 1) {
+                style.transform = `translate(0, 10px) rotate(-15deg)`;
+            } else if (row === 6 && col === 2) {
+                style.transform = `translate(0px, 10px) rotate(0)`;
+            } else if (row === 6 && col === 3) {
+                style.transform = `translate(0px, 10px) rotate(15deg)`;
+            }
+        } else {
+            switch (rotateIcon) {
+                case 'top':
+                    style.transform = `translate(0px, -10px) rotate(35deg)`;
+                    break;
+                case 'bottom':
+                    style.transform = `translate(0px, 10px) rotate(-35deg)`;
+                    break;
+                case 'top-right':
+                    style.transform = `translate(10px, -10px) rotate(45deg)`;
+                    break;
+                case 'bottom-left':
+                    style.transform = `translate(-10px, 10px) rotate(-135deg)`;
+                    break;
+                case 'top-left':
+                    style.transform = `translate(-10px, -10px) rotate(-45deg)`;
+                    break;
+                case 'bottom-right':
+                    style.transform = `translate(10px, 10px) rotate(135deg)`;
+                    break;
+                case 'right':
+                    style.transform = `translate(10px, 0px) rotate(90deg)`;
+                    break;
+                case 'left':
+                    style.transform = `translate(-10px, 0px) rotate(-90deg)`;
+                    break;
+                default:
+                    break;
+            }
         }
 
         const linkTo = () => {
@@ -266,8 +335,8 @@ export const MoreNew = () => {
                 <Image
                     src={Cross}
                     alt=""
-                    width={50}
-                    height={50}
+                    width={device === 'mobile' ? 30 : 50}
+                    height={device === 'mobile' ? 30 : 50}
                     className="more-new-svg-icon"
                     style={{ ...style, opacity: isCurrentlyHovered ? 0 : 1 }}
                 />
