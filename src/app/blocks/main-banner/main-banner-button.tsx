@@ -12,7 +12,7 @@ export const MainBannerButton = () => {
 
     const [open, setOpen] = useState(false);
 
-    const handleClick = () => window.open(getLinkWIthUtm(LK_REGISTER_LINK), '_blank');
+    const handleClick = () => setOpen(true); // window.open(getLinkWIthUtm(LK_REGISTER_LINK), '_blank');
 
     return (
         <>
