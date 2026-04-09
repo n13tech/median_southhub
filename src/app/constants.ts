@@ -1,6 +1,7 @@
 export const NBSP = '\u00A0';
 
 export const LK_REGISTER_LINK = process.env.NEXT_PUBLIC_LK_REGISTER_LINK || 'https://lk.southhub.ru/accounts/register/';
+export const LK_LOGIN_LINK = process.env.NEXT_PUBLIC_LK_LOGIN_LINK || 'https://lk.southhub.ru/accounts/login/';
 export const TELEGRAM_CHANELL_LINK = process.env.NEXT_PUBLIC_TELEGRAM_CHANELL_LINK || 'https://t.me/+A-vMV8yq_6M3ZjFi';
 export const TELEGRAM_CONTACT_US_LINK = process.env.NEXT_PUBLIC_TELEGRAM_CONTACT_US_LINK || 'https://t.me/+F8Vk0GiQ_Mk1MDgy';
 export const MEDIAN_LINK = process.env.NEXT_PUBLIC_MEDIAN_LINK || 'https://median.agency/';

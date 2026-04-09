@@ -4,9 +4,13 @@ import { useEffect, useState } from 'react';
 import { Button, Drawer } from 'antd';
 import './header.css';
 import { HeaderItem } from './header-item';
+import { LK_LOGIN_LINK } from '@/app/constants';
+import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
 export const HeaderBurger = () => {
     const [isActive, setActive] = useState(false);
+
+    const getLinkWIthUtm = useGetLinkWithUtm();
 
     useEffect(() => {
         const html = document.querySelector('html');
@@ -53,7 +57,7 @@ export const HeaderBurger = () => {
                         <HeaderItem title='проекты' intoScroll='our-projects-block' />
                     </div>
                     <div onClick={() => setActive(false)}>
-                        <HeaderItem title='войти' intoScroll='' />
+                        <HeaderItem title='войти' link={getLinkWIthUtm(LK_LOGIN_LINK)} />
                     </div>
                 </div>
                 {/* <div>

@@ -7,8 +7,12 @@ import { HeaderItem } from './header-item';
 
 import './header.css';
 import { HeaderBurger } from './header-burger';
+import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
+import { LK_LOGIN_LINK } from '@/app/constants';
 
 export const Header = () => {
+    const getLinkWIthUtm = useGetLinkWithUtm();
+
     const handleScrollIntoView = () => {
         const element = document.getElementById('header');
 
@@ -45,7 +49,7 @@ export const Header = () => {
 
                 <div className='header-items'>
                     <HeaderItem title='проекты' intoScroll='our-projects-block' />
-                    <HeaderItem title='войти' intoScroll='' />
+                    <HeaderItem title='войти' link={getLinkWIthUtm(LK_LOGIN_LINK)} />
                 </div>
             </div>
         </div>
