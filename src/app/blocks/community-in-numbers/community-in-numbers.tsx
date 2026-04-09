@@ -47,10 +47,10 @@ export const CommunityInNumbers = () => {
     }, []);
 
     const startAnimations = useCallback(() => {
-        animateNumber(0, 1477, setCount1, 3000);
-        animateNumber(0, 153, setCount2, 3000);
-        animateNumber(0, 77, setCount3, 3000);
-        animateNumber(0, 73, setCount4, 3000);
+        animateNumber(0, 1, setCount1, 3000);
+        animateNumber(0, 1400, setCount2, 3000);
+        animateNumber(0, 32, setCount3, 3000);
+        animateNumber(0, 5, setCount4, 3000);
     }, [animateNumber]);
 
     useEffect(() => {
@@ -94,10 +94,10 @@ export const CommunityInNumbers = () => {
                             style={!shouldAnimate ? { bottom: '0', top: 'auto' } : undefined}
                         >
                             <div className={`${FONT_MONT_BOOK_EXTRA_LIGHT.className} community-in-numbers-infographic-item-count`}>
-                                {count1.toLocaleString()}
+                                №{count1.toLocaleString()}
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                {`профессионалов в${NBSP}IT: 55% CTO, 20% CPO, 15% CDO и${NBSP}15% CEO`}
+                                {`сообщество для для C-level в IT`}
                             </div>
                         </div>
                     </div>
@@ -115,7 +115,7 @@ export const CommunityInNumbers = () => {
                                 {count2}
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                {`выступивших спикеров и${NBSP}лидеров индустрии за${NBSP}4${NBSP}года мероприятий`}
+                                {`участников`}
                             </div>
                         </div>
                     </div>
@@ -133,7 +133,7 @@ export const CommunityInNumbers = () => {
                                 {count3}%
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                {`участников из Москвы, 23% — из других городов России и${NBSP}стран СНГ`}
+                                {`CTO&CIO, 18% CPO, 15% CEO и 8% CDO`}
                             </div>
                         </div>
                     </div>
@@ -151,7 +151,7 @@ export const CommunityInNumbers = () => {
                                 {count4}%
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                {`NPS сообщества`}
+                                {`лет комьюнити IT-руководителей`}
                             </div>
                         </div>
                     </div>
@@ -201,7 +201,7 @@ export const CommunityInNumbers = () => {
                         <div className='community-in-numbers-infographic-mobile-item'>
                             <div className={`community-in-numbers-infographic-mobile-content`}>
                                 <div className={`${FONT_MONT_BOOK_EXTRA_LIGHT.className} community-in-numbers-infographic-item-count`}>
-                                    {count4}%
+                                    {count4}
                                 </div>
                                 <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
                                     {`NPS сообщества`}
