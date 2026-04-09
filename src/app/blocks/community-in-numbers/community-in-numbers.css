@@ -276,6 +276,10 @@
     @media screen and (max-width: 767px) {
         font-size: 75px;
     }
+
+    @media screen and (max-width: 400px) {
+        font-size: 56px;
+    }
 }
 
 .community-in-numbers-infographic-item-desc {
@@ -298,6 +302,11 @@
     @media screen and (max-width: 767px) {
         font-size: 14px;
     }
+
+    @media screen and (max-width: 400px) {
+        width: 130px;
+        font-size: 12px;
+    }
 }
 
 .community-in-numbers-infographic-mobile {
@@ -310,10 +319,14 @@
     height: 100%;
     width: 1px;
     background-color: #fff;
-    margin: 0 8px;
+    margin: 0 24px;
     transform-origin: bottom;
     transform: scaleY(0);
     transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    @media screen and (max-width: 400px) {
+        margin: 0 12px;
+    }
 }
 
 .community-in-numbers-infographic-mobile-line-animate {
@@ -334,10 +347,14 @@
     flex-direction: column;
     position: relative;
     height: 100%;
-    width: 152px;
+    width: 170px;
     padding-top: 50px;
     gap: 125px;
     box-sizing: border-box;
+
+    @media screen and (max-width: px) {
+        width: 152px;
+    }
 }
 
 .community-in-numbers-infographic-mobile-right-content {

@@ -112,6 +112,7 @@ body {
   box-shadow: none;
   text-transform: lowercase;
   color: #fff;
+  transition: width 0.5s ease-in-out;
 
     @media screen and (max-width: 1024px) {
       font-size: 14px;
@@ -120,6 +121,7 @@ body {
 
 .base-button_black {
   color: rgb(17,17,17) !important;
+  transition: width 0.5s ease-in-out;
 }
 
 .base-button:hover {

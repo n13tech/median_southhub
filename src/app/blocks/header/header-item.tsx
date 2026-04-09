@@ -6,17 +6,26 @@ import './header.css';
 
 type Props = {
     title: string;
-    intoScroll: string;
+    intoScroll?: string;
+    link?: string;
 }
 
-export const HeaderItem = ({ title, intoScroll }: Props) => {
+export const HeaderItem = ({ title, intoScroll, link }: Props) => {
     const handleScrollIntoView = () => {
-        const element = document.getElementById(intoScroll);
-        const yOffset = window.innerWidth > 1024 ? 0 : 0;
+        if (intoScroll) {
+            const element = document.getElementById(intoScroll!);
+            const yOffset = window.innerWidth > 1024 ? 0 : 0;
 
-        if (element) {
-            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
-            window.scrollTo({ top: y, behavior: 'smooth' });
+            if (element) {
+                const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+
+            return;
+        }
+
+        if (link) {
+            window.open(link, '_blank');
         }
     }
 

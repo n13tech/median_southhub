@@ -27,6 +27,7 @@ export const MoreNew = () => {
     const [device, setDevice] = useState<'desktop' | 'desktop_s' | 'tablet' | 'mobile'>('desktop');
     const [hoveredCell, setHoveredCell] = useState<{ row: number; col: number } | null>(null);
     const [fixedCells, setFixedCells] = useState<{ row: number; col: number }[]>([]);
+    const [isMobileVisible, setMobileVisible] = useState(false);
 
     const getLinkWIthUtm = useGetLinkWithUtm();
 
@@ -99,26 +100,44 @@ export const MoreNew = () => {
     useEffect(() => {
         if (device !== 'tablet' && device !== 'mobile') {
             setFixedCells([]);
+            setMobileVisible(false);
             return;
         }
 
-        const targetBlock = document.querySelector('#more-new');
+        const targetBlock = document.querySelector('#more-new') as HTMLElement;
         if (!targetBlock) return;
 
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setFixedCells(FIXED_CELLS[device]);
-                } else {
-                    setFixedCells([]);
-                }
-            },
-            { threshold: 0.2 }
-        );
+        let lastScrollY = window.scrollY;
 
-        observer.observe(targetBlock);
+        const changeOpen = (open: boolean) => {
+            setFixedCells(open ? FIXED_CELLS[device] : []);
+            setMobileVisible(open);
+        }
 
-        return () => observer.disconnect();
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            const isScrollingDown = currentScrollY > lastScrollY;
+            const rect = targetBlock.getBoundingClientRect();
+            const blockHeight = targetBlock.offsetHeight;
+
+            if (isScrollingDown && rect.bottom <= 250) {
+                changeOpen(false);
+            } else if (isScrollingDown && rect.top <= 70) {
+                changeOpen(true);
+            } else if (!isScrollingDown && rect.top <= 0 && rect.top > -(blockHeight / 2)) {
+                changeOpen(true);
+            } else if (rect.bottom <= -70) {
+                changeOpen(false);
+            } else {
+                changeOpen(false);
+            }
+
+            lastScrollY = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => window.removeEventListener('scroll', handleScroll);
     }, [device]);
 
     // Returns active hover sources depending on device
@@ -211,7 +230,7 @@ export const MoreNew = () => {
 
         const style = { transform: '' };
 
-        if (device === 'mobile') {
+        if (device === 'mobile' && isMobileVisible) {
             if (row === 0 && col === 0) {
                 style.transform = `translate(0px, -10px) rotate(15deg)`;
             } else if (row === 0 && col === 1) {
@@ -261,7 +280,7 @@ export const MoreNew = () => {
             } else if (row === 6 && col === 3) {
                 style.transform = `translate(0px, 10px) rotate(15deg)`;
             }
-        } else {
+        } else if (device === 'tablet' ? isMobileVisible : true) {
             switch (rotateIcon) {
                 case 'top':
                     style.transform = `translate(0px, -10px) rotate(35deg)`;

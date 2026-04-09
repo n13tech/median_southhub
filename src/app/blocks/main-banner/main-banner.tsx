@@ -32,6 +32,18 @@ export const MainBanner = () => {
     const textAnimationsRef = useRef<ScrollTrigger[]>([]);
     const videoScaleAnimationRef = useRef<ScrollTrigger | null>(null);
 
+    const animateIn = (element: HTMLElement | null) => {
+        if (!element) return;
+        gsap.killTweensOf(element);
+        gsap.to(element, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+    };
+
+    const animateOut = (element: HTMLElement | null, direction: 'up' | 'down' = 'up') => {
+        if (!element) return;
+        gsap.killTweensOf(element);
+        gsap.to(element, { opacity: 0, y: direction === 'up' ? -30 : 30, duration: 0.5, ease: "power3.in", overwrite: "auto" });
+    };
+
     useEffect(() => {
         setWindowHeight(window.innerHeight);
         setWindowWidth(window.innerWidth);
@@ -90,6 +102,7 @@ export const MainBanner = () => {
 
         elements.slice(1).forEach(({ element }) => {
             if (element) {
+                gsap.killTweensOf(element);
                 gsap.set(element, {
                     opacity: 0,
                     y: 30,
@@ -103,30 +116,9 @@ export const MainBanner = () => {
                 start: 'top top',
                 end: 'top+=35% top',
                 toggleActions: "play reverse play reverse",
-                onEnter: () => {
-                    gsap.to(mainBannerText1.current, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.5,
-                        ease: "power3.out",
-                    });
-                },
-                onLeave: () => {
-                    gsap.to(mainBannerText1.current, {
-                        opacity: 0,
-                        y: -30,
-                        duration: 0.5,
-                        ease: "power3.in",
-                    });
-                },
-                onEnterBack: () => {
-                    gsap.to(mainBannerText1.current, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.5,
-                        ease: "power3.out",
-                    });
-                },
+                onEnter: () => animateIn(mainBannerText1.current),
+                onLeave: () => animateOut(mainBannerText1.current, 'up'),
+                onEnterBack: () => animateIn(mainBannerText1.current),
             });
 
             textAnimationsRef.current.push(animation1);
@@ -138,38 +130,10 @@ export const MainBanner = () => {
                 start: 'top+=20% top',
                 end: 'top+=35% top',
                 toggleActions: "play reverse play reverse",
-                onEnter: () => {
-                    gsap.to(mainBannerText2.current, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.5,
-                        ease: "power3.out",
-                    });
-                },
-                onLeave: () => {
-                    gsap.to(mainBannerText2.current, {
-                        opacity: 0,
-                        y: -30,
-                        duration: 0.5,
-                        ease: "power3.in",
-                    });
-                },
-                onEnterBack: () => {
-                    gsap.to(mainBannerText2.current, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.5,
-                        ease: "power3.out",
-                    });
-                },
-                onLeaveBack: () => {
-                    gsap.to(mainBannerText2.current, {
-                        opacity: 0,
-                        y: -30,
-                        duration: 0.5,
-                        ease: "power3.in",
-                    });
-                },
+                onEnter: () => animateIn(mainBannerText2.current),
+                onLeave: () => animateOut(mainBannerText2.current, 'up'),
+                onEnterBack: () => animateIn(mainBannerText2.current),
+                onLeaveBack: () => animateOut(mainBannerText2.current, 'up'),
             });
 
             textAnimationsRef.current.push(animation2);
@@ -188,22 +152,8 @@ export const MainBanner = () => {
                 start: `top+=${percent}% top`,
                 end: `top+=${percent + 5}% top`,
                 toggleActions: "play reverse play reverse",
-                onEnter: () => {
-                    gsap.to(element, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1,
-                        ease: "power3.out",
-                    });
-                },
-                onLeaveBack: () => {
-                    gsap.to(element, {
-                        opacity: 0,
-                        y: 30,
-                        duration: 0.5,
-                        ease: "power3.in",
-                    });
-                },
+                onEnter: () => animateIn(element),
+                onLeaveBack: () => animateOut(element, 'down'),
             });
 
             textAnimationsRef.current.push(animation);
@@ -237,25 +187,14 @@ export const MainBanner = () => {
             onUpdate: (self) => {
                 const progress = self.progress;
 
-                if (progress >= 0.45) {
-                    if (!isScaled) {
-                        isScaled = true;
-                        gsap.to(videoWrapper, {
-                            scale: 1.5,
-                            duration: 0.8,
-                            ease: "power2.out",
-                        });
-                    }
-                } 
-                else if (progress < 0.45) {
-                    if (isScaled) {
-                        isScaled = false;
-                        gsap.to(videoWrapper, {
-                            scale: 1,
-                            duration: 0.8,
-                            ease: "power2.out",
-                        });
-                    }
+                if (progress >= 0.45 && !isScaled) {
+                    isScaled = true;
+                    gsap.killTweensOf(videoWrapper);
+                    gsap.to(videoWrapper, { scale: 1.5, duration: 0.8, ease: "power2.out", overwrite: "auto" });
+                } else if (progress < 0.45 && isScaled) {
+                    isScaled = false;
+                    gsap.killTweensOf(videoWrapper);
+                    gsap.to(videoWrapper, { scale: 1, duration: 0.8, ease: "power2.out", overwrite: "auto" });
                 }
             }
         });
