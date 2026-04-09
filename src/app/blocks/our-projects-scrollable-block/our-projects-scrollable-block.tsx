@@ -10,7 +10,6 @@ import { Button } from 'antd';
 import { ImageWithFallback } from '@/app/components/image-with-fallback';
 import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
-// Снизу вверх при скролле раньше убирать хедер
 export const OurProjectsScrollableBlock = () => {
   const getLinkWIthUtm = useGetLinkWithUtm();
 
@@ -24,7 +23,6 @@ export const OurProjectsScrollableBlock = () => {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Проверка на мобильное устройство
     const checkMobile = () => {
       const mobile = window.matchMedia("(max-width: 1024px)").matches;
       setIsMobile(mobile);
@@ -40,7 +38,6 @@ export const OurProjectsScrollableBlock = () => {
 
     requestAnimationFrame(raf);
 
-    // Set z-index for images
     const imgWrappers = document.querySelectorAll('.our-projects-item-right-img-wrapper');
     imgWrappers.forEach((wrapper, index) => {
       if (wrapper) {
@@ -49,26 +46,19 @@ export const OurProjectsScrollableBlock = () => {
       }
     });
 
-    // GSAP Animation
     const imgs = gsap.utils.toArray('.our-projects-item-right-img') as HTMLImageElement[];
     const infoSections = gsap.utils.toArray('.our-projects-item-left-info') as HTMLElement[];
 
-    // Очищаем только наши предыдущие ScrollTrigger
     scrollTriggersRef.current.forEach(trigger => trigger.kill());
     scrollTriggersRef.current = [];
     
-    // Убиваем предыдущие анимации
     if (mobileAnimationRef.current) {
       mobileAnimationRef.current.kill();
       mobileAnimationRef.current = null;
     }
 
-    // СБРАСЫВАЕМ СТИЛИ ПРАВОЙ КОЛОНКИ ПЕРЕД ПРИМЕНЕНИЕМ НОВЫХ
     if (rightColumnRef.current) {
-      // Сбрасываем все инлайновые стили
       rightColumnRef.current.removeAttribute('style');
-      
-      // Также сбрасываем стили для всех картинок
       imgs.forEach(img => {
         if (img && img.style) {
           img.removeAttribute('style');
@@ -76,26 +66,20 @@ export const OurProjectsScrollableBlock = () => {
       });
     }
 
-    // Функция для управления видимостью header
     const updateHeaderVisibility = (isPinned: boolean) => {
       const header = document.getElementById('header');
       if (!header) return;
       
-      // Header видим только когда блок НЕ в pinned состоянии
       header.style.opacity = isPinned ? '0' : '1';
       header.style.transition = 'opacity 0.3s ease';
       header.style.pointerEvents = isPinned ? 'none' : 'auto';
     };
 
-    // Десктоп анимация (1025px+)
     if (!isMobile) {
-      // Убедимся, что правый столбец имеет правильные стили для десктопа
       if (rightColumnRef.current) {
-        // Сбрасываем мобильные стили
         rightColumnRef.current.style.height = '';
         rightColumnRef.current.style.marginTop = '';
-        
-        // Добавляем класс для десктопа если нужно
+
         rightColumnRef.current.classList.remove('mobile');
         rightColumnRef.current.classList.add('desktop');
       }
@@ -111,17 +95,14 @@ export const OurProjectsScrollableBlock = () => {
         }
       });
 
-      // Сохраняем созданный триггер
       if (mainTimeline.scrollTrigger) {
         scrollTriggersRef.current.push(mainTimeline.scrollTrigger);
       }
 
-      // Сбрасываем стили картинок для десктопа
       gsap.set(imgs, {
-        clearProps: "all", // Очищаем все предыдущие свойства
+        clearProps: "all",
       });
 
-      // Устанавливаем начальные стили для десктопа
       gsap.set(imgs, {
         clipPath: "inset(0)",
         objectPosition: "0px 0%",
@@ -160,25 +141,19 @@ export const OurProjectsScrollableBlock = () => {
         mainTimeline.add(sectionTimeline);
       });
 
-    // Мобильная анимация (до 1024px)
     } else {
-      // Переопределяем высоту контейнера для мобильных
       if (rightColumnRef.current) {
         rightColumnRef.current.style.height = '275px';
         rightColumnRef.current.style.marginTop = '72px';
-        
-        // Добавляем класс для мобилки если нужно
+
         rightColumnRef.current.classList.remove('desktop');
         rightColumnRef.current.classList.add('mobile');
       }
 
-      // Оптимизация: включаем аппаратное ускорение
-      // Сначала очищаем все стили
       gsap.set(imgs, {
         clearProps: "all",
       });
 
-      // Затем устанавливаем мобильные стили
       gsap.set(imgs, {
         willChange: 'clip-path',
         force3D: true,
@@ -186,7 +161,6 @@ export const OurProjectsScrollableBlock = () => {
         objectPosition: 'center center'
       });
 
-      // Создаем одну общую timeline для всей анимации
       const mobileTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: ".our-projects-scrollable-block",
@@ -198,11 +172,9 @@ export const OurProjectsScrollableBlock = () => {
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            // Синхронизация с текстовыми блоками
             const progress = self.progress;
             const activeIndex = Math.floor(progress * infoSections.length);
-            
-            // Показываем/скрываем текстовые блоки
+
             infoSections.forEach((section, index) => {
               if (index === activeIndex) {
                 gsap.set(section, { opacity: 1, scale: 1 });
@@ -214,21 +186,17 @@ export const OurProjectsScrollableBlock = () => {
         }
       });
 
-      // Сохраняем созданный триггер
       if (mobileTimeline.scrollTrigger) {
         scrollTriggersRef.current.push(mobileTimeline.scrollTrigger);
       }
 
-      // Устанавливаем начальные состояния для мобилки
       imgs.forEach((img, index) => {
         if (index === 0) {
-          // Первая картинка - видима
           gsap.set(img, {
             clipPath: "inset(0% 0% 0% 0%)",
             objectPosition: "center 50%"
           });
         } else {
-          // Остальные - скрыты
           gsap.set(img, {
             clipPath: "inset(100% 0% 0% 0%)",
             objectPosition: "center 50%"
