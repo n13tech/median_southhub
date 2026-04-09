@@ -10,6 +10,7 @@ import { Button } from 'antd';
 import { ImageWithFallback } from '@/app/components/image-with-fallback';
 import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
 
+// Снизу вверх при скролле раньше убирать хедер
 export const OurProjectsScrollableBlock = () => {
   const getLinkWIthUtm = useGetLinkWithUtm();
 
@@ -107,10 +108,6 @@ export const OurProjectsScrollableBlock = () => {
           pin: ".our-projects-item-right",
           scrub: true,
           invalidateOnRefresh: true,
-          onToggle: (self) => {
-            // self.isActive - true когда блок закреплен, false когда нет
-            updateHeaderVisibility(self.isActive);
-          }
         }
       });
 
@@ -200,10 +197,6 @@ export const OurProjectsScrollableBlock = () => {
           pinSpacing: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onToggle: (self) => {
-            // self.isActive - true когда блок закреплен, false когда нет
-            updateHeaderVisibility(self.isActive);
-          },
           onUpdate: (self) => {
             // Синхронизация с текстовыми блоками
             const progress = self.progress;
@@ -243,23 +236,20 @@ export const OurProjectsScrollableBlock = () => {
         }
       });
 
-      // Создаем анимации переходов между картинками
       const sectionDuration = 1 / infoSections.length;
       
       for (let i = 0; i < imgs.length - 1; i++) {
         const currentImg = imgs[i];
         const nextImg = imgs[i + 1];
         const startPosition = i * sectionDuration;
-        
-        // Анимация скрытия текущей картинки
+
         mobileTimeline.to(currentImg, {
           clipPath: "inset(0% 0% 100% 0%)",
           objectPosition: "center 70%",
           duration: sectionDuration * 0.8,
           ease: "none"
         }, startPosition + sectionDuration * 0.1);
-        
-        // Анимация появления следующей картинки
+
         mobileTimeline.fromTo(nextImg,
           {
             clipPath: "inset(100% 0% 0% 0%)",
@@ -278,24 +268,19 @@ export const OurProjectsScrollableBlock = () => {
       mobileAnimationRef.current = mobileTimeline;
     }
 
-    // Устанавливаем начальное состояние header
-    updateHeaderVisibility(false);
-
-    // Создаем дополнительный ScrollTrigger для отслеживания входа/выхода из блока
     const boundaryTrigger = ScrollTrigger.create({
       trigger: ".our-projects-scrollable-block",
-      start: "top top",
-      end: "bottom bottom",
+      start: "top 70px",
+      end: "bottom top",
       onEnter: () => updateHeaderVisibility(true),
       onLeave: () => updateHeaderVisibility(false),
       onEnterBack: () => updateHeaderVisibility(true),
-      onLeaveBack: () => updateHeaderVisibility(false)
+      onLeaveBack: () => updateHeaderVisibility(false),
     });
 
     scrollTriggersRef.current.push(boundaryTrigger);
 
     return () => {
-      // Убиваем только наши триггеры
       scrollTriggersRef.current.forEach(trigger => trigger.kill());
       scrollTriggersRef.current = [];
       
@@ -304,8 +289,7 @@ export const OurProjectsScrollableBlock = () => {
         mobileAnimationRef.current = null;
       }
       window.removeEventListener('resize', checkMobile);
-      
-      // Восстанавливаем header при размонтировании
+
       const header = document.getElementById('header');
       if (header) {
         header.style.opacity = '1';
