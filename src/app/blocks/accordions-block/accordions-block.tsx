@@ -86,17 +86,11 @@ export const AccordionsBlock = () => {
 
     useEffect(() => {
         const wrapper = wrapperRef.current;
-
-        if (!wrapper) {
-            return;
-        }
+        if (!wrapper) return;
 
         const contents = contentRefs.current.filter(Boolean) as HTMLDivElement[];
         const icons = iconRefs.current.filter(Boolean) as HTMLDivElement[];
-
-        if (contents.length === 0) {
-            return;
-        }
+        if (contents.length === 0) return;
 
         const heights = contents.map((el) => el.offsetHeight);
         const totalHeight = heights.reduce((sum, h) => sum + h, 0);
@@ -105,55 +99,46 @@ export const AccordionsBlock = () => {
         spacer.style.height = `${totalHeight}px`;
         wrapper.parentNode?.insertBefore(spacer, wrapper.nextSibling);
 
-        contents.forEach((el, i) => {
-            gsap.set(el, { height: heights[i], overflow: 'hidden' });
-        });
-
+        contents.forEach((el, i) => gsap.set(el, { height: heights[i], overflow: 'hidden' }));
         gsap.set(icons, { rotation: 45 });
+
+        let rafId: number | null = null;
 
         const ctx = gsap.context(() => {
             const tl = gsap.timeline();
 
             heights.forEach((h, i) => {
-                tl.to(
-                    contents[i],
-                    {
-                        height: 0,
-                        ease: 'none',
-                        duration: h,
-                    },
-                );
-
-                tl.to(
-                    icons[i],
-                    {
-                        rotation: 0,
-                        ease: 'none',
-                        duration: h,
-                    },
-                    `<`,
-                );
+            tl.to(contents[i], { height: 0, ease: 'none', duration: h });
+            tl.to(icons[i], { rotation: 0, ease: 'none', duration: h }, '<');
             });
 
             ScrollTrigger.create({
-                trigger: firstItemRef.current,
-                start: 'top 130px',
-                end: () => `+=${totalHeight}`,
-                pin: wrapper,
-                pinSpacing: false,
-                scrub: 1,
-                animation: tl,
-                invalidateOnRefresh: true,
-                onUpdate: (self) => {
-                    const remainingHeight = totalHeight * (1 - self.progress);
-                    spacer.style.height = `${remainingHeight}px`;
-                }
+            trigger: firstItemRef.current,
+            start: 'top 130px',
+            end: () => `+=${totalHeight}`,
+            pin: wrapper,
+            pinSpacing: false,
+            scrub: 1,
+            animation: tl,
+            // ❌ Убираем invalidateOnRefresh, чтобы избежать рекурсии
+            onUpdate: (self) => {
+                const remainingHeight = totalHeight * (1 - self.progress);
+                spacer.style.height = `${remainingHeight}px`;
+
+                // Троттлинг вызова refresh
+                if (rafId) cancelAnimationFrame(rafId);
+                rafId = requestAnimationFrame(() => {
+                ScrollTrigger.refresh();
+                rafId = null;
+                });
+            },
             });
         }, wrapper);
 
         return () => {
             ctx.revert();
             spacer.remove();
+            if (rafId) cancelAnimationFrame(rafId);
         };
     }, []);
 
