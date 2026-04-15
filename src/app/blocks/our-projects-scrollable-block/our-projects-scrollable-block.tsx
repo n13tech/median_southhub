@@ -303,14 +303,29 @@ export const OurProjectsScrollableBlock = () => {
                 className="our-projects-item-right-img-wrapper"
                 data-index={ITEMS.length - index}
               >
-                <ImageWithFallback
-                  src={item.imageSrc}
-                  altSrc={item.altSrc}
-                  alt={item.imageAlt}
-                  width={isMobile ? 612 : 900}
-                  height={isMobile ? 275 : 536}
-                  className="our-projects-item-right-img"
-                />
+                {item.imageSrc && (
+                  <ImageWithFallback
+                    src={item.imageSrc}
+                    altSrc={item.altSrc!}
+                    alt={item.imageAlt}
+                    width={isMobile ? 612 : 900}
+                    height={isMobile ? 275 : 536}
+                    className="our-projects-item-right-img"
+                  />
+                )}
+                {item.videoSrc && (
+                    <video
+                        className="our-projects-item-right-img"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                        id={item.id}
+                    >
+                        <source src={item.videoSrc} type="video/mp4" />
+                    </video>
+                )}
               </div>
             ))}
           </div>

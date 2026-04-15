@@ -52,7 +52,6 @@ export const Preloader = () => {
         };
     }, [isVisible]);
 
-    // Цикличная смена шага через модуль — без switch
     useEffect(() => {
         const interval = setInterval(() => {
             setActiveStep((prev) => (prev + 1) % PRELOADER_IMAGES.length);
@@ -61,13 +60,13 @@ export const Preloader = () => {
         return () => clearInterval(interval);
     }, []);
 
-    // Запуск анимации скрытия при завершении загрузки
     useEffect(() => {
         if (videoLoadingProgress !== 100) return;
 
         setIsAnimating(true);
 
         const timer = setTimeout(() => {
+            window.scrollTo(0,0);
             setVisible(false);
         }, HIDE_ANIMATION_MS);
 

@@ -164,7 +164,7 @@ export const CommunityInNumbers = () => {
                         <div className='community-in-numbers-infographic-mobile-item'>
                             <div className={`community-in-numbers-infographic-mobile-content`}>
                                 <div className={`${FONT_MONT_BOOK_EXTRA_LIGHT.className} community-in-numbers-infographic-item-count`}>
-                                    {count1.toLocaleString()}
+                                    №{count1.toLocaleString()}
                                 </div>
                                 <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
                                     {`профессионалов в${NBSP}IT: 55% CTO, 20% CPO, 15% CDO и${NBSP}15% CEO`}

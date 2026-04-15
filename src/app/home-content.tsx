@@ -27,10 +27,6 @@ export default function HomeContent({ data }: Props) {
     const [isOpenCookieModal, setOpenCookieModal] = useState(false);
 
     useEffect(() => {
-        window.scrollTo(0,0);
-    }, []);
-
-    useEffect(() => {
         if (typeof window !== "undefined" && !window.localStorage.getItem('isVisibleCookieAlert')) {
              
             setOpenCookieModal(true);
