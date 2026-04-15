@@ -127,7 +127,7 @@ export const MainBanner = () => {
         if (mainBannerText2.current) {
             const animation2 = ScrollTrigger.create({
                 trigger: section,
-                start: 'top+=20% top',
+                start: 'top+=10% top',
                 end: 'top+=35% top',
                 toggleActions: "play reverse play reverse",
                 onEnter: () => animateIn(mainBannerText2.current),
@@ -297,7 +297,7 @@ export const MainBanner = () => {
                         preload="auto"
                         id='main-video-banner'
                     >
-                        <source src="./v2/U_V17_notxt.mp4" type="video/mp4" />
+                        <source src="./v2/southuuuuub.mp4" type="video/mp4" />
                     </video>
                 </div>
 
