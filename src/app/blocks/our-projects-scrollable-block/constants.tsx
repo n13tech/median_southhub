@@ -11,8 +11,9 @@ type ArchItem = {
   title: string;
   description: string;
   linkColor: string;
-  imageSrc: string | StaticImageData;
-  altSrc: string | StaticImageData;
+  imageSrc?: string | StaticImageData;
+  videoSrc?: string;
+  altSrc?: string | StaticImageData;
   imageAlt: string;
   buttonTitle: string;
   onClick: () => void;
@@ -24,8 +25,7 @@ export const getOurProjectItems = (getLinkWIthUtm: (i: string) => string): ArchI
         title: 'Snow BASE Camp',
         description: `19–22 марта 2026 года. Красная Поляна зимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`,
         linkColor: '#D5FF37',
-        imageSrc: '/v2/projects/SB-4.gif',
-        altSrc: '/v2/projects/SB-4.webp',
+        videoSrc: '/v2/SB25.mp4',
         imageAlt: 'SnowBase camp',
         buttonTitle: 'Участвовать',
         onClick: () => window.open(getLinkWIthUtm(SNOWBASE_LINK), '_blank'),
@@ -35,8 +35,7 @@ export const getOurProjectItems = (getLinkWIthUtm: (i: string) => string): ArchI
         title: 'South HUB Camp',
         description: `10–14 июня 2026 года. Сочи ежегодный кэмп-конференция для C-level в${NBSP}ІТ`,
         linkColor: '#D5FF37',
-        imageSrc: '/v2/projects/SH2-2.gif',
-        altSrc: '/v2/projects/SH2-2.webp',
+        videoSrc: '/v2/SH25.mp4',
         imageAlt: 'South HUB Camp',
         buttonTitle: 'Участвовать',
         onClick: () => window.open(getLinkWIthUtm(SOUTHHUB_LINK), '_blank'),
