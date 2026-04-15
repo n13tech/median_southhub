@@ -45,6 +45,15 @@ const getAllMobileCells = () => {
     return cells;
 };
 
+/**
+ * TODO после выкатки
+ * 1) Они должны при просто наведении увеличиваться медленно и медленно затухать
+ * 2) Если юыстро проводить курсором, то они быстро увеличиваются и так же медленно затухают
+ * 3) Пространство между ними???
+ * 4) Динамическое количество
+ * 5) Верхнюю строчку сделать как на макете не по сетке
+ */
+
 export const BlockWithUAnimate = () => {
     const [device, setDevice] = useState<'desktop' | 'desktop_s' | 'tablet' | 'mobile'>('desktop');
     const [hoveredCell, setHoveredCell] = useState<{ row: number; col: number } | null>(null);
@@ -186,10 +195,10 @@ export const BlockWithUAnimate = () => {
             if (!animatedCell || !isAnimating) return false;
             
             const isCenter = animatedCell.row === row && animatedCell.col === col;
-            const isNeighbor = (row === animatedCell.row && Math.abs(col - animatedCell.col) === 1) || 
-                              (col === animatedCell.col && Math.abs(row - animatedCell.row) === 1);
+            // Изменено: только соседи по горизонтали (та же строка, соседние колонки)
+            const isHorizontalNeighbor = row === animatedCell.row && Math.abs(col - animatedCell.col) === 1;
             
-            return isCenter || isNeighbor;
+            return isCenter || isHorizontalNeighbor;
         }
 
         if (!hoveredCell) return false;
@@ -200,13 +209,14 @@ export const BlockWithUAnimate = () => {
             return false;
         }
         
-        const isNeighbor = (row === hoverRow && Math.abs(col - hoverCol) === 1) || (col === hoverCol && Math.abs(row - hoverRow) === 1);
+        // Изменено: только соседи по горизонтали (та же строка, соседние колонки)
+        const isHorizontalNeighbor = row === hoverRow && Math.abs(col - hoverCol) === 1;
         
-        if (isNeighbor && isSpecialCell(row, col)) {
+        if (isHorizontalNeighbor && isSpecialCell(row, col)) {
             return false;
         }
         
-        return isNeighbor;
+        return isHorizontalNeighbor;
     };
 
     const getScalePercent = (row: number, col: number): number => {
@@ -218,9 +228,9 @@ export const BlockWithUAnimate = () => {
             }
 
             if (animatedCell) {
-                const isNeighbor = (row === animatedCell.row && Math.abs(col - animatedCell.col) === 1) || 
-                                  (col === animatedCell.col && Math.abs(row - animatedCell.row) === 1);
-                if (isNeighbor) {
+                // Изменено: только горизонтальные соседи
+                const isHorizontalNeighbor = row === animatedCell.row && Math.abs(col - animatedCell.col) === 1;
+                if (isHorizontalNeighbor) {
                     return 50;
                 }
             }
@@ -229,10 +239,10 @@ export const BlockWithUAnimate = () => {
 
         if (!hoveredCell) return 0;
         
-        const isNeighbor = (row === hoveredCell.row && Math.abs(col - hoveredCell.col) === 1) || 
-                          (col === hoveredCell.col && Math.abs(row - hoveredCell.row) === 1);
+        // Изменено: только горизонтальные соседи
+        const isHorizontalNeighbor = row === hoveredCell.row && Math.abs(col - hoveredCell.col) === 1;
         
-        if (isNeighbor) {
+        if (isHorizontalNeighbor) {
             return 50;
         }
         
