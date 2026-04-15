@@ -101,6 +101,10 @@ export const AccordionsBlock = () => {
         const heights = contents.map((el) => el.offsetHeight);
         const totalHeight = heights.reduce((sum, h) => sum + h, 0);
 
+        const spacer = document.createElement('div');
+        spacer.style.height = `${totalHeight}px`;
+        wrapper.parentNode?.insertBefore(spacer, wrapper.nextSibling);
+
         contents.forEach((el, i) => {
             gsap.set(el, { height: heights[i], overflow: 'hidden' });
         });
@@ -136,16 +140,20 @@ export const AccordionsBlock = () => {
                 start: 'top 130px',
                 end: () => `+=${totalHeight}`,
                 pin: wrapper,
-                pinSpacing: true,
-
+                pinSpacing: false,
                 scrub: 1,
                 animation: tl,
                 invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                    const remainingHeight = totalHeight * (1 - self.progress);
+                    spacer.style.height = `${remainingHeight}px`;
+                }
             });
         }, wrapper);
 
         return () => {
             ctx.revert();
+            spacer.remove();
         };
     }, []);
 
