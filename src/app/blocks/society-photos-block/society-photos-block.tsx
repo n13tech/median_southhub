@@ -26,6 +26,20 @@ import { DESKTOP_CELL_POSITIONS, TABLET_CELL_POSITIONS, MOBILE_CELL_POSITIONS } 
 
 const ANIMATION_SEQUENCE = [1, 2, 1, 3, 1, 2, 0, 3, 1, 2, 3, 2, 1, 3];
 
+/**
+ * TODO
+ * 1) Выравнять буквы, чтобы всегда были одинаковые по высоте
+ */
+
+/**
+ * TODO после выкатки
+ * 1) Динамическую сетку чтобы были квадратики
+ * 2) На каждую картинку сделать колонку и при наведении переключать картинку
+ * 3) Пока нет ховера у нас картинка заглушка на десктопе
+ * 4) На планшетах и моболке карусель через горизонт свайп.
+ * 5) На мобилке когда доезжаем до блока, происходит анимация их заглушки, буквы уезжают и появляется первыая картинка.
+ */
+
 export const SocietyPhotosBlock = () => {
     const [imgNumber, setImgNumber] = useState(0);
     const [device, setDevice] = useState('desktop');
@@ -97,129 +111,129 @@ export const SocietyPhotosBlock = () => {
         return DESKTOP_CELL_POSITIONS[ANIMATION_SEQUENCE[configIdx]].find(c => c.x === x && c.y === y);
     }, [device]);
 
-const renderGrid = useCallback(() => {
-    const rows = device === 'tablet' ? 6 : device === 'mobile' ? 9 : 5;
-    const cols = device === 'tablet' ? 5 : device === 'mobile' ? 5 : 7;
-    const grid = [];
+    const renderGrid = useCallback(() => {
+        const rows = device === 'tablet' ? 6 : device === 'mobile' ? 9 : 5;
+        const cols = device === 'tablet' ? 5 : device === 'mobile' ? 5 : 7;
+        const grid = [];
 
-    // Создаем карту colSpan для текущей и следующей конфигурации
-    const colSpanMap = new Map();
-    
-    if (device === 'mobile') {
-        const currentConfig = MOBILE_CELL_POSITIONS[ANIMATION_SEQUENCE[imgNumber]];
-        const nextConfig = MOBILE_CELL_POSITIONS[ANIMATION_SEQUENCE[(imgNumber + 1) % ANIMATION_SEQUENCE.length]];
+        // Создаем карту colSpan для текущей и следующей конфигурации
+        const colSpanMap = new Map();
         
-        // Отмечаем ячейки с colSpan
-        [...(currentConfig || []), ...(nextConfig || [])].forEach(cell => {
-            if (cell.colSpan === 2) {
-                colSpanMap.set(`${cell.x}-${cell.y}`, cell.colSpan);
-                // Отмечаем, что ячейка справа должна быть скрыта
-                colSpanMap.set(`${cell.x + 1}-${cell.y}`, 'hidden');
-            }
-        });
-    }
+        if (device === 'mobile') {
+            const currentConfig = MOBILE_CELL_POSITIONS[ANIMATION_SEQUENCE[imgNumber]];
+            const nextConfig = MOBILE_CELL_POSITIONS[ANIMATION_SEQUENCE[(imgNumber + 1) % ANIMATION_SEQUENCE.length]];
+            
+            // Отмечаем ячейки с colSpan
+            [...(currentConfig || []), ...(nextConfig || [])].forEach(cell => {
+                if (cell.colSpan === 2) {
+                    colSpanMap.set(`${cell.x}-${cell.y}`, cell.colSpan);
+                    // Отмечаем, что ячейка справа должна быть скрыта
+                    colSpanMap.set(`${cell.x + 1}-${cell.y}`, 'hidden');
+                }
+            });
+        }
 
-    for (let y = 0; y < rows; y++) {
-        const row = [];
-        // Рассчитываем общий вес колонок в ряду
-        let totalFlexWeight = cols;
-        
-        for (let x = 0; x < cols; x++) {
-            const cellKey = `${x}-${y}`;
-            const colSpanValue = colSpanMap.get(cellKey);
+        for (let y = 0; y < rows; y++) {
+            const row = [];
+            // Рассчитываем общий вес колонок в ряду
+            let totalFlexWeight = cols;
             
-            // Пропускаем скрытые ячейки (они будут отрендерены как часть colSpan)
-            if (colSpanValue === 'hidden') {
-                continue;
+            for (let x = 0; x < cols; x++) {
+                const cellKey = `${x}-${y}`;
+                const colSpanValue = colSpanMap.get(cellKey);
+                
+                // Пропускаем скрытые ячейки (они будут отрендерены как часть colSpan)
+                if (colSpanValue === 'hidden') {
+                    continue;
+                }
+                
+                // Определяем flex вес для ячейки
+                let flexWeight = 1;
+                if (colSpanValue === 2) {
+                    flexWeight = 2;
+                    totalFlexWeight += 1; // Увеличиваем общий вес, так как мы добавляем +1 к flex
+                }
+                
+                const currentCell = getCellContent(x, y, imgNumber);
+                const nextCell = getCellContent(x, y, (imgNumber + 1) % ANIMATION_SEQUENCE.length);
+                
+                // Для ячеек с colSpan убираем правую границу
+                const showBorderRight = x < cols - 1 && colSpanValue !== 2;
+                const showBorderBottom = y < rows - 1;
+                
+                const isActive = currentCell || nextCell;
+                
+                const shouldAnimate =
+                    (currentCell && !nextCell) ||
+                    (!currentCell && nextCell) ||
+                    (currentCell && nextCell && JSON.stringify(currentCell) !== JSON.stringify(nextCell))
+                
+                row.push(
+                    <div
+                        key={cellKey}
+                        className={`society-grid-cell ${!showBorderRight ? 'no-border-right' : ''} ${!showBorderBottom ? 'no-border-bottom' : ''}`}
+                        style={{ flex: flexWeight }}
+                    >
+                        {isActive && (
+                            <div className={`cell-flip-container ${shouldAnimate ? 'animating' : ''}`}>
+                                {currentCell && (
+                                    <div className="cell-content current">
+                                        {currentCell.type === 'text' ? (
+                                            <div className={`text-cell ${FONT_MONT_BOOK.className}`}>
+                                                {currentCell.text}
+                                            </div>
+                                        ) : (
+                                            currentCell.src === 'WordS' && <IconS className='society-cell-img' /> ||
+                                            currentCell.src === 'WordO' && <IconO className='society-cell-img' /> ||
+                                            currentCell.src === 'WordU' && <IconU className='society-cell-img' /> ||
+                                            currentCell.src === 'WordT' && <IconT className='society-cell-img' /> ||
+                                            currentCell.src === 'WordH' && <IconH className='society-cell-img' /> ||
+                                            currentCell.src === 'WordB' && <IconB className='society-cell-img' />
+                                        )}
+                                    </div>
+                                )}
+
+                                {nextCell && (
+                                    <div className="cell-content next">
+                                        {nextCell.type === 'text' ? (
+                                            <div className={`text-cell ${FONT_MONT_BOOK.className}`}>
+                                                {nextCell.text}
+                                            </div>
+                                        ) : (
+                                            nextCell.src === 'WordS' && <IconS className='society-cell-img' /> ||
+                                            nextCell.src === 'WordO' && <IconO className='society-cell-img' /> ||
+                                            nextCell.src === 'WordU' && <IconU className='society-cell-img' /> ||
+                                            nextCell.src === 'WordT' && <IconT className='society-cell-img' /> ||
+                                            nextCell.src === 'WordH' && <IconH className='society-cell-img' /> ||
+                                            nextCell.src === 'WordB' && <IconB className='society-cell-img' />
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {(
+                            (device === 'desktop' && y === 4 && x === 3) ||
+                            (device === 'tablet' && y === 5 && x === 2) ||
+                            (device === 'mobile' && y === 8 && x === 2)
+                        ) && (
+                            <div className={`${FONT_IBM_PLEX_SERIF_LIGHT.className} cell-content-count`}>
+                                {`${imgNumber + 1}/${14}`}
+                            </div>
+                        )}
+                    </div>
+                );
             }
             
-            // Определяем flex вес для ячейки
-            let flexWeight = 1;
-            if (colSpanValue === 2) {
-                flexWeight = 2;
-                totalFlexWeight += 1; // Увеличиваем общий вес, так как мы добавляем +1 к flex
-            }
-            
-            const currentCell = getCellContent(x, y, imgNumber);
-            const nextCell = getCellContent(x, y, (imgNumber + 1) % ANIMATION_SEQUENCE.length);
-            
-            // Для ячеек с colSpan убираем правую границу
-            const showBorderRight = x < cols - 1 && colSpanValue !== 2;
-            const showBorderBottom = y < rows - 1;
-            
-            const isActive = currentCell || nextCell;
-            
-            const shouldAnimate =
-                (currentCell && !nextCell) ||
-                (!currentCell && nextCell) ||
-                (currentCell && nextCell && JSON.stringify(currentCell) !== JSON.stringify(nextCell))
-            
-            row.push(
-                <div
-                    key={cellKey}
-                    className={`society-grid-cell ${!showBorderRight ? 'no-border-right' : ''} ${!showBorderBottom ? 'no-border-bottom' : ''}`}
-                    style={{ flex: flexWeight }}
-                >
-                    {isActive && (
-                        <div className={`cell-flip-container ${shouldAnimate ? 'animating' : ''}`}>
-                            {currentCell && (
-                                <div className="cell-content current">
-                                    {currentCell.type === 'text' ? (
-                                        <div className={`text-cell ${FONT_MONT_BOOK.className}`}>
-                                            {currentCell.text}
-                                        </div>
-                                    ) : (
-                                        currentCell.src === 'WordS' && <IconS className='society-cell-img' /> ||
-                                        currentCell.src === 'WordO' && <IconO className='society-cell-img' /> ||
-                                        currentCell.src === 'WordU' && <IconU className='society-cell-img' /> ||
-                                        currentCell.src === 'WordT' && <IconT className='society-cell-img' /> ||
-                                        currentCell.src === 'WordH' && <IconH className='society-cell-img' /> ||
-                                        currentCell.src === 'WordB' && <IconB className='society-cell-img' />
-                                    )}
-                                </div>
-                            )}
-
-                            {nextCell && (
-                                <div className="cell-content next">
-                                    {nextCell.type === 'text' ? (
-                                        <div className={`text-cell ${FONT_MONT_BOOK.className}`}>
-                                            {nextCell.text}
-                                        </div>
-                                    ) : (
-                                        nextCell.src === 'WordS' && <IconS className='society-cell-img' /> ||
-                                        nextCell.src === 'WordO' && <IconO className='society-cell-img' /> ||
-                                        nextCell.src === 'WordU' && <IconU className='society-cell-img' /> ||
-                                        nextCell.src === 'WordT' && <IconT className='society-cell-img' /> ||
-                                        nextCell.src === 'WordH' && <IconH className='society-cell-img' /> ||
-                                        nextCell.src === 'WordB' && <IconB className='society-cell-img' />
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {(
-                        (device === 'desktop' && y === 4 && x === 3) ||
-                        (device === 'tablet' && y === 5 && x === 2) ||
-                        (device === 'mobile' && y === 8 && x === 2)
-                    ) && (
-                        <div className={`${FONT_IBM_PLEX_SERIF_LIGHT.className} cell-content-count`}>
-                            {`${imgNumber + 1}/${14}`}
-                        </div>
-                    )}
+            grid.push(
+                <div key={`row-${y}`} className='society-grid-row'>
+                    {row}
                 </div>
             );
         }
         
-        grid.push(
-            <div key={`row-${y}`} className='society-grid-row'>
-                {row}
-            </div>
-        );
-    }
-    
-    return grid;
-}, [getCellContent, imgNumber, device]);
+        return grid;
+    }, [getCellContent, imgNumber, device]);
 
     useEffect(() => {
         const getDevice = () => {
