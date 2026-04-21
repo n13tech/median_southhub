@@ -99,6 +99,7 @@
     align-items: center;
     justify-content: center;
     backface-visibility: hidden;
+    padding: 1px;
 }
 
 .cell-content.current {
