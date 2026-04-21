@@ -7,7 +7,7 @@ const styles = {
     height: "100%",
     display: 'block',
     margin: '0 auto',
-    preserveAspectRatio: "none",
+    preserveAspectRatio: "xMidYMid meet",
 }
 
 export const IconS = ({ className }: Props) => (
