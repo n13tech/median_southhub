@@ -92,7 +92,7 @@ export const SocietyPhotosBlock = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setImgNumber((prev) => prev === 13 ? 0 : prev + 1)
-        }, 200000);
+        }, 2000);
 
         return () => {
             clearInterval(interval);
