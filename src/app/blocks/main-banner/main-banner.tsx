@@ -297,7 +297,7 @@ export const MainBanner = () => {
                         preload="auto"
                         id='main-video-banner'
                     >
-                        <source src="./v2/southuuuuub.mp4" type="video/mp4" />
+                        <source src="./v2/southuuub.mp4" type="video/mp4" />
                     </video>
                 </div>
 
