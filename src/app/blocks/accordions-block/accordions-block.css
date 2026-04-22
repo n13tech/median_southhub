@@ -34,69 +34,62 @@
   }
 }
 
-.accordions-block-list {
-  width: 100%;
-}
+.accordions-block-component {
+    > div {
+        border-bottom: 1px solid #111 !important;
+        border-radius: 0 !important;
 
-.accordion-item {
-  border-bottom: 1px solid #111;
-}
+        &:first-child {
+            .ant-collapse-header {
+                padding-top: 0 !important;
+            }
+        }
+    }
 
-.accordion-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px 0;
-  gap: 16px;
-}
+    .ant-collapse-header {
+        padding: 24px 0 !important;
+    }
 
-.accordion-header--first {
-  padding-top: 0;
+    .ant-collapse-content-box {
+        padding: 0 0 24px !important;
+    }
+
+    .ant-collapse-expand-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 42px !important;
+        height: 42px !important;
+        transition: transform 0.3s ease-in-out;
+        padding: 0 !important;
+
+        @media screen and (max-width: 1024px) {
+          width: 24px !important;
+          height: 24px !important;
+        }
+    }
+
+    .ant-collapse-item-active .ant-collapse-expand-icon {
+      transform: rotate(45deg);
+      transform-origin: center;
+    }
 }
 
 .accordions-block-label {
-  margin: 0;
-  font-weight: 500;
-  font-size: 48px;
-  line-height: 125%;
-  text-transform: uppercase;
-  color: rgb(17, 17, 17);
-  white-space: pre-wrap;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 125%;
+    text-transform: uppercase;
+    color: rgb(17, 17, 17);
+    white-space: pre-wrap;
 
-  @media screen and (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-
-.accordion-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 47px;
-  height: 47px;
-
-  @media screen and (max-width: 1024px) {
-    width: 24px;
-    height: 24px;
-
-    svg {
-      width: 24px;
-      height: 24px;
+    @media screen and (max-width: 1024px) {
+      font-size: 20px;
     }
-  }
 }
 
-.accordion-content {
-  overflow: hidden;
-}
-
-.accordion-content-inner {
-  padding-bottom: 24px;
-
-  @media screen and (max-width: 1024px) {
-    padding-bottom: 12px;
-  }
+.accordions-block-list {
+  width: 100%;
 }
 
 .accordions-block-children {
