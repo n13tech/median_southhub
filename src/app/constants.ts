@@ -18,4 +18,4 @@ export const YOUTUBE_PLAYLIST_LINK = process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST ||
 export const ENABLE_METRIC = process.env.ENABLE_METRIC ?? true;
 
 export const SHSITES_URL = process.env.NEXT_PUBLIC_SHSITES_URL || 'https://shmain.n13dev.ru';
-export const SHSITES_API_KEY = process.env.NEXT_PUBLIC_SHSITES_API_KEY || '4a55372764240a667a05989466fb21127271d06bd9377d3e6652e3ab8a353749';
+export const SHSITES_API_KEY = process.env.NEXT_PUBLIC_SHSITES_API_KEY || '3fd9ca8670dd34f7d86811c2e9b3aedc73c693467211f84ff15cddf574560485';
