@@ -1,38 +1,59 @@
-# Базовый образ
-FROM node:20-alpine AS base
+# Stage 1: dependencies
+FROM node:20-alpine AS deps
+
 WORKDIR /app
+
 COPY package*.json ./
 
-# ================================
-# Этап 1: зависимости для DEV
-FROM base AS dev
-RUN npm install
+# Устанавливаем зависимости
+RUN npm ci
+
+
+# Stage 2: build
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-EXPOSE 3000
-CMD ["npm", "run", "dev"]
 
-# ================================
-# Этап 2: сборка PROD
-FROM base AS builder
-
+# production env
 COPY .env.production .env.production
 
-RUN npm ci
-COPY . .
+# Сборка Next.js
 RUN npm run build
 
-# ================================
-# Этап 3: production-сервер
-FROM node:20-alpine AS prod
+
+# Stage 3: production runner
+FROM node:20-alpine AS runner
+
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
 
+# Ограничение памяти Node.js
+ENV NODE_OPTIONS="--max-old-space-size=512"
+
+# Создаём non-root пользователя
+RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
+
+# Копируем только production-артефакты
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
+# Только production dependencies
+COPY --from=deps /app/package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# Права
+RUN chown -R nextjs:nextjs /app
+
+USER nextjs
+
 EXPOSE 3000
+
 CMD ["npm", "start"]
