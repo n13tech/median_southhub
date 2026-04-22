@@ -59,8 +59,6 @@ export const CommunityInNumbers = () => {
             
             const rect = wrapperRef.current.getBoundingClientRect();
             const isVisible = rect.top <= 80;
-
-            console.log(rect, isVisible)
             
             if (isVisible) {
                 setIsAnimated(true);
