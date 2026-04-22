@@ -14,7 +14,11 @@ export const useGetLinkWithUtm = () => {
         utm_content: searchParams.get('utm_content'),
     }), [searchParams]);
 
-    const getLinkWithUtm = useCallback((url: string): string => {
+    const getLinkWithUtm = useCallback((url: string | undefined): string => {
+        if (!url) {
+            return '';
+        }
+
         try {
             if (!url.includes('southhub.ru')) {
                 return url;

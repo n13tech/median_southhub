@@ -19,7 +19,7 @@ type ArchItem = {
   onClick: () => void;
 }
 
-export const getOurProjectItems = (getLinkWIthUtm: (i: string) => string): ArchItem[] => [
+export const getOurProjectItems = (getLinkWIthUtm: (i: string | undefined) => string): ArchItem[] => [
     {
         id: 'our-projects-snow-base',
         title: 'Snow BASE Camp',
