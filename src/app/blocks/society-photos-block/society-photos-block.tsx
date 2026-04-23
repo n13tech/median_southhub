@@ -58,21 +58,28 @@ export const SocietyPhotosBlock = () => {
             const blockRect = targetBlock.getBoundingClientRect();
             const blockTop = blockRect.top - 70;
             const isScrollingUp = currentScrollY < lastScrollY;
-    
+
             if (blockTop <= 0) {
                 if (!isHeaderBlack) {
                     header.classList.remove('header_black');
                     isHeaderBlack = true;
                 }
-            } 
-            else if (isScrollingUp && blockTop <= 70) {
+
+                if (blockRect.bottom <= 70) {
+                    header.classList.remove('header_hidden_logo');
+                } else {
+                    header.classList.add('header_hidden_logo');
+                }
+            } else if (isScrollingUp && blockTop <= 70) {
                 if (!isHeaderBlack) {
                     header.classList.remove('header_black');
+                    header.classList.add('header_hidden_logo');
                     isHeaderBlack = true;
                 }
             } else {
                 if (isHeaderBlack) {
                     header.classList.add('header_black');
+                    header.classList.remove('header_hidden_logo');
                     isHeaderBlack = false;
                 }
             }
