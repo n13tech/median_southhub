@@ -76,6 +76,13 @@
     display: none;
 }
 
+.header_hidden_logo {
+    .header-logo {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
 .header_black {
     .header_item {
         color: rgb(17,17,17);
