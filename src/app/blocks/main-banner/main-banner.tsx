@@ -302,14 +302,12 @@ export const MainBanner = () => {
                 </div>
 
                 <div className="main-banner-content" ref={contentRef}>
-                    <Fade delay={250} triggerOnce>
-                        <div
-                            ref={mainBannerText1}
-                            className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-1`}
-                        >
-                            {'сообщество\nC-level в IT'}
-                        </div>
-                    </Fade>
+                    <div
+                        ref={mainBannerText1}
+                        className={`${FONT_MONT_BOOK.className} main-banner-text main-banner-text-1`}
+                    >
+                        {'сообщество\nC-level в IT'}
+                    </div>
 
                     <div
                         ref={mainBannerText2}
