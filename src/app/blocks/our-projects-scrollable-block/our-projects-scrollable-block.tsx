@@ -321,7 +321,7 @@ export const OurProjectsScrollableBlock = () => {
                         loop
                         playsInline
                         preload="auto"
-                        id={item.id}
+                        id={item.videoId}
                     >
                         <source src={item.videoSrc} type="video/mp4" />
                     </video>
