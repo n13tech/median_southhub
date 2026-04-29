@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { NBSP } from '@/app/constants';
 import { FONT_MONT_BOOK, FONT_MONT_BOOK_EXTRA_LIGHT } from '../../fonts';
 import './community-in-numbers.css';
+import { NBSP } from '@/app/constants';
+
+const TEXT_1 = `сообщество для C-level в${NBSP}IT`;
+const TEXT_2 = 'участников';
+const TEXT_3 = `CTO&CIO, 18%${NBSP}CPO, 15%${NBSP}CEO и 8%${NBSP}CDO`;
+const TEXT_4 = `лет комьюнити IT-руководителей`;
 
 export const CommunityInNumbers = () => {
     const [isMobile, setMobile] = useState<boolean | null>(null);
@@ -97,7 +102,7 @@ export const CommunityInNumbers = () => {
                                 №{count1.toLocaleString()}
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                {`сообщество для для C-level в IT`}
+                                {TEXT_1}
                             </div>
                         </div>
                     </div>
@@ -115,7 +120,7 @@ export const CommunityInNumbers = () => {
                                 {count2}
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                {`участников`}
+                                {TEXT_2}
                             </div>
                         </div>
                     </div>
@@ -133,7 +138,7 @@ export const CommunityInNumbers = () => {
                                 {count3}%
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                {`CTO&CIO, 18% CPO, 15% CEO и 8% CDO`}
+                                {TEXT_3}
                             </div>
                         </div>
                     </div>
@@ -148,10 +153,10 @@ export const CommunityInNumbers = () => {
                             style={!shouldAnimate ? { bottom: '0', top: 'auto' } : undefined}
                         >
                             <div className={`${FONT_MONT_BOOK_EXTRA_LIGHT.className} community-in-numbers-infographic-item-count`}>
-                                {count4}%
+                                {count4}
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                {`лет комьюнити IT-руководителей`}
+                                {TEXT_4}
                             </div>
                         </div>
                     </div>
@@ -167,7 +172,7 @@ export const CommunityInNumbers = () => {
                                     №{count1.toLocaleString()}
                                 </div>
                                 <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                    {`профессионалов в${NBSP}IT: 55% CTO, 20% CPO, 15% CDO и${NBSP}15% CEO`}
+                                    {TEXT_1}
                                 </div>
                             </div>
                         </div>
@@ -178,7 +183,7 @@ export const CommunityInNumbers = () => {
                                     {count3}%
                                 </div>
                                 <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                    {`участников из Москвы, 23% — из других городов России и${NBSP}стран СНГ`}
+                                    {TEXT_2}
                                 </div>
                             </div>
                         </div>
@@ -193,7 +198,7 @@ export const CommunityInNumbers = () => {
                                     {count2}
                                 </div>
                                 <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                    {`выступивших спикеров и${NBSP}лидеров индустрии за${NBSP}4${NBSP}года мероприятий`}
+                                    {TEXT_3}
                                 </div>
                             </div>
                         </div>
@@ -204,7 +209,7 @@ export const CommunityInNumbers = () => {
                                     {count4}
                                 </div>
                                 <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                    {`NPS сообщества`}
+                                    {TEXT_4}
                                 </div>
                             </div>
                         </div>
