@@ -8,6 +8,7 @@ import { StaticImageData } from 'next/image';
 
 type ArchItem = {
   id: string;
+  videoId?: string;
   title: string;
   description: string;
   linkColor: string;
@@ -22,6 +23,7 @@ type ArchItem = {
 export const getOurProjectItems = (getLinkWIthUtm: (i: string | undefined) => string): ArchItem[] => [
     {
         id: 'our-projects-south-hub',
+        videoId: 'south-hub-video',
         title: 'South HUB Camp',
         description: `10–14 июня 2026 года. Сочи ежегодный кэмп-конференция для C-level в${NBSP}ІТ`,
         linkColor: '#D5FF37',
@@ -32,6 +34,7 @@ export const getOurProjectItems = (getLinkWIthUtm: (i: string | undefined) => st
     },
     {
         id: 'our-projects-snow-base',
+        videoId: 'snow-base-video',
         title: 'Snow BASE Camp',
         description: `19–22 марта 2026 года. Красная Поляна зимний кэмп для экспертов на стыке AI и${NBSP}бизнеса`,
         linkColor: '#D5FF37',

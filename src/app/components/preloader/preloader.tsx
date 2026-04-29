@@ -19,10 +19,107 @@ export const Preloader = () => {
     const [isVisible, setVisible] = useState(true);
     const [isAnimating, setIsAnimating] = useState(false);
     const [activeStep, setActiveStep] = useState(0);
+    const [pageLoadProgress, setPageLoadProgress] = useState(0);
 
     const overflowTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const videoLoadingProgress = useVideoLoadingProgress('main-video-banner');
+    const videoLoadingProgress1 = useVideoLoadingProgress('main-video-banner');
+    const videoLoadingProgress2 = useVideoLoadingProgress('south-hub-video');
+    const videoLoadingProgress3 = useVideoLoadingProgress('snow-base-video');
+
+    const combinedProgress = Math.min(
+        Math.round((videoLoadingProgress1 * 0.25) + (videoLoadingProgress2 * 0.25) + (videoLoadingProgress3 * 0.25) + (pageLoadProgress * 0.25)),
+        100
+    );
+
+    useEffect(() => {
+        if (document.readyState === 'complete') {
+            setPageLoadProgress(100);
+            return;
+        }
+
+        const updatePageLoadProgress = () => {
+            const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+            
+            if (resources.length === 0) {
+                setPageLoadProgress(document.readyState === 'loading' ? 10 : 50);
+                return;
+            }
+
+            const loadedResources = resources.filter(entry => {
+                return (
+                    entry.name.includes('.js') ||
+                    entry.name.includes('.css') ||
+                    entry.initiatorType === 'script' ||
+                    entry.initiatorType === 'link' ||
+                    entry.initiatorType === 'xmlhttprequest' ||
+                    entry.initiatorType === 'fetch'
+                );
+            });
+
+            if (loadedResources.length === 0) {
+                setPageLoadProgress(50);
+                return;
+            }
+
+            const totalProgress = loadedResources.reduce((sum, resource) => {
+                if (resource.transferSize === 0 && resource.decodedBodySize === 0) {
+                    return sum + 100;
+                }
+                return sum + (resource.transferSize ? 100 : 0);
+            }, 0);
+
+            const avgProgress = Math.round(totalProgress / loadedResources.length);
+            setPageLoadProgress(prev => Math.max(prev, Math.min(avgProgress, 100)));
+        };
+
+        updatePageLoadProgress();
+
+        const handleLoad = () => {
+            setPageLoadProgress(100);
+        };
+
+        const handleResourceLoad = () => {
+            updatePageLoadProgress();
+        };
+
+        let performanceObserver: PerformanceObserver | null = null;
+        
+        try {
+            performanceObserver = new PerformanceObserver((list) => {
+                const entries = list.getEntries();
+                if (entries.length > 0) {
+                    updatePageLoadProgress();
+                }
+            });
+
+            performanceObserver.observe({ 
+                entryTypes: ['resource'],
+                buffered: true 
+            });
+        } catch (e) {
+            console.warn('PerformanceObserver not supported, using fallback');
+        }
+
+        window.addEventListener('load', handleLoad);
+        
+        const interval = setInterval(updatePageLoadProgress, 200);
+
+        const handleDOMContentLoaded = () => {
+            setPageLoadProgress(prev => Math.max(prev, 70));
+        };
+        
+        document.addEventListener('DOMContentLoaded', handleDOMContentLoaded);
+
+        return () => {
+            window.removeEventListener('load', handleLoad);
+            document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
+            if (performanceObserver) {
+                performanceObserver.disconnect();
+            }
+            clearInterval(interval);
+        };
+    }, []);
 
     // Управление overflow с задержкой при скрытии
     useEffect(() => {
@@ -61,7 +158,7 @@ export const Preloader = () => {
     }, []);
 
     useEffect(() => {
-        if (videoLoadingProgress !== 100) return;
+        if (combinedProgress < 100) return;
 
         setIsAnimating(true);
 
@@ -71,7 +168,7 @@ export const Preloader = () => {
         }, HIDE_ANIMATION_MS);
 
         return () => clearTimeout(timer);
-    }, [videoLoadingProgress]);
+    }, [combinedProgress]);
 
     if (!isVisible) {
         return null;
@@ -94,7 +191,7 @@ export const Preloader = () => {
                 </div>
 
                 <div className={`preloader__progress ${FONT_IBM_PLEX_SERIF_LIGHT.className}`}>
-                    {videoLoadingProgress}%
+                    {combinedProgress}%
                 </div>
             </div>
         </div>
