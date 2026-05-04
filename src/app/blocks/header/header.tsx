@@ -33,6 +33,7 @@ export const Header = () => {
                         onClick={handleScrollIntoView}
                         style={{ cursor: 'pointer' }}
                         className='header-logo-white'
+                        unoptimized
                     />
                     <Image
                         src={LogoBlack}
@@ -42,6 +43,7 @@ export const Header = () => {
                         onClick={handleScrollIntoView}
                         style={{ cursor: 'pointer' }}
                         className='header-logo-black'
+                        unoptimized
                     />
 
                     <HeaderBurger />

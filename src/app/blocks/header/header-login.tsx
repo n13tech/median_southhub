@@ -26,6 +26,7 @@ export const HeaderLogin = () => {
                     alt='login'
                     width={50}
                     height={50}
+                    unoptimized
                 />
             </a>
             <a href={getLinkWIthUtm(TELEGRAM_CHANELL_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} header_item header_item_logo`}>
@@ -34,6 +35,7 @@ export const HeaderLogin = () => {
                     alt='telega'
                     width={50}
                     height={50}
+                    unoptimized
                 />
                 <p className='header-desctop-hiden'>телеграм</p>
             </a>

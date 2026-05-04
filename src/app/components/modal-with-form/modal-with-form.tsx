@@ -148,7 +148,7 @@ export const ModalWithForm = ({ open, onClose }: Props) => {
                         justifyContent: 'center',
                     }}
                 >
-                    <Image src={Cross} alt='' />
+                    <Image src={Cross} alt='' unoptimized />
                 </div>,
                 document.body
             )}

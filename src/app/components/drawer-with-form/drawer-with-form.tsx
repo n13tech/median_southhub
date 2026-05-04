@@ -39,6 +39,7 @@ export const DrawerWithForm = ({ open, onClose }: Props) => {
                     alt="SOUTHUUUB"
                     width={180}
                     height={21}
+                    unoptimized
                 />
             )}
             open={open}
@@ -53,6 +54,7 @@ export const DrawerWithForm = ({ open, onClose }: Props) => {
                     width={24}
                     height={24}
                     className='drawer-with-form-header-drawer-burger-cross'
+                    unoptimized
                 />
             )}
         >

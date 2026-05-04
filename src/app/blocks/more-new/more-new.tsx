@@ -358,6 +358,7 @@ export const MoreNew = () => {
                     height={device === 'mobile' ? 30 : 50}
                     className="more-new-svg-icon"
                     style={{ ...style, opacity: isCurrentlyHovered ? 0 : 1 }}
+                    unoptimized
                 />
                 <Image
                     src={Telegram}
@@ -366,6 +367,7 @@ export const MoreNew = () => {
                     height={50}
                     className="more-new-svg-icon"
                     style={{ opacity: [0, 1].includes(row) && isCurrentlyHovered ? 1 : 0, cursor: 'pointer' }}
+                    unoptimized
                 />
                 <Image
                     src={Live}
@@ -374,6 +376,7 @@ export const MoreNew = () => {
                     height={50}
                     className="more-new-svg-icon"
                     style={{ opacity: [2, 3, 4].includes(row) && isCurrentlyHovered ? 1 : 0, cursor: 'pointer' }}
+                    unoptimized
                 />
                 <Image
                     src={Youtube}
@@ -382,6 +385,7 @@ export const MoreNew = () => {
                     height={50}
                     className="more-new-svg-icon"
                     style={{ opacity: [5, 6].includes(row) && isCurrentlyHovered ? 1 : 0, cursor: 'pointer' }}
+                    unoptimized
                 />
             </div>
         );

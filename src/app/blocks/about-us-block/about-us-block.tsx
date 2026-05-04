@@ -15,6 +15,7 @@ export const AboutUsBlock = () => {
                         src={MedianLogo}
                         alt='median-agency'
                         height={87}
+                        unoptimized
                     />
                 </div>
 

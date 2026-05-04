@@ -26,6 +26,7 @@ export const Footer = () => {
                             alt="southuub"
                             height={22}
                             className='footer-logo'
+                            unoptimized
                         />
                     </div>
 
@@ -58,6 +59,7 @@ export const Footer = () => {
                                 src={Youtube}
                                 alt="youtube"
                                 height={24}
+                                unoptimized
                             />
                         </a>
                         <a href={getLinkWithUtm(SOUTHHUB_LINKEDIN)} target='_blank'>
@@ -65,6 +67,7 @@ export const Footer = () => {
                                 src={LinkedIn}
                                 alt="linkedin"
                                 height={24}
+                                unoptimized
                             />
                         </a>
                         <a href={getLinkWithUtm(TELEGRAM_CHANELL_LINK)} target='_blank' className={`${FONT_MONT_BOOK.className} footer-contacts-link`}>
@@ -72,6 +75,7 @@ export const Footer = () => {
                                 src={Telegram}
                                 alt="telegramm"
                                 height={24}
+                                unoptimized
                             />
                         </a>
                     </div>

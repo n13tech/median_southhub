@@ -18,6 +18,7 @@ const Item = () => {
                 height={36}
                 width={36}
                 className='infinity-banner-tg'
+                unoptimized
             />
 
             <Image
@@ -26,6 +27,7 @@ const Item = () => {
                 width={220}
                 height={24}
                 className='infinity-banner-logo'
+                unoptimized
             />
 
             <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>
@@ -38,6 +40,7 @@ const Item = () => {
                 height={36}
                 width={36}
                 className='infinity-banner-tg'
+                unoptimized
             />
             <Image
                 src={LogoWhite}
@@ -45,6 +48,7 @@ const Item = () => {
                 width={220}
                 height={24}
                 className='infinity-banner-logo'
+                unoptimized
             />
 
             <p className={`${FONT_MONT_BOOK.className} infinity-banner-text`}>

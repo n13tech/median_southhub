@@ -271,6 +271,7 @@ export const BlockWithUAnimate = () => {
                     alt=''
                     height={21}
                     className='block-with-u-animate-logo-icon'
+                    unoptimized
                 />
             );
         }
@@ -333,6 +334,7 @@ export const BlockWithUAnimate = () => {
                             width: svgWidth,
                             height: svgHeight,
                         }}
+                        unoptimized
                     />
                 ) : (
                     <Image
@@ -345,6 +347,7 @@ export const BlockWithUAnimate = () => {
                             width: svgWidth,
                             height: svgHeight,
                         }}
+                        unoptimized
                     />
                 )}
             </div>
