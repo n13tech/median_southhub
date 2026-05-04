@@ -113,6 +113,7 @@ export const AccordionsBlock = () => {
                             width={47}
                             height={47}
                             priority
+                            unoptimized
                         />
                     )}
                 />

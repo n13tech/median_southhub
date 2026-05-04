@@ -186,6 +186,7 @@ export const Preloader = () => {
                             width={280}
                             height={80}
                             className={`preloader__image ${activeStep === index ? 'preloader__image--active' : ''}`}
+                            unoptimized
                         />
                     ))}
                 </div>
