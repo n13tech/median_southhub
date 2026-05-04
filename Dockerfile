@@ -40,6 +40,9 @@ ENV NODE_OPTIONS="--max-old-space-size=512"
 # Создаём non-root пользователя
 RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
 
+# Создаём cache директории заранее
+RUN mkdir -p /app/.next/cache && chown -R nextjs:nextjs /app
+
 # Копируем только production-артефакты
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
