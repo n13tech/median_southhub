@@ -11,12 +11,14 @@ export const AboutUsBlock = () => {
         <div className='about-us-block-wrapper' id='about-us-block'>
             <div className='about-us-block-info-wrapper'>
                 <div className='about-us-block-logo-wrapper'>
-                    <Image
-                        src={MedianLogo}
-                        alt='median-agency'
-                        height={87}
-                        unoptimized
-                    />
+                    <a href='https://median.agency' target='_blank'>
+                        <Image
+                            src={MedianLogo}
+                            alt='median-agency'
+                            height={87}
+                            unoptimized
+                        />
+                    </a>
                 </div>
 
                 <div className='about-us-block-line' />
