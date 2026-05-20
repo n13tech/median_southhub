@@ -62,7 +62,12 @@ export const InfinityBanner = () => {
     const getLinkWIthUtm = useGetLinkWithUtm();
 
     return (
-        <a className='infinity-banner-wrapper' id='infinity-banner' href={getLinkWIthUtm(TELEGRAM_CHANELL_LINK)} target='_blank'>
+        <a
+            id='btn_lending_infinity_banner'
+            className='infinity-banner-wrapper'
+            href={getLinkWIthUtm(TELEGRAM_CHANELL_LINK)}
+            target='_blank'
+        >
             <div className="infinity-banner-items infinity-banner-marquee">
                 <Item />
                 <Item />

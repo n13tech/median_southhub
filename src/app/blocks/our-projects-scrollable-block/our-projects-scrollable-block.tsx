@@ -283,6 +283,7 @@ export const OurProjectsScrollableBlock = () => {
                   {item.description}
                 </p>
                 <Button
+                  id={`btn_lending_${item.id}`}
                   className={`our-projects-item-left-info-button base-button`}
                   onClick={item.onClick}
                   type='primary'

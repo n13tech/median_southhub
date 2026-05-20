@@ -73,6 +73,7 @@ export default function HomeContent({ data }: Props) {
                         </p>
 
                         <Button
+                            id='btn_lending_cookie_button'
                             className={`${FONT_MONT_BOOK.className} cookie-banner-button`}
                             onClick={() => {
                                 setOpenCookieModal(false)

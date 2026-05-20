@@ -120,6 +120,7 @@ export const ModalWithForm = ({ open, onClose }: Props) => {
 
                 <div className='modal-with-form-block-button-wrapper'>
                     <Button
+                        id='btn_lending_form_submit'
                         type='primary'
                         onClick={handleClick}
                         className={`${FONT_MONT_BOOK.className} modal-with-form-submit base-button base-button_black`}

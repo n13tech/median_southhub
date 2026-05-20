@@ -16,7 +16,12 @@ export const MainBannerButton = () => {
 
     return (
         <>
-            <Button type='primary' className={`main-banner-button base-button`} onClick={handleClick}>
+            <Button
+                id='btn_lending_main_banner'
+                type='primary'
+                className={`main-banner-button base-button`}
+                onClick={handleClick}
+            >
                 <span className={`${FONT_MONT_BOOK.className}`}>
                     Стать участником
                 </span>

@@ -13,6 +13,7 @@ export const AboutUsBlockButton = () => {
 
     return (
         <Button
+            id='btn_lending_contact_us'
             type='primary'
             onClick={handleClick}
             className={`${FONT_MONT_BOOK.className} about-us-block-info-button base-button base-button_black`}

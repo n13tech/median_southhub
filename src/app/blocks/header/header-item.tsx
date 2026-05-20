@@ -5,12 +5,13 @@ import { FONT_MONT_BOOK } from '../../fonts';
 import './header.css';
 
 type Props = {
+    id: string;
     title: string;
     intoScroll?: string;
     link?: string;
 }
 
-export const HeaderItem = ({ title, intoScroll, link }: Props) => {
+export const HeaderItem = ({ id, title, intoScroll, link }: Props) => {
     const handleScrollIntoView = () => {
         if (intoScroll) {
             const element = document.getElementById(intoScroll!);
@@ -31,6 +32,7 @@ export const HeaderItem = ({ title, intoScroll, link }: Props) => {
 
     return (
         <div
+            id={id}
             onClick={handleScrollIntoView}
             className={`${FONT_MONT_BOOK.className} header_item`}
         >

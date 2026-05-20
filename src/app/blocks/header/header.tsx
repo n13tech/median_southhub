@@ -50,8 +50,9 @@ export const Header = () => {
                 </div>
 
                 <div className='header-items'>
-                    <HeaderItem title='проекты' intoScroll='our-projects-block' />
-                    <HeaderItem title='войти' link={getLinkWIthUtm(LK_LOGIN_LINK)} />
+                    <HeaderItem id='btn_lending_header_item_southub' title='south hub camp' link={getLinkWIthUtm('https://southhub.ru/southub/')} />
+                    <HeaderItem id='btn_lending_header_item_our_project' title='где встречаемся' intoScroll='our-projects-block' />
+                    <HeaderItem id='btn_lending_header_item_login' title='войти' link={getLinkWIthUtm(LK_LOGIN_LINK)} />
                 </div>
             </div>
         </div>

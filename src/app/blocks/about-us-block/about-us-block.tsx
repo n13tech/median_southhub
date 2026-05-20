@@ -11,7 +11,11 @@ export const AboutUsBlock = () => {
         <div className='about-us-block-wrapper' id='about-us-block'>
             <div className='about-us-block-info-wrapper'>
                 <div className='about-us-block-logo-wrapper'>
-                    <a href='https://median.agency' target='_blank'>
+                    <a
+                        id='btn_lending_logo_about_us'
+                        href='https://median.agency'
+                        target='_blank'
+                    >
                         <Image
                             src={MedianLogo}
                             alt='median-agency'
