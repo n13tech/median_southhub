@@ -74,7 +74,8 @@ export default function HomeContent({ data }: Props) {
 
                         <Button
                             id='btn_lending_cookie_button'
-                            className={`${FONT_MONT_BOOK.className} cookie-banner-button`}
+                            type='primary'
+                            className={`${FONT_MONT_BOOK.className} base-button cookie-banner-button`}
                             onClick={() => {
                                 setOpenCookieModal(false)
                                 window.localStorage.setItem('isVisibleCookieAlert', 'true')}

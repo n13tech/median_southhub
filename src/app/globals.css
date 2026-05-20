@@ -42,7 +42,7 @@ body {
     width: 800px;
     gap: 40px;
     padding: 24px 32px;
-    background-color: #fff;
+    background-color: #111111;
     border-radius: 8px;
     box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 
@@ -71,6 +71,7 @@ body {
         font-weight: 500;
         font-size: 14px;
         line-height: 125%;
+        color: #fff;
 
       @media screen and (max-width: 1024px) {
         font-size: 12px;
@@ -79,26 +80,10 @@ body {
     }
 
     .cookie-banner-button {
-        width: 56px;
-        height: 56px;
-        border-radius: 100%;
-        border: none;
-        background-color: #18436D;
-        color: #fff;
-        font-weight: 500;
-        font-size: 24px;
-        line-height: 24px;
+        width: 100px;
 
         &:hover {
-            background-color: #E55929 !important;
-            color: #fff !important;
-        }
-
-        @media screen and (max-width: 1024px) {
-          width: 48px;
-          height: 48px;
-          font-size: 16px;
-          line-height: 16px;
+          width: 100px;
         }
     }
 }
