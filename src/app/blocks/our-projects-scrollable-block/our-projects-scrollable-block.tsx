@@ -321,8 +321,9 @@ export const OurProjectsScrollableBlock = () => {
                         muted
                         loop
                         playsInline
-                        preload="auto"
+                        preload="metadata"
                         id={item.videoId}
+                        disableRemotePlayback
                     >
                         <source src={item.videoSrc} type="video/mp4" />
                     </video>

@@ -296,6 +296,7 @@ export const MainBanner = () => {
                         playsInline
                         preload="auto"
                         id='main-video-banner'
+                        disableRemotePlayback
                     >
                         <source src="./v2/southuuub.mp4" type="video/mp4" />
                     </video>
