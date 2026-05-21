@@ -12,7 +12,12 @@ export const AccesibleButton = () => {
 
     return (
         <>
-            <Button type='primary' className={`how-become-community-block-button base-button base-button_black`} onClick={handleClick}>
+            <Button
+                id='btn_lending_apply_community'
+                type='primary'
+                className={`how-become-community-block-button base-button base-button_black`}
+                onClick={handleClick}
+            >
                 <span className={`${FONT_MONT_BOOK.className}`}>
                     подать заявку
                 </span>

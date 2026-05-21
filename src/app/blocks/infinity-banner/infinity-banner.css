@@ -1,18 +1,9 @@
 .infinity-banner-wrapper {
-    position: relative;
+    display: block;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    padding: 32px 0;
-    gap: 44px;
     background-color: #111;
     cursor: pointer;
-
-    &:hover {
-      .infinity-banner-marquee {
-        animation-play-state: paused;
-      }
-    }
+    padding: 32px 0;
 
     @media screen and (max-width: 1024px) {
         padding: 20px 0;
@@ -25,12 +16,14 @@
     }
 }
 
+.infinity-banner-track {
+  width: 100%;
+}
+
 .infinity-banner-items {
-    display: flex;
-    gap: 44px;
-    justify-content: space-around;
-    min-width: 100%;
-    flex-shrink: 0;
+  display: flex;
+  gap: 44px;
+  will-change: transform;
 
     @media screen and (max-width: 1024px) {
         gap: 30px;
@@ -45,7 +38,7 @@
     display: flex;
     align-items: center;
     gap: 44px;
-    transition: all 0.1s ease-in-out;
+    flex-shrink: 0;
 
     @media screen and (max-width: 1024px) {
         gap: 30px;

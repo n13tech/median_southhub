@@ -119,6 +119,7 @@ export const DrawerWithForm = ({ open, onClose }: Props) => {
 
             <div className='drawer-with-form-block-button-wrapper'>
                 <Button
+                    id='btn_lending_form_contact_us'
                     variant='outlined'
                     color='default'
                     onClick={handleClick}

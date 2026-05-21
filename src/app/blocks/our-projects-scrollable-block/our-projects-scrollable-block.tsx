@@ -283,6 +283,7 @@ export const OurProjectsScrollableBlock = () => {
                   {item.description}
                 </p>
                 <Button
+                  id={`btn_lending_${item.id}`}
                   className={`our-projects-item-left-info-button base-button`}
                   onClick={item.onClick}
                   type='primary'
@@ -320,8 +321,9 @@ export const OurProjectsScrollableBlock = () => {
                         muted
                         loop
                         playsInline
-                        preload="auto"
+                        preload="metadata"
                         id={item.videoId}
+                        disableRemotePlayback
                     >
                         <source src={item.videoSrc} type="video/mp4" />
                     </video>

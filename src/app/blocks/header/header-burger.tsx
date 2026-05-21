@@ -32,7 +32,7 @@ export const HeaderBurger = () => {
 
     return (
         <>
-            <Button variant='text' type='text' className='header-burger' onClick={() => setActive(true)}>
+            <Button id='btn_lending_burger' variant='text' type='text' className='header-burger' onClick={() => setActive(true)}>
                 <svg width="39" height="18" viewBox="0 0 39 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 4H39" stroke="white" strokeWidth="2"/>
                     <path d="M0 14H39" stroke="white" strokeWidth="2"/>
@@ -54,10 +54,13 @@ export const HeaderBurger = () => {
             >
                 <div>
                     <div onClick={() => setActive(false)}>
-                        <HeaderItem title='проекты' intoScroll='our-projects-block' />
+                        <HeaderItem id='btn_lending_header_item_southub' title='south hub camp' link={getLinkWIthUtm('https://southhub.ru/southub/')} />
                     </div>
                     <div onClick={() => setActive(false)}>
-                        <HeaderItem title='войти' link={getLinkWIthUtm(LK_LOGIN_LINK)} />
+                        <HeaderItem id='btn_lending_header_item_our_project' title='где встречаемся' intoScroll='our-projects-block' />
+                    </div>
+                    <div onClick={() => setActive(false)}>
+                        <HeaderItem id='btn_lending_header_item_login' title='войти' link={getLinkWIthUtm(LK_LOGIN_LINK)} />
                     </div>
                 </div>
                 {/* <div>
