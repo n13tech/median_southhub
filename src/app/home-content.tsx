@@ -72,17 +72,19 @@ export default function HomeContent({ data }: Props) {
                             {`Мы собираем cookies, потому что они помогают сайту помнить вас и${NBSP}оставаться таким${NBSP}же внимательным, как${NBSP}люди в${NBSP}сообществе South${NBSP}HUВ. Просто скажите «да»`}
                         </p>
 
-                        <Button
-                            id='btn_lending_cookie_button'
-                            type='primary'
-                            className={`${FONT_MONT_BOOK.className} base-button cookie-banner-button`}
-                            onClick={() => {
-                                setOpenCookieModal(false)
-                                window.localStorage.setItem('isVisibleCookieAlert', 'true')}
-                            }
-                        >
-                            да
-                        </Button>
+                        <div className="cookie-banner_button-wrapper">
+                            <Button
+                                id='btn_lending_cookie_button'
+                                type='primary'
+                                className={`${FONT_MONT_BOOK.className} base-button cookie-banner-button`}
+                                onClick={() => {
+                                    setOpenCookieModal(false)
+                                    window.localStorage.setItem('isVisibleCookieAlert', 'true')}
+                                }
+                            >
+                                да
+                            </Button>
+                        </div>
                     </div>
                 )}
             </div>
