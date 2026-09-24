@@ -41,6 +41,12 @@
         margin-bottom: 75px;
     }
 
+    @media screen and (max-width: 1024px) {
+        left: 30%;
+        font-size: 45px;
+        margin-bottom: 75px;
+    }
+
     @media screen and (max-width: 767px) {
         left: auto;
         margin: 0 auto 50px;
@@ -273,11 +279,15 @@
         font-size: 80px;
     }
 
-    @media screen and (max-width: 767px) {
-        font-size: 75px;
+    @media screen and (max-width: 950px) {
+        font-size: 65px;
     }
 
-    @media screen and (max-width: 400px) {
+    @media screen and (max-width: 767px) {
+        font-size: 68px;
+    }
+
+    @media screen and (max-width: 450px) {
         font-size: 56px;
     }
 }

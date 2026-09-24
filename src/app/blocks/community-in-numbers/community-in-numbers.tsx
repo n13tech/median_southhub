@@ -53,7 +53,7 @@ export const CommunityInNumbers = () => {
 
     const startAnimations = useCallback(() => {
         animateNumber(0, 1, setCount1, 3000);
-        animateNumber(0, 1400, setCount2, 3000);
+        animateNumber(0, 1700, setCount2, 3000);
         animateNumber(0, 32, setCount3, 3000);
         animateNumber(0, 5, setCount4, 3000);
     }, [animateNumber]);
@@ -117,7 +117,7 @@ export const CommunityInNumbers = () => {
                             style={!shouldAnimate ? { bottom: '0', top: 'auto' } : undefined}
                         >
                             <div className={`${FONT_MONT_BOOK_EXTRA_LIGHT.className} community-in-numbers-infographic-item-count`}>
-                                {count2}
+                                {count2}+
                             </div>
                             <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
                                 {TEXT_2}
@@ -183,7 +183,7 @@ export const CommunityInNumbers = () => {
                                     {count3}%
                                 </div>
                                 <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                    {TEXT_2}
+                                    {TEXT_3}
                                 </div>
                             </div>
                         </div>
@@ -195,10 +195,10 @@ export const CommunityInNumbers = () => {
                         <div className='community-in-numbers-infographic-mobile-item'>
                             <div className={`community-in-numbers-infographic-mobile-item-content`}>
                                 <div className={`${FONT_MONT_BOOK_EXTRA_LIGHT.className} community-in-numbers-infographic-item-count`}>
-                                    {count2}
+                                    {count2}+
                                 </div>
                                 <div className={`${FONT_MONT_BOOK.className} community-in-numbers-infographic-item-desc`}>
-                                    {TEXT_3}
+                                    {TEXT_2}
                                 </div>
                             </div>
                         </div>
