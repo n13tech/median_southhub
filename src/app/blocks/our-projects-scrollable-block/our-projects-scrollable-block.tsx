@@ -59,10 +59,10 @@ export const OurProjectsScrollableBlock = () => {
       container.querySelectorAll(".our-projects-item-left-info"),
     );
 
-    // data-index / z-index — единственный источник истины здесь
     imgWrappers.forEach((wrapper, index) => {
-      wrapper.setAttribute("data-index", String(imgWrappers.length - index));
-      wrapper.style.zIndex = String(index + 1);
+      const reverseIndex = imgWrappers.length - index;
+      wrapper.setAttribute("data-index", String(reverseIndex));
+      wrapper.style.zIndex = String(reverseIndex);
     });
 
     // Очистка предыдущих триггеров
@@ -120,10 +120,9 @@ export const OurProjectsScrollableBlock = () => {
       });
 
       gsap.set(imgs, {
-        clipPath: "inset(0)",
+        clipPath: "inset(0% 0% 0% 0%)",
         objectPosition: "0px 0%",
         objectFit: "cover",
-        willChange: "clip-path, object-position",
         force3D: true,
       });
 
@@ -138,7 +137,7 @@ export const OurProjectsScrollableBlock = () => {
             .to(
               currentImage,
               {
-                clipPath: "inset(0px 0px 100%)",
+                clipPath: "inset(0% 0% 100% 0%)",
                 objectPosition: "0px 60%",
                 duration: 1.5,
                 ease: "none",
@@ -188,7 +187,6 @@ export const OurProjectsScrollableBlock = () => {
           anticipatePin: 1,
           invalidateOnRefresh: true,
           refreshPriority: 1,
-          // onUpdate убран — он ничего не делал
         },
       });
 
