@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
-import './our-projects-scrollable-block.css';
-import { getOurProjectItems } from './constants';
-import { FONT_MONT_BOOK } from '@/app/fonts';
-import { Button } from 'antd';
-import { ImageWithFallback } from '@/app/components/image-with-fallback';
-import { useGetLinkWithUtm } from '@/app/hooks/use-get-link-with-utm';
+import { useEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import "./our-projects-scrollable-block.css";
+import { getOurProjectItems } from "./constants";
+import { FONT_MONT_BOOK } from "@/app/fonts";
+import { Button } from "antd";
+import { ImageWithFallback } from "@/app/components/image-with-fallback";
+import { useGetLinkWithUtm } from "@/app/hooks/use-get-link-with-utm";
 
 export const OurProjectsScrollableBlock = () => {
   const getLinkWIthUtm = useGetLinkWithUtm();
@@ -20,69 +20,83 @@ export const OurProjectsScrollableBlock = () => {
   const mobileAnimationRef = useRef<gsap.core.Timeline | null>(null);
   const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
 
+  const ITEMS = useMemo(
+    () => getOurProjectItems(getLinkWIthUtm),
+    [getLinkWIthUtm],
+  );
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const checkMobile = () => {
-      const mobile = window.matchMedia("(max-width: 1024px)").matches;
-      setIsMobile(mobile);
+    const mql = window.matchMedia("(max-width: 1024px)");
+
+    const handleMqlChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsMobile(e.matches);
     };
 
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    handleMqlChange(mql);
+    mql.addEventListener("change", handleMqlChange);
 
-    const raf = () => {
-      ScrollTrigger.update();
-      requestAnimationFrame(raf);
+    return () => {
+      mql.removeEventListener("change", handleMqlChange);
     };
+  }, []);
 
-    requestAnimationFrame(raf);
+  useEffect(() => {
+    const container = containerRef.current;
+    const rightColumn = rightColumnRef.current;
 
-    const imgWrappers = document.querySelectorAll('.our-projects-item-right-img-wrapper');
+    if (!container || !rightColumn) return;
+
+    // Scoped-поиск внутри компонента, а не по всему документу
+    const imgWrappers = container.querySelectorAll<HTMLElement>(
+      ".our-projects-item-right-img-wrapper",
+    );
+    const imgs = gsap.utils.toArray<HTMLImageElement>(
+      container.querySelectorAll(".our-projects-item-right-img"),
+    );
+    const infoSections = gsap.utils.toArray<HTMLElement>(
+      container.querySelectorAll(".our-projects-item-left-info"),
+    );
+
+    // data-index / z-index — единственный источник истины здесь
     imgWrappers.forEach((wrapper, index) => {
-      if (wrapper) {
-        wrapper.setAttribute('data-index', (index + 1).toString());
-        (wrapper as HTMLElement).style.zIndex = (imgWrappers.length - index).toString();
-      }
+      wrapper.setAttribute("data-index", String(imgWrappers.length - index));
+      wrapper.style.zIndex = String(index + 1);
     });
 
-    const imgs = gsap.utils.toArray('.our-projects-item-right-img') as HTMLImageElement[];
-    const infoSections = gsap.utils.toArray('.our-projects-item-left-info') as HTMLElement[];
-
-    scrollTriggersRef.current.forEach(trigger => trigger.kill());
+    // Очистка предыдущих триггеров
+    scrollTriggersRef.current.forEach((trigger) => trigger.kill());
     scrollTriggersRef.current = [];
-    
+
     if (mobileAnimationRef.current) {
       mobileAnimationRef.current.kill();
       mobileAnimationRef.current = null;
     }
 
-    if (rightColumnRef.current) {
-      rightColumnRef.current.removeAttribute('style');
-      imgs.forEach(img => {
-        if (img && img.style) {
-          img.removeAttribute('style');
-        }
-      });
+    // Сброс inline-стилей перед новым сетапом
+    if (rightColumn) {
+      rightColumn.removeAttribute("style");
+      rightColumn.style.height = "";
+      rightColumn.style.marginTop = "";
     }
+    imgs.forEach((img) => {
+      if (img?.style) img.removeAttribute("style");
+    });
 
     const updateHeaderVisibility = (isPinned: boolean) => {
-      const header = document.getElementById('header');
+      const header = document.getElementById("header");
       if (!header) return;
-      
-      header.style.opacity = isPinned ? '0' : '1';
-      header.style.transition = 'opacity 0.3s ease';
-      header.style.pointerEvents = isPinned ? 'none' : 'auto';
+
+      header.style.opacity = isPinned ? "0" : "1";
+      header.style.transition = "opacity 0.3s ease";
+      header.style.pointerEvents = isPinned ? "none" : "auto";
     };
 
     if (!isMobile) {
-      if (rightColumnRef.current) {
-        rightColumnRef.current.style.height = '';
-        rightColumnRef.current.style.marginTop = '';
-
-        rightColumnRef.current.classList.remove('mobile');
-        rightColumnRef.current.classList.add('desktop');
-      }
+      // ============ DESKTOP ============
+      rightColumn.classList.remove("mobile");
+      rightColumn.classList.add("desktop");
 
       const mainTimeline = gsap.timeline({
         scrollTrigger: {
@@ -92,7 +106,9 @@ export const OurProjectsScrollableBlock = () => {
           pin: ".our-projects-item-right",
           scrub: true,
           invalidateOnRefresh: true,
-        }
+          anticipatePin: 1,
+          refreshPriority: 1, // MainBanner = 0
+        },
       });
 
       if (mainTimeline.scrollTrigger) {
@@ -100,13 +116,15 @@ export const OurProjectsScrollableBlock = () => {
       }
 
       gsap.set(imgs, {
-        clearProps: "all",
+        clearProps: "clipPath,objectPosition,objectFit,transform,willChange",
       });
 
       gsap.set(imgs, {
         clipPath: "inset(0)",
         objectPosition: "0px 0%",
-        objectFit: "cover"
+        objectFit: "cover",
+        willChange: "clip-path, object-position",
+        force3D: true,
       });
 
       imgs.forEach((_, index) => {
@@ -123,42 +141,40 @@ export const OurProjectsScrollableBlock = () => {
                 clipPath: "inset(0px 0px 100%)",
                 objectPosition: "0px 60%",
                 duration: 1.5,
-                ease: "none"
+                ease: "none",
               },
-              0
+              0,
             )
             .to(
               nextImage,
               {
                 objectPosition: "0px 40%",
                 duration: 1.5,
-                ease: "none"
+                ease: "none",
               },
-              0
+              0,
             );
         }
 
         mainTimeline.add(sectionTimeline);
       });
-
     } else {
-      if (rightColumnRef.current) {
-        rightColumnRef.current.style.height = '275px';
-        rightColumnRef.current.style.marginTop = '72px';
+      // ============ MOBILE ============
+      rightColumn.style.height = "275px";
+      rightColumn.style.marginTop = "72px";
 
-        rightColumnRef.current.classList.remove('desktop');
-        rightColumnRef.current.classList.add('mobile');
-      }
+      rightColumn.classList.remove("desktop");
+      rightColumn.classList.add("mobile");
 
       gsap.set(imgs, {
-        clearProps: "all",
+        clearProps: "clipPath,objectPosition,objectFit,transform,willChange",
       });
 
       gsap.set(imgs, {
-        willChange: 'clip-path',
+        willChange: "clip-path",
         force3D: true,
-        objectFit: 'cover',
-        objectPosition: 'center center'
+        objectFit: "cover",
+        objectPosition: "center center",
       });
 
       const mobileTimeline = gsap.timeline({
@@ -171,19 +187,9 @@ export const OurProjectsScrollableBlock = () => {
           pinSpacing: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const activeIndex = Math.floor(progress * infoSections.length);
-
-            infoSections.forEach((section, index) => {
-              if (index === activeIndex) {
-                gsap.set(section, { opacity: 1, scale: 1 });
-              } else {
-                gsap.set(section, { opacity: 1, scale: 1 });
-              }
-            });
-          }
-        }
+          refreshPriority: 1,
+          // onUpdate убран — он ничего не делал
+        },
       });
 
       if (mobileTimeline.scrollTrigger) {
@@ -194,42 +200,47 @@ export const OurProjectsScrollableBlock = () => {
         if (index === 0) {
           gsap.set(img, {
             clipPath: "inset(0% 0% 0% 0%)",
-            objectPosition: "center 50%"
+            objectPosition: "center 50%",
           });
         } else {
           gsap.set(img, {
             clipPath: "inset(100% 0% 0% 0%)",
-            objectPosition: "center 50%"
+            objectPosition: "center 50%",
           });
         }
       });
 
       const sectionDuration = 1 / infoSections.length;
-      
+
       for (let i = 0; i < imgs.length - 1; i++) {
         const currentImg = imgs[i];
         const nextImg = imgs[i + 1];
         const startPosition = i * sectionDuration;
 
-        mobileTimeline.to(currentImg, {
-          clipPath: "inset(0% 0% 100% 0%)",
-          objectPosition: "center 70%",
-          duration: sectionDuration * 0.8,
-          ease: "none"
-        }, startPosition + sectionDuration * 0.1);
+        mobileTimeline.to(
+          currentImg,
+          {
+            clipPath: "inset(0% 0% 100% 0%)",
+            objectPosition: "center 70%",
+            duration: sectionDuration * 0.8,
+            ease: "none",
+          },
+          startPosition + sectionDuration * 0.1,
+        );
 
-        mobileTimeline.fromTo(nextImg,
+        mobileTimeline.fromTo(
+          nextImg,
           {
             clipPath: "inset(100% 0% 0% 0%)",
-            objectPosition: "center 30%"
+            objectPosition: "center 30%",
           },
           {
             clipPath: "inset(0% 0% 0% 0%)",
             objectPosition: "center 50%",
             duration: sectionDuration * 0.8,
-            ease: "none"
+            ease: "none",
           },
-          startPosition + sectionDuration * 0.1
+          startPosition + sectionDuration * 0.1,
         );
       }
 
@@ -240,6 +251,7 @@ export const OurProjectsScrollableBlock = () => {
       trigger: ".our-projects-scrollable-block",
       start: "top 70px",
       end: "bottom top",
+      refreshPriority: 1,
       onEnter: () => updateHeaderVisibility(true),
       onLeave: () => updateHeaderVisibility(false),
       onEnterBack: () => updateHeaderVisibility(true),
@@ -249,90 +261,103 @@ export const OurProjectsScrollableBlock = () => {
     scrollTriggersRef.current.push(boundaryTrigger);
 
     return () => {
-      scrollTriggersRef.current.forEach(trigger => trigger.kill());
+      scrollTriggersRef.current.forEach((trigger) => trigger.kill());
       scrollTriggersRef.current = [];
-      
+
       if (mobileAnimationRef.current) {
         mobileAnimationRef.current.kill();
         mobileAnimationRef.current = null;
       }
-      window.removeEventListener('resize', checkMobile);
 
-      const header = document.getElementById('header');
+      const header = document.getElementById("header");
       if (header) {
-        header.style.opacity = '1';
-        header.style.pointerEvents = 'auto';
+        header.style.opacity = "1";
+        header.style.pointerEvents = "auto";
       }
     };
   }, [isMobile]);
 
-  const ITEMS = getOurProjectItems(getLinkWIthUtm);
-
   return (
-    <>
-      <div className="our-projects-scrollable-block-wrapper" ref={containerRef} id='our-projects-block'>
-        <div className="our-projects-scrollable-block">
-          {/* Левая колонка - текст */}
-          <div className="our-projects-item-left" ref={leftColumnRef}>
-            {ITEMS.map((item) => (
-              <div key={item.id} className="our-projects-item-left-info" id={item.id}>
-                <h2 className={`${FONT_MONT_BOOK.className} our-projects-item-left-info-title`}>
-                  {item.title}
-                </h2>
-                <p className={`${FONT_MONT_BOOK.className} our-projects-item-left-info-description`}>
-                  {item.description}
-                </p>
-                <Button
-                  id={`btn_lending_${item.id}`}
-                  className={`our-projects-item-left-info-button base-button`}
-                  onClick={item.onClick}
-                  type='primary'
-                >
-                  <span className={`${FONT_MONT_BOOK.className}`}>{item.buttonTitle}</span>
-                </Button>
-              </div>
-            ))}
-          </div>
-
-          {/* Правая колонка - картинки */}
-          <div className="our-projects-item-right" ref={rightColumnRef}>
-            <h2 className={`${FONT_MONT_BOOK.className} our-projects-item-right-title`}>где встречаемся</h2>
-
-            {ITEMS.slice().map((item, index) => (
-              <div
-                key={`img-${item.id}`}
-                className="our-projects-item-right-img-wrapper"
-                data-index={ITEMS.length - index}
+    <div
+      className="our-projects-scrollable-block-wrapper"
+      ref={containerRef}
+      id="our-projects-block"
+    >
+      <div className="our-projects-scrollable-block">
+        {/* Левая колонка - текст */}
+        <div className="our-projects-item-left" ref={leftColumnRef}>
+          {ITEMS.map((item) => (
+            <div
+              key={item.id}
+              className="our-projects-item-left-info"
+              id={item.id}
+            >
+              <h2
+                className={`${FONT_MONT_BOOK.className} our-projects-item-left-info-title`}
               >
-                {item.imageSrc && (
-                  <ImageWithFallback
-                    src={item.imageSrc}
-                    altSrc={item.altSrc!}
-                    alt={item.imageAlt}
-                    width={isMobile ? 612 : 900}
-                    height={isMobile ? 275 : 536}
-                    className="our-projects-item-right-img"
-                  />
-                )}
-                {item.videoSrc && (
-                    <video
-                        className="our-projects-item-right-img"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                        id={item.videoId}
-                        disableRemotePlayback
-                    >
-                        <source src={item.videoSrc} type="video/mp4" />
-                    </video>
-                )}
-              </div>
-            ))}
-          </div>
+                {item.title}
+              </h2>
+              <p
+                className={`${FONT_MONT_BOOK.className} our-projects-item-left-info-description`}
+              >
+                {item.description}
+              </p>
+              <Button
+                id={`btn_lending_${item.id}`}
+                className={`our-projects-item-left-info-button base-button`}
+                onClick={item.onClick}
+                type="primary"
+              >
+                <span className={`${FONT_MONT_BOOK.className}`}>
+                  {item.buttonTitle}
+                </span>
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        {/* Правая колонка - картинки */}
+        <div className="our-projects-item-right" ref={rightColumnRef}>
+          <h2
+            className={`${FONT_MONT_BOOK.className} our-projects-item-right-title`}
+          >
+            где встречаемся
+          </h2>
+
+          {ITEMS.map((item) => (
+            <div
+              key={`img-${item.id}`}
+              className="our-projects-item-right-img-wrapper"
+              // data-index ставится в useEffect — единый источник истины
+            >
+              {item.imageSrc && (
+                <ImageWithFallback
+                  src={item.imageSrc}
+                  altSrc={item.altSrc!}
+                  alt={item.imageAlt}
+                  width={isMobile ? 612 : 900}
+                  height={isMobile ? 275 : 536}
+                  className="our-projects-item-right-img"
+                />
+              )}
+              {item.videoSrc && (
+                <video
+                  className="our-projects-item-right-img"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  id={item.videoId}
+                  disableRemotePlayback
+                >
+                  <source src={item.videoSrc} type="video/mp4" />
+                </video>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
