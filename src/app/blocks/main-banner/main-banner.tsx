@@ -10,6 +10,10 @@ import "./main-banner.css";
 import { NBSP } from "@/app/constants";
 
 const ANIMATION_SPEED_FACTOR = 1.1;
+const SNAP_ZONE_START = 0.35; // 35% — конец text1/text2
+const SNAP_ZONE_END = 0.4; // 40% — появление text3
+const SNAP_IDLE_MS = 150; // сколько ждать после остановки скролла
+const SNAP_DURATION = 0.4; // длительность докручивания
 
 export const MainBanner = () => {
   const [windowHeight, setWindowHeight] = useState(0);
@@ -32,6 +36,12 @@ export const MainBanner = () => {
   const textAnimationsRef = useRef<ScrollTrigger[]>([]);
   const videoScaleAnimationRef = useRef<ScrollTrigger | null>(null);
   const isVideoScaledRef = useRef(false);
+
+  // Для snap-логики
+  const scrollDistanceRef = useRef(0);
+  const idleTimerRef = useRef<number | null>(null);
+  const isSnappingRef = useRef(false);
+  const scrollTweenRef = useRef<gsap.core.Tween | null>(null);
 
   const animateIn = useCallback((element: HTMLElement | null) => {
     if (!element) return;
@@ -60,10 +70,7 @@ export const MainBanner = () => {
     [],
   );
 
-  // ============================================================
-  // ИЗМЕНЕНИЕ 1: resize-листенер только на смену breakpoint + обновление размеров
-  // (не дергает setState на каждый пиксель ресайза)
-  // ============================================================
+  // Размеры окна — только при смене breakpoint + ориентации
   useEffect(() => {
     const mql = window.matchMedia("(max-width: 1024px)");
 
@@ -72,10 +79,9 @@ export const MainBanner = () => {
       setWindowWidth(window.innerWidth);
     };
 
-    // Обновляем размеры только при смене breakpoint или ориентации
     const handleBreakpointChange = () => updateSizes();
 
-    updateSizes(); // начальное значение
+    updateSizes();
 
     mql.addEventListener("change", handleBreakpointChange);
     window.addEventListener("orientationchange", handleBreakpointChange);
@@ -86,9 +92,7 @@ export const MainBanner = () => {
     };
   }, []);
 
-  // ============================================================
-  // Появление первого текста при загрузке (ваш оригинал)
-  // ============================================================
+  // Появление первого текста при загрузке
   useEffect(() => {
     if (!mainBannerText1.current) return;
 
@@ -103,8 +107,69 @@ export const MainBanner = () => {
   }, []);
 
   // ============================================================
-  // ВАШ setupTextAnimations — БЕЗ ИЗМЕНЕНИЙ (кроме refreshPriority)
+  // Snap-логика: если остановились между 35% и 40% — докрутить до 40%
   // ============================================================
+  const setupSnapLogic = useCallback(() => {
+    const section = sectionRef.current;
+    if (!section) return () => {};
+
+    const handleScroll = () => {
+      // Если уже едем — игнорируем
+      if (isSnappingRef.current) return;
+
+      if (idleTimerRef.current !== null) {
+        window.clearTimeout(idleTimerRef.current);
+      }
+
+      idleTimerRef.current = window.setTimeout(() => {
+        const sectionTop = section.offsetTop;
+        const scrollDistance = scrollDistanceRef.current;
+        if (!scrollDistance) return;
+
+        const scrollY = window.scrollY;
+        const progress = (scrollY - sectionTop) / scrollDistance;
+
+        // Попали в промежуток 35–40% — докрутить до 40%
+        if (progress >= SNAP_ZONE_START && progress < SNAP_ZONE_END) {
+          const targetY = sectionTop + scrollDistance * SNAP_ZONE_END;
+
+          isSnappingRef.current = true;
+
+          // Убиваем возможный предыдущий твин
+          if (scrollTweenRef.current) {
+            scrollTweenRef.current.kill();
+            scrollTweenRef.current = null;
+          }
+
+          scrollTweenRef.current = gsap.to(window, {
+            scrollTo: { y: targetY, autoKill: false },
+            duration: SNAP_DURATION,
+            ease: "power2.out",
+            onComplete: () => {
+              isSnappingRef.current = false;
+              scrollTweenRef.current = null;
+            },
+          });
+        }
+      }, SNAP_IDLE_MS);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (idleTimerRef.current !== null) {
+        window.clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = null;
+      }
+      if (scrollTweenRef.current) {
+        scrollTweenRef.current.kill();
+        scrollTweenRef.current = null;
+      }
+      isSnappingRef.current = false;
+    };
+  }, []);
+
   const setupTextAnimations = useCallback(() => {
     textAnimationsRef.current.forEach((animation) => animation.kill());
     textAnimationsRef.current = [];
@@ -112,7 +177,6 @@ export const MainBanner = () => {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Начальные состояния (ваш оригинал)
     if (mainBannerText1.current) {
       gsap.set(mainBannerText1.current, { opacity: 1, y: 0 });
     }
@@ -156,6 +220,7 @@ export const MainBanner = () => {
       textAnimationsRef.current.push(animation2);
     }
 
+    // text3 и text4 — появление без ухода (ваша логика)
     const otherElements = [
       { element: mainBannerText3.current, percent: 40 },
       { element: mainBannerText4.current, percent: 65 },
@@ -177,9 +242,6 @@ export const MainBanner = () => {
     });
   }, [animateIn, animateOut]);
 
-  // ============================================================
-  // ВАШ setupVideoScaleAnimation — БЕЗ ИЗМЕНЕНИЙ (кроме refreshPriority)
-  // ============================================================
   const setupVideoScaleAnimation = useCallback(() => {
     if (videoScaleAnimationRef.current) {
       videoScaleAnimationRef.current.kill();
@@ -218,10 +280,6 @@ export const MainBanner = () => {
     videoScaleAnimationRef.current = st;
   }, []);
 
-  // ============================================================
-  // ВАШ основной useEffect — БЕЗ ИЗМЕНЕНИЙ
-  // + anticipatePin: 1 (ИЗМЕНЕНИЕ 2)
-  // ============================================================
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -233,6 +291,9 @@ export const MainBanner = () => {
 
     const isMobile = windowWidth <= 1024;
     const scrollDistance = isMobile ? 4000 * ANIMATION_SPEED_FACTOR : 5000;
+
+    // Запоминаем для snap-логики
+    scrollDistanceRef.current = scrollDistance;
 
     section.style.minHeight = `${scrollDistance + windowHeight}px`;
 
@@ -248,7 +309,7 @@ export const MainBanner = () => {
       scrub: true,
       pin: pin,
       pinSpacing: false,
-      anticipatePin: 1, // ИЗМЕНЕНИЕ 2
+      anticipatePin: 1,
       invalidateOnRefresh: true,
       refreshPriority: 0,
     });
@@ -256,7 +317,12 @@ export const MainBanner = () => {
     setupTextAnimations();
     setupVideoScaleAnimation();
 
+    // Запускаем snap-логику
+    const cleanupSnap = setupSnapLogic();
+
     return () => {
+      cleanupSnap();
+
       if (scrollTriggerRef.current) {
         scrollTriggerRef.current.kill();
         scrollTriggerRef.current = null;
@@ -273,6 +339,7 @@ export const MainBanner = () => {
     windowWidth,
     setupTextAnimations,
     setupVideoScaleAnimation,
+    setupSnapLogic,
   ]);
 
   return (
