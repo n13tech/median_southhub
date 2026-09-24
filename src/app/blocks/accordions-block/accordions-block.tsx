@@ -1,123 +1,130 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { FONT_MONT_BOOK } from '@/app/fonts';
-import './accordions-block.css';
-import Image from 'next/image';
-import AccordionPlus from '../../../../public/accordion-plus.svg';
-import { Collapse, CollapseProps } from 'antd';
+import { useEffect } from "react";
+import { FONT_MONT_BOOK } from "@/app/fonts";
+import "./accordions-block.css";
+import Image from "next/image";
+import AccordionPlus from "../../../../public/accordion-plus.svg";
+import { Collapse, CollapseProps } from "antd";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import gsap from "gsap";
 
-const ITEMS: CollapseProps['items'] = [
+const ITEMS: CollapseProps["items"] = [
   {
-    key: '1',
-    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Баланс</p>,
+    key: "1",
+    label: (
+      <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>
+        Баланс
+      </p>
+    ),
     children: (
-        <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {`верим, что успех и эффективность руководителя строятся на балансе профессиональных связей, семьи, саморазвития, обучения и физической формы`}
-        </p>
+      <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
+        {`верим, что успех и эффективность руководителя строятся на балансе профессиональных связей, семьи, саморазвития, обучения и физической формы`}
+      </p>
     ),
   },
   {
-    key: '2',
-    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Совместное развитие</p>,
+    key: "2",
+    label: (
+      <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>
+        Совместное развитие
+      </p>
+    ),
     children: (
-        <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {`создаём пространство, в котором комфортно расти и вдохновлять других, влиять на развитие бизнеса и всей IT-индустрии`}
-        </p>
+      <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
+        {`создаём пространство, в котором комфортно расти и вдохновлять других, влиять на развитие бизнеса и всей IT-индустрии`}
+      </p>
     ),
   },
   {
-    key: '3',
-    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Безопасная среда</p>,
+    key: "3",
+    label: (
+      <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>
+        Безопасная среда
+      </p>
+    ),
     children: (
-        <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {`строим тёплое сообщество равных, где поддержка важнее регалий, юмор — часть культуры, а доверие и открытость позволяют вести честные разговоры`}
-        </p>
+      <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
+        {`строим тёплое сообщество равных, где поддержка важнее регалий, юмор — часть культуры, а доверие и открытость позволяют вести честные разговоры`}
+      </p>
     ),
   },
   {
-    key: '4',
-    label: <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>Со-создание</p>,
+    key: "4",
+    label: (
+      <p className={`${FONT_MONT_BOOK.className} accordions-block-label`}>
+        Со-создание
+      </p>
+    ),
     children: (
-        <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
-            {`любая активность сообщества рождается из энергии участников: идей, опыта, запросов и инициатив. здесь созидают вместе — а значит, по-настоящему`}
-        </p>
+      <p className={`${FONT_MONT_BOOK.className} accordions-block-children`}>
+        {`любая активность сообщества рождается из энергии участников: идей, опыта, запросов и инициатив. здесь созидают вместе — а значит, по-настоящему`}
+      </p>
     ),
   },
 ];
 
+const renderExpandIcon = () => (
+  <Image
+    src={AccordionPlus}
+    alt=""
+    aria-hidden="true"
+    width={47}
+    height={47}
+    unoptimized
+  />
+);
 
 export const AccordionsBlock = () => {
-    useEffect(() => {
-        const header = document.querySelector('#header');
-        const targetBlock = document.querySelector('#accordions-block');
-        
-        if (!header || !targetBlock) return;
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
 
-        let lastScrollY = window.scrollY;
-        let isHeaderBlack = false;
+    const header = document.querySelector<HTMLElement>("#header");
+    const targetBlock =
+      document.querySelector<HTMLElement>("#accordions-block");
 
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            const blockRect = targetBlock.getBoundingClientRect();
-            const blockTop = blockRect.top - 70;
-            const isScrollingUp = currentScrollY < lastScrollY;
-    
-            if (blockTop <= 0) {
-                if (!isHeaderBlack) {
-                    header.classList.add('header_black');
-                    isHeaderBlack = true;
-                }
-            } 
-            else if (isScrollingUp && blockTop <= 70) {
-                if (!isHeaderBlack) {
-                    header.classList.add('header_black');
-                    isHeaderBlack = true;
-                }
-            } else {
-                if (isHeaderBlack) {
-                    header.classList.remove('header_black');
-                    isHeaderBlack = false;
-                }
-            }
-        
-            lastScrollY = currentScrollY;
-        };
+    if (!header || !targetBlock) return;
 
-        window.addEventListener('scroll', handleScroll);
-        
-        handleScroll();
+    const addBlack = () => header.classList.add("header_black");
+    const removeBlack = () => header.classList.remove("header_black");
 
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+    const st = ScrollTrigger.create({
+      trigger: targetBlock,
+      start: "top 70px",
+      end: "bottom top",
+      refreshPriority: 2, // MainBanner = 0, OurProjects = 1
+      onEnter: addBlack,
+      onLeave: removeBlack,
+      onEnterBack: addBlack,
+      onLeaveBack: removeBlack,
+    });
 
-    return (
-        <div className='accordions-block-wrapper' id='accordions-block'>
-            <div className={`${FONT_MONT_BOOK.className} accordions-block-title`}>
-                наши ценности
-            </div>
+    return () => {
+      st.kill();
+      header.classList.remove("header_black");
+    };
+  }, []);
 
-            <div className='accordions-block-list'>
-                <Collapse
-                    ghost={true}
-                    expandIconPosition='end'
-                    items={ITEMS}
-                    className='accordions-block-component'
-                    defaultActiveKey={['1', '2', '3', '4']}
-                    expandIcon={() => (
-                        <Image
-                            src={AccordionPlus}
-                            alt="accordion-plus"
-                            width={47}
-                            height={47}
-                            priority
-                            unoptimized
-                        />
-                    )}
-                />
-            </div>
-        </div>
-    );
+  return (
+    <section
+      className="accordions-block-wrapper"
+      id="accordions-block"
+      aria-label="Наши ценности"
+    >
+      <div className={`${FONT_MONT_BOOK.className} accordions-block-title`}>
+        наши ценности
+      </div>
+
+      <div className="accordions-block-list">
+        <Collapse
+          ghost={true}
+          expandIconPosition="end"
+          items={ITEMS}
+          className="accordions-block-component"
+          defaultActiveKey={["1", "2", "3", "4"]}
+          expandIcon={renderExpandIcon}
+        />
+      </div>
+    </section>
+  );
 };
