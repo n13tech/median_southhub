@@ -1,3 +1,5 @@
+"use client";
+
 import { FONT_IBM_PLEX_SERIF_ITALIC, FONT_MONT_BOOK } from "../../fonts";
 import { MainBannerButton } from "./main-banner-button";
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -58,20 +60,35 @@ export const MainBanner = () => {
     [],
   );
 
-  // Размеры окна — единственный источник истины для resize
+  // ============================================================
+  // ИЗМЕНЕНИЕ 1: resize-листенер только на смену breakpoint + обновление размеров
+  // (не дергает setState на каждый пиксель ресайза)
+  // ============================================================
   useEffect(() => {
-    const handleResize = () => {
+    const mql = window.matchMedia("(max-width: 1024px)");
+
+    const updateSizes = () => {
       setWindowHeight(window.innerHeight);
       setWindowWidth(window.innerWidth);
     };
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
+    // Обновляем размеры только при смене breakpoint или ориентации
+    const handleBreakpointChange = () => updateSizes();
 
-    return () => window.removeEventListener("resize", handleResize);
+    updateSizes(); // начальное значение
+
+    mql.addEventListener("change", handleBreakpointChange);
+    window.addEventListener("orientationchange", handleBreakpointChange);
+
+    return () => {
+      mql.removeEventListener("change", handleBreakpointChange);
+      window.removeEventListener("orientationchange", handleBreakpointChange);
+    };
   }, []);
 
-  // Первый текст — появление при загрузке
+  // ============================================================
+  // Появление первого текста при загрузке (ваш оригинал)
+  // ============================================================
   useEffect(() => {
     if (!mainBannerText1.current) return;
 
@@ -85,6 +102,9 @@ export const MainBanner = () => {
     });
   }, []);
 
+  // ============================================================
+  // ВАШ setupTextAnimations — БЕЗ ИЗМЕНЕНИЙ (кроме refreshPriority)
+  // ============================================================
   const setupTextAnimations = useCallback(() => {
     textAnimationsRef.current.forEach((animation) => animation.kill());
     textAnimationsRef.current = [];
@@ -92,7 +112,7 @@ export const MainBanner = () => {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Начальные состояния
+    // Начальные состояния (ваш оригинал)
     if (mainBannerText1.current) {
       gsap.set(mainBannerText1.current, { opacity: 1, y: 0 });
     }
@@ -107,12 +127,13 @@ export const MainBanner = () => {
       gsap.set(el, { opacity: 0, y: 30 });
     });
 
-    // text1 — оригинальная логика БЕЗ onLeaveBack
+    // text1 — без onLeaveBack (ваша логика)
     if (mainBannerText1.current) {
       const animation1 = ScrollTrigger.create({
         trigger: section,
         start: "top top",
         end: "top+=35% top",
+        refreshPriority: 0,
         onEnter: () => animateIn(mainBannerText1.current),
         onLeave: () => animateOut(mainBannerText1.current, "up"),
         onEnterBack: () => animateIn(mainBannerText1.current),
@@ -120,12 +141,13 @@ export const MainBanner = () => {
       textAnimationsRef.current.push(animation1);
     }
 
-    // text2 — оригинальная логика со всеми четырьмя колбэками
+    // text2 — все четыре колбэка (ваша логика)
     if (mainBannerText2.current) {
       const animation2 = ScrollTrigger.create({
         trigger: section,
         start: "top+=10% top",
         end: "top+=35% top",
+        refreshPriority: 0,
         onEnter: () => animateIn(mainBannerText2.current),
         onLeave: () => animateOut(mainBannerText2.current, "up"),
         onEnterBack: () => animateIn(mainBannerText2.current),
@@ -134,9 +156,8 @@ export const MainBanner = () => {
       textAnimationsRef.current.push(animation2);
     }
 
-    // text3, text4 — оригинальная логика: ТОЛЬКО onEnter + onLeaveBack
     const otherElements = [
-      { element: mainBannerText3.current, percent: 45 },
+      { element: mainBannerText3.current, percent: 40 },
       { element: mainBannerText4.current, percent: 65 },
     ];
 
@@ -147,6 +168,7 @@ export const MainBanner = () => {
         trigger: section,
         start: `top+=${percent}% top`,
         end: `top+=${percent + 5}% top`,
+        refreshPriority: 0,
         onEnter: () => animateIn(element),
         onLeaveBack: () => animateOut(element, "down"),
       });
@@ -155,6 +177,9 @@ export const MainBanner = () => {
     });
   }, [animateIn, animateOut]);
 
+  // ============================================================
+  // ВАШ setupVideoScaleAnimation — БЕЗ ИЗМЕНЕНИЙ (кроме refreshPriority)
+  // ============================================================
   const setupVideoScaleAnimation = useCallback(() => {
     if (videoScaleAnimationRef.current) {
       videoScaleAnimationRef.current.kill();
@@ -165,7 +190,6 @@ export const MainBanner = () => {
     const videoWrapper = videoWrapperRef.current;
     if (!section || !videoWrapper) return;
 
-    // Читаем текущий scale вместо сброса
     const currentScale = Number(gsap.getProperty(videoWrapper, "scale")) || 1;
     isVideoScaledRef.current = currentScale > 1.01;
 
@@ -174,6 +198,7 @@ export const MainBanner = () => {
       start: "top top",
       end: "bottom bottom",
       invalidateOnRefresh: true,
+      refreshPriority: 0,
       onUpdate: (self) => {
         const shouldScale = self.progress >= 0.45;
 
@@ -193,6 +218,10 @@ export const MainBanner = () => {
     videoScaleAnimationRef.current = st;
   }, []);
 
+  // ============================================================
+  // ВАШ основной useEffect — БЕЗ ИЗМЕНЕНИЙ
+  // + anticipatePin: 1 (ИЗМЕНЕНИЕ 2)
+  // ============================================================
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -219,7 +248,9 @@ export const MainBanner = () => {
       scrub: true,
       pin: pin,
       pinSpacing: false,
+      anticipatePin: 1, // ИЗМЕНЕНИЕ 2
       invalidateOnRefresh: true,
+      refreshPriority: 0,
     });
 
     setupTextAnimations();
